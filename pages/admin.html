@@ -1,0 +1,1955 @@
+<!-- pages/admin.html - Dashboard Administrateur avec synchronisation temps réel -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0A0A14">
+    <meta name="description" content="Administration — Salam Market PRO">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <title>Salam Market PRO · Administration</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@400..700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <style>
+        /* ============================================================
+           DESIGN SYSTEM — Version unifiée premium
+           ============================================================ */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --emerald-400: #34D399;
+            --emerald-500: #10B981;
+            --emerald-600: #059669;
+            --violet-400: #A78BFA;
+            --violet-500: #8B5CF6;
+            --amber-400: #FBBF24;
+            --amber-500: #F59E0B;
+            --blue-400: #60A5FA;
+            --blue-500: #3B82F6;
+            --rose-400: #FB7185;
+            --rose-500: #F43F5E;
+            
+            --surface-primary: #0A0A14;
+            --surface-card: rgba(15, 15, 30, 0.85);
+            --surface-card-solid: #0F0F1E;
+            --surface-input: rgba(10, 10, 20, 0.7);
+            --surface-hover: rgba(255, 255, 255, 0.03);
+            
+            --border-subtle: rgba(255, 255, 255, 0.04);
+            --border-default: rgba(255, 255, 255, 0.08);
+            --border-strong: rgba(255, 255, 255, 0.12);
+            --border-accent: rgba(16, 185, 129, 0.25);
+            
+            --text-primary: #F1F5F9;
+            --text-secondary: #CBD5E1;
+            --text-muted: #94A3B8;
+            --text-faint: #64748B;
+            
+            --font-display: 'Space Grotesk', system-ui, sans-serif;
+            --font-body: 'Inter', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --radius-sm: 10px;
+            --radius-md: 14px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+            --radius-2xl: 32px;
+            --radius-full: 9999px;
+            
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+            --shadow-xl: 0 30px 80px rgba(0, 0, 0, 0.6);
+            
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --duration-fast: 200ms;
+            --duration-base: 400ms;
+            
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --space-10: 40px;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--surface-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* Background */
+        .bg-decoration {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .bg-gradient-1 {
+            position: absolute;
+            width: 150%;
+            height: 100%;
+            background: radial-gradient(ellipse 80% 60% at 10% -20%, rgba(16, 185, 129, 0.06) 0%, transparent 50%);
+            animation: floatBg 20s ease-in-out infinite;
+        }
+        
+        @keyframes floatBg {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(1%, -1%) rotate(0.5deg); }
+            66% { transform: translate(-1%, 1%) rotate(-0.5deg); }
+        }
+        
+        /* Layout */
+        .app-layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(10, 10, 20, 0.95);
+            backdrop-filter: blur(40px);
+            border-right: 1px solid var(--border-default);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            padding: var(--space-6) var(--space-4);
+            transition: transform var(--duration-base) var(--ease-out-expo);
+        }
+        
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding-bottom: var(--space-6);
+            margin-bottom: var(--space-4);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        .sidebar-logo {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--emerald-600), var(--emerald-500));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+        
+        .sidebar-brand h2 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; }
+        .sidebar-brand p { font-size: 0.65rem; color: var(--emerald-400); }
+        
+        .sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: var(--space-1); }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-md);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all var(--duration-fast);
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+        }
+        
+        .nav-item:hover { background: var(--surface-hover); color: var(--text-secondary); transform: translateX(4px); }
+        .nav-item.active { background: rgba(16, 185, 129, 0.08); color: var(--emerald-400); border-left: 2px solid var(--emerald-500); }
+        .nav-item i { width: 22px; }
+        
+        .nav-badge {
+            margin-left: auto;
+            background: var(--rose-500);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            font-weight: 700;
+        }
+        
+        .sidebar-footer { margin-top: auto; padding-top: var(--space-6); border-top: 1px solid var(--border-subtle); }
+        
+        .btn-logout {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-md);
+            background: transparent;
+            border: 1px solid var(--border-default);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all var(--duration-fast);
+        }
+        
+        .btn-logout:hover { background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.3); color: var(--rose-500); }
+        
+        /* Mobile header */
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(10, 10, 20, 0.95);
+            backdrop-filter: blur(40px);
+            border-bottom: 1px solid var(--border-default);
+            z-index: 99;
+            align-items: center;
+            padding: 0 var(--space-4);
+            gap: var(--space-3);
+        }
+        
+        .menu-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .mobile-logo { font-family: var(--font-display); font-weight: 700; font-size: 1rem; }
+        .mobile-logo span { color: var(--emerald-400); }
+        
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 98;
+        }
+        
+        .overlay.show { display: block; }
+        
+        /* Main content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: var(--space-6);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .admin-container { max-width: 1400px; margin: 0 auto; }
+        
+        /* Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+        
+        .page-header h1 {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .sync-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-4);
+            background: rgba(16, 185, 129, 0.12);
+            border-radius: var(--radius-full);
+            font-size: 0.7rem;
+            color: var(--emerald-400);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+            flex-wrap: wrap;
+        }
+        
+        /* Stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+        
+        .stat-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+            transition: all var(--duration-fast);
+            cursor: pointer;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--border-accent);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: var(--space-3);
+        }
+        
+        .stat-value {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+        
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: var(--space-1);
+        }
+        
+        /* Charts row */
+        .charts-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-6);
+            margin-bottom: var(--space-6);
+        }
+        
+        .chart-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+        }
+        
+        .chart-header {
+            padding: var(--space-4) var(--space-6);
+            border-bottom: 1px solid var(--border-subtle);
+            font-weight: 600;
+        }
+        
+        .chart-container {
+            padding: var(--space-4);
+            height: 300px;
+        }
+        
+        /* Section */
+        .section {
+            display: none;
+            animation: fadeIn 0.3s var(--ease-out-expo);
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Tables */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th {
+            text-align: left;
+            padding: var(--space-3) var(--space-4);
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        .data-table td {
+            padding: var(--space-3) var(--space-4);
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .data-table tr:hover td {
+            background: var(--surface-hover);
+        }
+        
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-full);
+            font-size: 0.65rem;
+            font-weight: 700;
+        }
+        
+        .badge-success { background: rgba(16, 185, 129, 0.12); color: var(--emerald-400); }
+        .badge-warning { background: rgba(245, 158, 11, 0.12); color: var(--amber-400); }
+        .badge-info { background: rgba(59, 130, 246, 0.12); color: var(--blue-400); }
+        .badge-danger { background: rgba(244, 63, 94, 0.12); color: var(--rose-400); }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all var(--duration-fast);
+            border: none;
+            font-family: inherit;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--emerald-600), var(--emerald-500));
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-default);
+            color: var(--text-secondary);
+        }
+        
+        .btn-outline:hover {
+            border-color: var(--emerald-400);
+            color: var(--emerald-400);
+        }
+        
+        .btn-danger {
+            background: transparent;
+            border: 1px solid var(--border-default);
+            color: var(--rose-400);
+        }
+        
+        .btn-danger:hover {
+            background: rgba(244, 63, 94, 0.08);
+            border-color: var(--rose-500);
+        }
+        
+        .btn-sm {
+            padding: var(--space-1) var(--space-3);
+            font-size: 0.7rem;
+        }
+        
+        /* Search */
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: var(--space-3);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: var(--space-2) var(--space-3) var(--space-2) 36px;
+            background: var(--surface-input);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            outline: none;
+        }
+        
+        .search-box input:focus {
+            border-color: var(--border-accent);
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-4);
+        }
+        
+        .modal-overlay.show {
+            display: flex;
+        }
+        
+        .modal {
+            background: var(--surface-card-solid);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-xl);
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s var(--ease-spring);
+        }
+        
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        .modal-header {
+            padding: var(--space-5) var(--space-6);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h3 {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: var(--space-6);
+        }
+        
+        .modal-footer {
+            padding: var(--space-4) var(--space-6);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--space-3);
+        }
+        
+        /* Form */
+        .form-group {
+            margin-bottom: var(--space-5);
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: var(--space-2);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            background: var(--surface-input);
+            border: 1.5px solid var(--border-default);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: inherit;
+            outline: none;
+            transition: all var(--duration-fast);
+        }
+        
+        .form-input:focus, .form-select:focus {
+            border-color: var(--border-accent);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.08);
+        }
+        
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: var(--space-5);
+            right: var(--space-5);
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+        
+        .toast {
+            background: var(--surface-card-solid);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            padding: var(--space-4) var(--space-5);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            min-width: 280px;
+            transform: translateX(120%);
+            opacity: 0;
+            transition: all 0.5s var(--ease-spring);
+        }
+        
+        .toast.show { transform: translateX(0); opacity: 1; }
+        .toast.success { border-left: 3px solid var(--emerald-500); }
+        .toast.error { border-left: 3px solid var(--rose-500); }
+        .toast.success .toast-icon { color: var(--emerald-400); }
+        .toast.error .toast-icon { color: var(--rose-500); }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .charts-row { grid-template-columns: 1fr; }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .mobile-header { display: flex; }
+            .main-content { margin-left: 0; padding-top: 76px; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .data-table { min-width: 600px; }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .page-header { flex-direction: column; align-items: flex-start; }
+            .header-actions { width: 100%; justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-decoration" aria-hidden="true">
+        <div class="bg-gradient-1"></div>
+    </div>
+    
+    <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+    
+    <header class="mobile-header">
+        <button class="menu-btn" onclick="openSidebar()"><i class="fa-solid fa-bars"></i></button>
+        <span class="mobile-logo">Salam <span>Admin</span></span>
+    </header>
+    
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo"><i class="fa-solid fa-crown"></i></div>
+            <div class="sidebar-brand">
+                <h2>Salam Admin</h2>
+                <p>Super Admin</p>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <button class="nav-item active" onclick="showSection('dashboard')">
+                <i class="fa-solid fa-gauge-high"></i> Tableau de Bord
+            </button>
+            <button class="nav-item" onclick="showSection('orders')">
+                <i class="fa-solid fa-box"></i> Commandes
+                <span class="nav-badge" id="pendingOrdersBadge">0</span>
+            </button>
+            <button class="nav-item" onclick="showSection('users')">
+                <i class="fa-solid fa-users"></i> Utilisateurs
+            </button>
+            <button class="nav-item" onclick="showSection('products')">
+                <i class="fa-solid fa-basket-shopping"></i> Produits
+            </button>
+            <button class="nav-item" onclick="showSection('suppliers')">
+                <i class="fa-solid fa-shop"></i> Fournisseurs
+            </button>
+            <button class="nav-item" onclick="showSection('promos')">
+                <i class="fa-solid fa-tags"></i> Promotions
+            </button>
+            <button class="nav-item" onclick="showSection('settings')">
+                <i class="fa-solid fa-gear"></i> Paramètres
+            </button>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</button>
+        </div>
+    </aside>
+    
+    <main class="main-content">
+        <div class="admin-container">
+            
+            <!-- SECTION: DASHBOARD -->
+            <div class="section active" id="section-dashboard">
+                <div class="page-header">
+                    <div>
+                        <h1><i class="fa-solid fa-gauge-high"></i> Tableau de Bord</h1>
+                        <div class="sync-badge" id="syncBadge">
+                            <i class="fa-solid fa-circle-nodes"></i> Synchronisé
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn-outline btn" onclick="refreshAll()">
+                            <i class="fa-solid fa-rotate-right"></i> Actualiser
+                        </button>
+                        <button class="btn-primary btn" onclick="exportReport()">
+                            <i class="fa-solid fa-download"></i> Exporter rapport
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="stats-grid" id="dashboardStats"></div>
+                
+                <div class="charts-row">
+                    <div class="chart-card">
+                        <div class="chart-header">📊 Évolution des ventes</div>
+                        <div class="chart-container">
+                            <canvas id="salesChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">🥧 Répartition des ventes par catégorie</div>
+                        <div class="chart-container">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6);">
+                    <div class="chart-card">
+                        <div class="chart-header">🆕 Derniers utilisateurs</div>
+                        <div class="table-wrapper">
+                            <table class="data-table" id="recentUsersTable">
+                                <thead><tr><th>Utilisateur</th><th>Rôle</th><th>Date</th></tr></thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">📦 Dernières commandes</div>
+                        <div class="table-wrapper">
+                            <table class="data-table" id="recentOrdersTable">
+                                <thead><tr><th>ID</th><th>Client</th><th>Montant</th><th>Statut</th></tr></thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION: COMMANDES -->
+            <div class="section" id="section-orders">
+                <div class="page-header">
+                    <h1><i class="fa-solid fa-box"></i> Gestion des commandes</h1>
+                    <div class="header-actions">
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="orderSearch" placeholder="Rechercher..." oninput="loadOrders()">
+                        </div>
+                        <select class="btn-outline btn" id="orderStatusFilter" onchange="loadOrders()">
+                            <option value="all">Tous les statuts</option>
+                            <option value="confirmée">Confirmée</option>
+                            <option value="préparation">Préparation</option>
+                            <option value="livraison">Livraison</option>
+                            <option value="livrée">Livrée</option>
+                            <option value="annulée">Annulée</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="table-wrapper">
+                        <table class="data-table" id="ordersTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th><th>Client</th><th>Articles</th><th>Total</th><th>Paiement</th><th>Statut</th><th>Date</th><th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION: UTILISATEURS -->
+            <div class="section" id="section-users">
+                <div class="page-header">
+                    <h1><i class="fa-solid fa-users"></i> Gestion des utilisateurs</h1>
+                    <div class="header-actions">
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="userSearch" placeholder="Rechercher..." oninput="loadUsers()">
+                        </div>
+                        <button class="btn-primary btn" onclick="openUserModal()">
+                            <i class="fa-solid fa-plus"></i> Ajouter
+                        </button>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="table-wrapper">
+                        <table class="data-table" id="usersTable">
+                            <thead>
+                                <tr>
+                                    <th>Utilisateur</th><th>Contact</th><th>Rôle</th><th>Commandes</th><th>Dépensé</th><th>Statut</th><th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION: PRODUITS -->
+            <div class="section" id="section-products">
+                <div class="page-header">
+                    <h1><i class="fa-solid fa-basket-shopping"></i> Gestion des produits</h1>
+                    <div class="header-actions">
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="productSearch" placeholder="Rechercher..." oninput="loadProducts()">
+                        </div>
+                        <button class="btn-primary btn" onclick="openProductModal()">
+                            <i class="fa-solid fa-plus"></i> Ajouter
+                        </button>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="table-wrapper">
+                        <table class="data-table" id="productsTable">
+                            <thead>
+                                <tr>
+                                    <th>Produit</th><th>Catégorie</th><th>Prix</th><th>Stock</th><th>Fournisseur</th><th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION: FOURNISSEURS -->
+            <div class="section" id="section-suppliers">
+                <div class="page-header">
+                    <h1><i class="fa-solid fa-shop"></i> Gestion des fournisseurs</h1>
+                    <div class="header-actions">
+                        <button class="btn-primary btn" onclick="openSupplierModal()">
+                            <i class="fa-solid fa-plus"></i> Ajouter
+                        </button>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="table-wrapper">
+                        <table class="data-table" id="suppliersTable">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th><th>Catégorie</th><th>Téléphone</th><th>Produits</th><th>Statut</th><th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION: PROMOTIONS -->
+            <div class="section" id="section-promos">
+                <div class="page-header">
+                    <h1><i class="fa-solid fa-tags"></i> Codes promotionnels</h1>
+                    <div class="header-actions">
+                        <button class="btn-primary btn" onclick="openPromoModal()">
+                            <i class="fa-solid fa-plus"></i> Nouveau code
+                        </button>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="table-wrapper">
+                        <table class="data-table" id="promosTable">
+                            <thead>
+                                <tr>
+                                    <th>Code</th><th>Réduction</th><th>Min. achat</th><th>Utilisations</th><th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION: PARAMÈTRES -->
+            <div class="section" id="section-settings">
+                <div class="page-header">
+                    <h1><i class="fa-solid fa-gear"></i> Paramètres généraux</h1>
+                </div>
+                <div class="chart-card">
+                    <div class="card-body" style="padding: var(--space-6);">
+                        <div class="form-group">
+                            <label class="form-label">Frais de livraison (FCFA)</label>
+                            <input type="number" class="form-input" id="deliveryFee" value="500" style="max-width: 200px;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Livraison gratuite à partir de (FCFA)</label>
+                            <input type="number" class="form-input" id="freeDeliveryThreshold" value="10000" style="max-width: 200px;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Numéro Orange Money</label>
+                            <input type="text" class="form-input" id="omNumber" value="+237 6 88 282 662" style="max-width: 300px;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Numéro MTN Mobile Money</label>
+                            <input type="text" class="form-input" id="mtnNumber" value="+237 6 80 000 000" style="max-width: 300px;">
+                        </div>
+                        <button class="btn-primary btn" onclick="saveSettings()">
+                            <i class="fa-solid fa-check"></i> Enregistrer les paramètres
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- MODAL: Utilisateur -->
+    <div class="modal-overlay" id="userModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="userModalTitle">Ajouter un utilisateur</h3>
+                <button class="modal-close" onclick="closeUserModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="userForm">
+                    <input type="hidden" id="userId">
+                    <div class="form-group">
+                        <label class="form-label">Nom complet</label>
+                        <input type="text" class="form-input" id="userName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="userEmail">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Téléphone</label>
+                        <input type="tel" class="form-input" id="userPhone">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Rôle</label>
+                        <select class="form-select" id="userRole">
+                            <option value="client">Client</option>
+                            <option value="supplier">Fournisseur</option>
+                            <option value="admin">Administrateur</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="passwordGroup">
+                        <label class="form-label">Mot de passe</label>
+                        <input type="password" class="form-input" id="userPassword" placeholder="Laisser vide pour garder l'actuel">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline btn" onclick="closeUserModal()">Annuler</button>
+                <button class="btn-primary btn" onclick="saveUser()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL: Produit -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="productModalTitle">Ajouter un produit</h3>
+                <button class="modal-close" onclick="closeProductModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm">
+                    <input type="hidden" id="productId">
+                    <div class="form-group">
+                        <label class="form-label">Nom du produit</label>
+                        <input type="text" class="form-input" id="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Catégorie</label>
+                        <input type="text" class="form-input" id="productCategory" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Prix (FCFA)</label>
+                        <input type="number" class="form-input" id="productPrice" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Stock</label>
+                        <input type="number" class="form-input" id="productStock" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fournisseur</label>
+                        <input type="text" class="form-input" id="productSupplier" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Emoji / Image</label>
+                        <input type="text" class="form-input" id="productImage" value="📦">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline btn" onclick="closeProductModal()">Annuler</button>
+                <button class="btn-primary btn" onclick="saveProduct()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL: Fournisseur -->
+    <div class="modal-overlay" id="supplierModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="supplierModalTitle">Ajouter un fournisseur</h3>
+                <button class="modal-close" onclick="closeSupplierModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="supplierForm">
+                    <input type="hidden" id="supplierId">
+                    <div class="form-group">
+                        <label class="form-label">Nom du fournisseur</label>
+                        <input type="text" class="form-input" id="supplierName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Catégorie</label>
+                        <input type="text" class="form-input" id="supplierCategory" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Téléphone</label>
+                        <input type="tel" class="form-input" id="supplierPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="supplierEmail">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Statut</label>
+                        <select class="form-select" id="supplierStatus">
+                            <option value="actif">Actif</option>
+                            <option value="inactif">Inactif</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline btn" onclick="closeSupplierModal()">Annuler</button>
+                <button class="btn-primary btn" onclick="saveSupplier()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL: Promotion -->
+    <div class="modal-overlay" id="promoModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Ajouter un code promo</h3>
+                <button class="modal-close" onclick="closePromoModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="promoForm">
+                    <div class="form-group">
+                        <label class="form-label">Code</label>
+                        <input type="text" class="form-input" id="promoCode" required style="text-transform: uppercase;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Réduction (%)</label>
+                        <input type="number" class="form-input" id="promoDiscount" required min="1" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Montant minimum (FCFA)</label>
+                        <input type="number" class="form-input" id="promoMinAmount" value="5000">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline btn" onclick="closePromoModal()">Annuler</button>
+                <button class="btn-primary btn" onclick="savePromo()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <script src="../js/global-sync.js"></script>
+    <script>
+        // ============================================================
+        // ADMIN DASHBOARD — Gestion complète avec synchronisation
+        // ============================================================
+        
+        (() => {
+            'use strict';
+            
+            // Vérification session admin
+            const session = JSON.parse(localStorage.getItem('salam_session') || 'null');
+            if (!session || session.user.role !== 'admin') {
+                window.location.href = '../index.html';
+                return;
+            }
+            
+            // Variables
+            let salesChart = null;
+            let categoryChart = null;
+            
+            // Storage helpers avec synchronisation
+            const Storage = {
+                get: (key, defaultVal = null) => {
+                    try { return JSON.parse(localStorage.getItem('salam_' + key) || 'null') || defaultVal; }
+                    catch { return defaultVal; }
+                },
+                set: (key, value) => {
+                    localStorage.setItem('salam_' + key, JSON.stringify(value));
+                    // Déclencher la synchronisation
+                    if (window.SalamSync) {
+                        window.SalamSync.triggerGlobalRefresh('admin');
+                    }
+                }
+            };
+            
+            // ========== INITIALISATION ==========
+            function init() {
+                // Initialiser le système de synchronisation
+                if (window.SalamSync) {
+                    window.SalamSync.init();
+                    
+                    // S'enregistrer pour les mises à jour externes
+                    window.SalamSync.onGlobalRefresh(() => {
+                        console.log('[Admin] Rafraîchissement global reçu');
+                        loadDashboard();
+                        loadOrders();
+                        loadUsers();
+                        loadProducts();
+                        loadSuppliers();
+                        loadPromos();
+                        updatePendingBadge();
+                        showToast('Synchronisation', 'Données mises à jour depuis un autre onglet', 'info', 2000);
+                    }, 'admin');
+                    
+                    // Écouter les mises à jour externes spécifiques
+                    window.SalamSync.EventBus.on('users:updated:external', () => {
+                        loadUsers();
+                        loadDashboard();
+                        showToast('Utilisateurs', 'Liste des utilisateurs mise à jour', 'info', 1500);
+                    });
+                    
+                    window.SalamSync.EventBus.on('products:updated:external', () => {
+                        loadProducts();
+                        loadDashboard();
+                        showToast('Produits', 'Catalogue des produits mis à jour', 'info', 1500);
+                    });
+                    
+                    window.SalamSync.EventBus.on('orders:updated:external', () => {
+                        loadOrders();
+                        loadDashboard();
+                        updatePendingBadge();
+                        showToast('Commandes', 'Liste des commandes mise à jour', 'info', 1500);
+                    });
+                }
+                
+                loadDashboard();
+                loadOrders();
+                loadUsers();
+                loadProducts();
+                loadSuppliers();
+                loadPromos();
+                updatePendingBadge();
+            }
+            
+            function updatePendingBadge() {
+                const orders = Storage.get('orders', []);
+                const pending = orders.filter(o => !['livrée', 'annulée'].includes(o.status)).length;
+                document.getElementById('pendingOrdersBadge').textContent = pending;
+            }
+            
+            // ========== DASHBOARD ==========
+            function loadDashboard() {
+                const orders = Storage.get('orders', []);
+                const users = Storage.get('users', []);
+                const products = Storage.get('products', []);
+                
+                const totalRevenue = orders.filter(o => o.paymentStatus === 'paid').reduce((sum, o) => sum + (o.total || 0), 0);
+                const totalOrders = orders.length;
+                const pendingOrders = orders.filter(o => !['livrée', 'annulée'].includes(o.status)).length;
+                const totalUsers = users.length;
+                
+                document.getElementById('dashboardStats').innerHTML = `
+                    <div class="stat-card" onclick="showSection('orders')">
+                        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.08);"><i class="fa-solid fa-coins" style="color: var(--emerald-400);"></i></div>
+                        <div class="stat-value">${totalRevenue.toLocaleString()} FCFA</div>
+                        <div class="stat-label">Chiffre d'affaires</div>
+                    </div>
+                    <div class="stat-card" onclick="showSection('orders')">
+                        <div class="stat-icon" style="background: rgba(245, 158, 11, 0.08);"><i class="fa-solid fa-clock" style="color: var(--amber-400);"></i></div>
+                        <div class="stat-value">${pendingOrders}</div>
+                        <div class="stat-label">Commandes en attente</div>
+                    </div>
+                    <div class="stat-card" onclick="showSection('orders')">
+                        <div class="stat-icon" style="background: rgba(59, 130, 246, 0.08);"><i class="fa-solid fa-box" style="color: var(--blue-400);"></i></div>
+                        <div class="stat-value">${totalOrders}</div>
+                        <div class="stat-label">Commandes totales</div>
+                    </div>
+                    <div class="stat-card" onclick="showSection('users')">
+                        <div class="stat-icon" style="background: rgba(139, 92, 246, 0.08);"><i class="fa-solid fa-users" style="color: var(--violet-400);"></i></div>
+                        <div class="stat-value">${totalUsers}</div>
+                        <div class="stat-label">Utilisateurs</div>
+                    </div>
+                `;
+                
+                // Derniers utilisateurs
+                const recentUsers = [...users].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
+                document.querySelector('#recentUsersTable tbody').innerHTML = recentUsers.map(u => `
+                    <tr>
+                        <td><strong>${escapeHtml(u.name)}</strong></td>
+                        <td><span class="badge ${u.role === 'admin' ? 'badge-danger' : (u.role === 'supplier' ? 'badge-warning' : 'badge-info')}">${u.role}</span></td>
+                        <td>${u.createdAt ? new Date(u.createdAt).toLocaleDateString('fr-FR') : '-'}</td>
+                    </tr>
+                `).join('');
+                
+                // Dernières commandes
+                const recentOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
+                document.querySelector('#recentOrdersTable tbody').innerHTML = recentOrders.map(o => `
+                    <tr>
+                        <td><span class="badge badge-info">#${o.id.slice(-8)}</span></td>
+                        <td>${escapeHtml(o.customerName || 'N/A')}</td>
+                        <td>${(o.total || 0).toLocaleString()} FCFA</td>
+                        <td><span class="badge ${o.status === 'livrée' ? 'badge-success' : (o.status === 'annulée' ? 'badge-danger' : 'badge-warning')}">${o.status}</span></td>
+                    </tr>
+                `).join('');
+                
+                initCharts(orders, products);
+            }
+            
+            function initCharts(orders, products) {
+                // Ventes par mois
+                const monthlySales = Array(12).fill(0);
+                orders.forEach(o => {
+                    const month = new Date(o.createdAt).getMonth();
+                    monthlySales[month] += o.total || 0;
+                });
+                
+                const ctx = document.getElementById('salesChart')?.getContext('2d');
+                if (ctx) {
+                    if (salesChart) salesChart.destroy();
+                    salesChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
+                            datasets: [{
+                                label: 'Ventes (FCFA)',
+                                data: monthlySales,
+                                borderColor: '#10B981',
+                                backgroundColor: 'rgba(16, 185, 129, 0.05)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { display: false } }
+                        }
+                    });
+                }
+                
+                // Catégories
+                const categoryMap = new Map();
+                products.forEach(p => {
+                    if (p.category) {
+                        categoryMap.set(p.category, (categoryMap.get(p.category) || 0) + 1);
+                    }
+                });
+                
+                const ctx2 = document.getElementById('categoryChart')?.getContext('2d');
+                if (ctx2) {
+                    if (categoryChart) categoryChart.destroy();
+                    categoryChart = new Chart(ctx2, {
+                        type: 'doughnut',
+                        data: {
+                            labels: Array.from(categoryMap.keys()),
+                            datasets: [{
+                                data: Array.from(categoryMap.values()),
+                                backgroundColor: ['#10B981', '#8B5CF6', '#F59E0B', '#3B82F6', '#F43F5E', '#60A5FA']
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { position: 'bottom', labels: { color: '#94A3B8' } } }
+                        }
+                    });
+                }
+            }
+            
+            // ========== COMMANDES ==========
+            function loadOrders() {
+                let orders = Storage.get('orders', []);
+                const search = document.getElementById('orderSearch')?.value.toLowerCase() || '';
+                const statusFilter = document.getElementById('orderStatusFilter')?.value || 'all';
+                
+                if (statusFilter !== 'all') {
+                    orders = orders.filter(o => o.status === statusFilter);
+                }
+                if (search) {
+                    orders = orders.filter(o => o.id.toLowerCase().includes(search) || (o.customerName || '').toLowerCase().includes(search));
+                }
+                
+                orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                
+                document.querySelector('#ordersTable tbody').innerHTML = orders.map(o => `
+                    <tr>
+                        <td><span class="badge badge-info">#${o.id.slice(-8)}</span></td>
+                        <td>${escapeHtml(o.customerName || 'N/A')}</td>
+                        <td>${o.items?.length || 0} art.</td>
+                        <td><strong>${(o.total || 0).toLocaleString()} FCFA</strong></td>
+                        <td><span class="badge ${o.paymentStatus === 'paid' ? 'badge-success' : 'badge-warning'}">${o.paymentStatus === 'paid' ? 'Payé' : 'En attente'}</span></td>
+                        <td>
+                            <select class="btn-outline btn-sm" onchange="updateOrderStatus('${o.id}', this.value)">
+                                <option value="confirmée" ${o.status === 'confirmée' ? 'selected' : ''}>Confirmée</option>
+                                <option value="préparation" ${o.status === 'préparation' ? 'selected' : ''}>Préparation</option>
+                                <option value="livraison" ${o.status === 'livraison' ? 'selected' : ''}>Livraison</option>
+                                <option value="livrée" ${o.status === 'livrée' ? 'selected' : ''}>Livrée</option>
+                                <option value="annulée" ${o.status === 'annulée' ? 'selected' : ''}>Annulée</option>
+                            </select>
+                        </td>
+                        <td>${new Date(o.createdAt).toLocaleDateString('fr-FR')}</td>
+                        <td>
+                            <button class="btn-danger btn-sm" onclick="deleteOrder('${o.id}')"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+            
+            function updateOrderStatus(id, status) {
+                let orders = Storage.get('orders', []);
+                const index = orders.findIndex(o => o.id === id);
+                if (index !== -1) {
+                    orders[index].status = status;
+                    if (!orders[index].statusHistory) orders[index].statusHistory = [];
+                    orders[index].statusHistory.push({ status, timestamp: new Date().toISOString(), note: 'Modifié par admin' });
+                    Storage.set('orders', orders);
+                    
+                    // Déclencher la synchronisation
+                    if (window.SalamSync) {
+                        window.SalamSync.updateOrder(id, { status });
+                        window.SalamSync.triggerGlobalRefresh('admin-order');
+                    }
+                    
+                    loadDashboard();
+                    loadOrders();
+                    updatePendingBadge();
+                    showToast('Statut mis à jour', `Commande #${id} → ${status}`, 'success');
+                }
+            }
+            
+            function deleteOrder(id) {
+                if (!confirm('Supprimer cette commande ?')) return;
+                let orders = Storage.get('orders', []);
+                orders = orders.filter(o => o.id !== id);
+                Storage.set('orders', orders);
+                
+                if (window.SalamSync) window.SalamSync.triggerGlobalRefresh('admin-order-delete');
+                
+                loadDashboard();
+                loadOrders();
+                updatePendingBadge();
+                showToast('Commande supprimée', `#${id} a été supprimée`, 'success');
+            }
+            
+            // ========== UTILISATEURS ==========
+            function loadUsers() {
+                let users = Storage.get('users', []);
+                const search = document.getElementById('userSearch')?.value.toLowerCase() || '';
+                if (search) {
+                    users = users.filter(u => u.name.toLowerCase().includes(search) || (u.email || '').toLowerCase().includes(search));
+                }
+                
+                document.querySelector('#usersTable tbody').innerHTML = users.map(u => `
+                    <tr>
+                        <td><strong>${escapeHtml(u.name)}</strong></td>
+                        <td>${u.email || u.phone || '-'}</td>
+                        <td><span class="badge ${u.role === 'admin' ? 'badge-danger' : (u.role === 'supplier' ? 'badge-warning' : 'badge-info')}">${u.role}</span></td>
+                        <td>${u.totalOrders || 0}</td>
+                        <td>${(u.totalSpent || 0).toLocaleString()} FCFA</td>
+                        <td><span class="badge ${u.status === 'active' ? 'badge-success' : 'badge-danger'}">${u.status === 'active' ? 'Actif' : 'Inactif'}</span></td>
+                        <td>
+                            <button class="btn-outline btn-sm" onclick="editUser('${u.id}')"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn-danger btn-sm" onclick="deleteUser('${u.id}')"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+            
+            function openUserModal(id = null) {
+                if (id) {
+                    const users = Storage.get('users', []);
+                    const user = users.find(u => u.id === id);
+                    if (user) {
+                        document.getElementById('userId').value = user.id;
+                        document.getElementById('userName').value = user.name;
+                        document.getElementById('userEmail').value = user.email || '';
+                        document.getElementById('userPhone').value = user.phone || '';
+                        document.getElementById('userRole').value = user.role;
+                        document.getElementById('userModalTitle').textContent = 'Modifier l\'utilisateur';
+                        document.getElementById('passwordGroup').style.display = 'block';
+                    }
+                } else {
+                    document.getElementById('userId').value = '';
+                    document.getElementById('userName').value = '';
+                    document.getElementById('userEmail').value = '';
+                    document.getElementById('userPhone').value = '';
+                    document.getElementById('userRole').value = 'client';
+                    document.getElementById('userModalTitle').textContent = 'Ajouter un utilisateur';
+                    document.getElementById('passwordGroup').style.display = 'block';
+                }
+                document.getElementById('userModal').classList.add('show');
+            }
+            
+            function closeUserModal() {
+                document.getElementById('userModal').classList.remove('show');
+            }
+            
+            function saveUser() {
+                const id = document.getElementById('userId').value;
+                const name = document.getElementById('userName').value.trim();
+                const email = document.getElementById('userEmail').value.trim();
+                const phone = document.getElementById('userPhone').value.trim();
+                const role = document.getElementById('userRole').value;
+                const password = document.getElementById('userPassword').value;
+                
+                if (!name) {
+                    showToast('Erreur', 'Le nom est requis', 'error');
+                    return;
+                }
+                
+                let users = Storage.get('users', []);
+                
+                if (id) {
+                    const index = users.findIndex(u => u.id === id);
+                    if (index !== -1) {
+                        users[index].name = name;
+                        users[index].email = email;
+                        users[index].phone = phone;
+                        users[index].role = role;
+                        if (password) users[index].password = btoa(password + 'salam_salt_2026');
+                        Storage.set('users', users);
+                        
+                        if (window.SalamSync) {
+                            window.SalamSync.updateUser(id, { name, email, phone, role });
+                            window.SalamSync.triggerGlobalRefresh('admin-user-edit');
+                        }
+                        
+                        showToast('Utilisateur modifié', `${name} mis à jour`, 'success');
+                    }
+                } else {
+                    const newUser = {
+                        id: 'USR_' + Date.now().toString(36).toUpperCase(),
+                        name: name,
+                        email: email,
+                        phone: phone,
+                        password: btoa('password123' + 'salam_salt_2026'),
+                        role: role,
+                        status: 'active',
+                        createdAt: new Date().toISOString()
+                    };
+                    users.push(newUser);
+                    Storage.set('users', users);
+                    
+                    if (window.SalamSync) window.SalamSync.triggerGlobalRefresh('admin-user-add');
+                    
+                    showToast('Utilisateur ajouté', `${name} a été ajouté`, 'success');
+                }
+                
+                closeUserModal();
+                loadUsers();
+                loadDashboard();
+            }
+            
+            function editUser(id) {
+                openUserModal(id);
+            }
+            
+            function deleteUser(id) {
+                if (!confirm('Supprimer cet utilisateur ?')) return;
+                let users = Storage.get('users', []);
+                users = users.filter(u => u.id !== id);
+                Storage.set('users', users);
+                
+                if (window.SalamSync) window.SalamSync.triggerGlobalRefresh('admin-user-delete');
+                
+                loadUsers();
+                loadDashboard();
+                showToast('Utilisateur supprimé', '', 'success');
+            }
+            
+            // ========== PRODUITS ==========
+            function loadProducts() {
+                let products = Storage.get('products', []);
+                const search = document.getElementById('productSearch')?.value.toLowerCase() || '';
+                if (search) {
+                    products = products.filter(p => p.name.toLowerCase().includes(search) || (p.category || '').toLowerCase().includes(search));
+                }
+                
+                document.querySelector('#productsTable tbody').innerHTML = products.map(p => `
+                    <tr>
+                        <td>${p.image || '📦'} ${escapeHtml(p.name)}</td>
+                        <td>${p.category || '-'}</td>
+                        <td>${(p.price || 0).toLocaleString()} FCFA</td>
+                        <td>${p.stock || 0}</td>
+                        <td>${p.supplier || '-'}</td>
+                        <td>
+                            <button class="btn-outline btn-sm" onclick="editProduct(${p.id})"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn-danger btn-sm" onclick="deleteProduct(${p.id})"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+            
+            function openProductModal(id = null) {
+                if (id) {
+                    const products = Storage.get('products', []);
+                    const product = products.find(p => p.id === id);
+                    if (product) {
+                        document.getElementById('productId').value = product.id;
+                        document.getElementById('productName').value = product.name;
+                        document.getElementById('productCategory').value = product.category || '';
+                        document.getElementById('productPrice').value = product.price;
+                        document.getElementById('productStock').value = product.stock;
+                        document.getElementById('productSupplier').value = product.supplier || '';
+                        document.getElementById('productImage').value = product.image || '📦';
+                        document.getElementById('productModalTitle').textContent = 'Modifier le produit';
+                    }
+                } else {
+                    document.getElementById('productId').value = '';
+                    document.getElementById('productName').value = '';
+                    document.getElementById('productCategory').value = '';
+                    document.getElementById('productPrice').value = '';
+                    document.getElementById('productStock').value = '';
+                    document.getElementById('productSupplier').value = '';
+                    document.getElementById('productImage').value = '📦';
+                    document.getElementById('productModalTitle').textContent = 'Ajouter un produit';
+                }
+                document.getElementById('productModal').classList.add('show');
+            }
+            
+            function closeProductModal() {
+                document.getElementById('productModal').classList.remove('show');
+            }
+            
+            function saveProduct() {
+                const id = document.getElementById('productId').value;
+                const name = document.getElementById('productName').value.trim();
+                const category = document.getElementById('productCategory').value.trim();
+                const price = parseFloat(document.getElementById('productPrice').value);
+                const stock = parseInt(document.getElementById('productStock').value);
+                const supplier = document.getElementById('productSupplier').value.trim();
+                const image = document.getElementById('productImage').value;
+                
+                if (!name || !category || isNaN(price)) {
+                    showToast('Erreur', 'Champs requis manquants', 'error');
+                    return;
+                }
+                
+                let products = Storage.get('products', []);
+                
+                if (id) {
+                    const index = products.findIndex(p => p.id === parseInt(id));
+                    if (index !== -1) {
+                        products[index] = { ...products[index], name, category, price, stock, supplier, image };
+                        Storage.set('products', products);
+                        
+                        if (window.SalamSync) {
+                            window.SalamSync.updateProduct(parseInt(id), { name, category, price, stock, supplier, image });
+                            window.SalamSync.triggerGlobalRefresh('admin-product-edit');
+                        }
+                        
+                        showToast('Produit modifié', name, 'success');
+                    }
+                } else {
+                    const newProduct = {
+                        id: Date.now(),
+                        name, category, price, stock, supplier, image,
+                        available: true,
+                        createdAt: new Date().toISOString()
+                    };
+                    products.push(newProduct);
+                    Storage.set('products', products);
+                    
+                    if (window.SalamSync) window.SalamSync.triggerGlobalRefresh('admin-product-add');
+                    
+                    showToast('Produit ajouté', name, 'success');
+                }
+                
+                closeProductModal();
+                loadProducts();
+                loadDashboard();
+            }
+            
+            function editProduct(id) {
+                openProductModal(id);
+            }
+            
+            function deleteProduct(id) {
+                if (!confirm('Supprimer ce produit ?')) return;
+                let products = Storage.get('products', []);
+                products = products.filter(p => p.id !== id);
+                Storage.set('products', products);
+                
+                if (window.SalamSync) window.SalamSync.triggerGlobalRefresh('admin-product-delete');
+                
+                loadProducts();
+                loadDashboard();
+                showToast('Produit supprimé', '', 'success');
+            }
+            
+            // ========== FOURNISSEURS ==========
+            function loadSuppliers() {
+                let suppliers = Storage.get('suppliers', []);
+                document.querySelector('#suppliersTable tbody').innerHTML = suppliers.map(s => `
+                    <tr>
+                        <td><strong>${escapeHtml(s.name)}</strong></td>
+                        <td>${s.category || '-'}</td>
+                        <td>${s.phone || '-'}</td>
+                        <td>${s.productCount || 0}</td>
+                        <td><span class="badge ${s.status === 'actif' ? 'badge-success' : 'badge-danger'}">${s.status === 'actif' ? 'Actif' : 'Inactif'}</span></td>
+                        <td>
+                            <button class="btn-outline btn-sm" onclick="editSupplier('${s.id}')"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn-danger btn-sm" onclick="deleteSupplier('${s.id}')"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+            
+            function openSupplierModal(id = null) {
+                if (id) {
+                    const suppliers = Storage.get('suppliers', []);
+                    const supplier = suppliers.find(s => s.id === id);
+                    if (supplier) {
+                        document.getElementById('supplierId').value = supplier.id;
+                        document.getElementById('supplierName').value = supplier.name;
+                        document.getElementById('supplierCategory').value = supplier.category || '';
+                        document.getElementById('supplierPhone').value = supplier.phone || '';
+                        document.getElementById('supplierEmail').value = supplier.email || '';
+                        document.getElementById('supplierStatus').value = supplier.status || 'actif';
+                        document.getElementById('supplierModalTitle').textContent = 'Modifier le fournisseur';
+                    }
+                } else {
+                    document.getElementById('supplierId').value = '';
+                    document.getElementById('supplierName').value = '';
+                    document.getElementById('supplierCategory').value = '';
+                    document.getElementById('supplierPhone').value = '';
+                    document.getElementById('supplierEmail').value = '';
+                    document.getElementById('supplierStatus').value = 'actif';
+                    document.getElementById('supplierModalTitle').textContent = 'Ajouter un fournisseur';
+                }
+                document.getElementById('supplierModal').classList.add('show');
+            }
+            
+            function closeSupplierModal() {
+                document.getElementById('supplierModal').classList.remove('show');
+            }
+            
+            function saveSupplier() {
+                const id = document.getElementById('supplierId').value;
+                const name = document.getElementById('supplierName').value.trim();
+                const category = document.getElementById('supplierCategory').value.trim();
+                const phone = document.getElementById('supplierPhone').value.trim();
+                const email = document.getElementById('supplierEmail').value.trim();
+                const status = document.getElementById('supplierStatus').value;
+                
+                if (!name) {
+                    showToast('Erreur', 'Le nom est requis', 'error');
+                    return;
+                }
+                
+                let suppliers = Storage.get('suppliers', []);
+                
+                if (id) {
+                    const index = suppliers.findIndex(s => s.id === id);
+                    if (index !== -1) {
+                        suppliers[index] = { ...suppliers[index], name, category, phone, email, status };
+                        Storage.set('suppliers', suppliers);
+                        showToast('Fournisseur modifié', name, 'success');
+                    }
+                } else {
+                    const newSupplier = {
+                        id: 'SUP_' + Date.now().toString(36).toUpperCase(),
+                        name, category, phone, email, status,
+                        productCount: 0,
+                        createdAt: new Date().toISOString()
+                    };
+                    suppliers.push(newSupplier);
+                    Storage.set('suppliers', suppliers);
+                    showToast('Fournisseur ajouté', name, 'success');
+                }
+                
+                closeSupplierModal();
+                loadSuppliers();
+                loadDashboard();
+            }
+            
+            function editSupplier(id) {
+                openSupplierModal(id);
+            }
+            
+            function deleteSupplier(id) {
+                if (!confirm('Supprimer ce fournisseur ?')) return;
+                let suppliers = Storage.get('suppliers', []);
+                suppliers = suppliers.filter(s => s.id !== id);
+                Storage.set('suppliers', suppliers);
+                loadSuppliers();
+                loadDashboard();
+                showToast('Fournisseur supprimé', '', 'success');
+            }
+            
+            // ========== PROMOTIONS ==========
+            function loadPromos() {
+                let promos = Storage.get('promos', []);
+                document.querySelector('#promosTable tbody').innerHTML = promos.map(p => `
+                    <tr>
+                        <td><span class="badge badge-warning">${p.code}</span></td>
+                        <td>${p.discount}%</td>
+                        <td>${(p.minAmount || 0).toLocaleString()} FCFA</span></td>
+                        <td>${p.usedCount || 0}/${p.maxUses || '∞'}</td>
+                        <td>
+                            <button class="btn-danger btn-sm" onclick="deletePromo('${p.code}')"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+            
+            function openPromoModal() {
+                document.getElementById('promoModal').classList.add('show');
+            }
+            
+            function closePromoModal() {
+                document.getElementById('promoModal').classList.remove('show');
+            }
+            
+            function savePromo() {
+                const code = document.getElementById('promoCode').value.trim().toUpperCase();
+                const discount = parseInt(document.getElementById('promoDiscount').value);
+                const minAmount = parseInt(document.getElementById('promoMinAmount').value) || 0;
+                
+                if (!code || isNaN(discount)) {
+                    showToast('Erreur', 'Code et réduction requis', 'error');
+                    return;
+                }
+                
+                let promos = Storage.get('promos', []);
+                if (promos.find(p => p.code === code)) {
+                    showToast('Erreur', 'Ce code existe déjà', 'error');
+                    return;
+                }
+                
+                promos.push({ code, discount, minAmount, usedCount: 0, maxUses: 100 });
+                Storage.set('promos', promos);
+                closePromoModal();
+                loadPromos();
+                showToast('Code promo ajouté', code, 'success');
+            }
+            
+            function deletePromo(code) {
+                if (!confirm(`Supprimer le code ${code} ?`)) return;
+                let promos = Storage.get('promos', []);
+                promos = promos.filter(p => p.code !== code);
+                Storage.set('promos', promos);
+                loadPromos();
+                showToast('Code promo supprimé', code, 'success');
+            }
+            
+            // ========== PARAMÈTRES ==========
+            function saveSettings() {
+                const deliveryFee = document.getElementById('deliveryFee').value;
+                const freeThreshold = document.getElementById('freeDeliveryThreshold').value;
+                const omNumber = document.getElementById('omNumber').value;
+                const mtnNumber = document.getElementById('mtnNumber').value;
+                
+                localStorage.setItem('salam_delivery_fee', deliveryFee);
+                localStorage.setItem('salam_free_delivery_threshold', freeThreshold);
+                localStorage.setItem('salam_om_merchant', omNumber);
+                localStorage.setItem('salam_mtn_merchant', mtnNumber);
+                
+                showToast('Paramètres sauvegardés', 'Configuration mise à jour', 'success');
+            }
+            
+            // ========== UTILITAIRES ==========
+            function showSection(section) {
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                document.getElementById(`section-${section}`).classList.add('active');
+                document.querySelector(`.nav-item[onclick="showSection('${section}')"]`).classList.add('active');
+                
+                if (section === 'dashboard') loadDashboard();
+                if (section === 'orders') loadOrders();
+                if (section === 'users') loadUsers();
+                if (section === 'products') loadProducts();
+                if (section === 'suppliers') loadSuppliers();
+                if (section === 'promos') loadPromos();
+                
+                closeSidebar();
+            }
+            
+            function refreshAll() {
+                loadDashboard();
+                loadOrders();
+                loadUsers();
+                loadProducts();
+                loadSuppliers();
+                loadPromos();
+                if (window.SalamSync) window.SalamSync.triggerGlobalRefresh('admin-manual');
+                showToast('Actualisé', 'Toutes les données ont été mises à jour', 'success');
+            }
+            
+            function exportReport() {
+                const data = {
+                    date: new Date().toISOString(),
+                    orders: Storage.get('orders', []),
+                    users: Storage.get('users', []),
+                    products: Storage.get('products', []),
+                    suppliers: Storage.get('suppliers', []),
+                    promos: Storage.get('promos', [])
+                };
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `salam_export_${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                showToast('Export réussi', 'Rapport téléchargé', 'success');
+            }
+            
+            function showToast(title, message, type = 'success', duration = 4000) {
+                const container = document.getElementById('toastContainer');
+                if (!container) return;
+                
+                const icons = { success: 'fa-circle-check', error: 'fa-circle-exclamation', info: 'fa-circle-info' };
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.innerHTML = `
+                    <i class="fa-solid ${icons[type] || icons.success} toast-icon"></i>
+                    <div class="toast-content">
+                        <div class="toast-title">${escapeHtml(title)}</div>
+                        <div class="toast-message">${escapeHtml(message)}</div>
+                    </div>
+                    <button class="toast-close" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></button>
+                `;
+                
+                container.appendChild(toast);
+                setTimeout(() => toast.classList.add('show'), 10);
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 500);
+                }, duration);
+            }
+            
+            function escapeHtml(str) {
+                if (!str) return '';
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+            
+            function openSidebar() {
+                document.getElementById('sidebar').classList.add('open');
+                document.getElementById('overlay').classList.add('show');
+            }
+            
+            function closeSidebar() {
+                document.getElementById('sidebar').classList.remove('open');
+                document.getElementById('overlay').classList.remove('show');
+            }
+            
+            function logout() {
+                localStorage.removeItem('salam_session');
+                localStorage.removeItem('salam_cart');
+                window.location.href = '../index.html';
+            }
+            
+            // Expose globals
+            window.showSection = showSection;
+            window.refreshAll = refreshAll;
+            window.exportReport = exportReport;
+            window.updateOrderStatus = updateOrderStatus;
+            window.deleteOrder = deleteOrder;
+            window.openUserModal = openUserModal;
+            window.closeUserModal = closeUserModal;
+            window.saveUser = saveUser;
+            window.editUser = editUser;
+            window.deleteUser = deleteUser;
+            window.openProductModal = openProductModal;
+            window.closeProductModal = closeProductModal;
+            window.saveProduct = saveProduct;
+            window.editProduct = editProduct;
+            window.deleteProduct = deleteProduct;
+            window.openSupplierModal = openSupplierModal;
+            window.closeSupplierModal = closeSupplierModal;
+            window.saveSupplier = saveSupplier;
+            window.editSupplier = editSupplier;
+            window.deleteSupplier = deleteSupplier;
+            window.openPromoModal = openPromoModal;
+            window.closePromoModal = closePromoModal;
+            window.savePromo = savePromo;
+            window.deletePromo = deletePromo;
+            window.saveSettings = saveSettings;
+            window.openSidebar = openSidebar;
+            window.closeSidebar = closeSidebar;
+            window.logout = logout;
+            
+            // Initialisation
+            init();
+        })();
+    </script>
+</body>
+</html>
