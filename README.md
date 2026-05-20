@@ -1,8 +1,8 @@
 
 ```markdown
-# ðŸ•Œ SALAM MARKET PRO â€” Plateforme de Commerce Digital Premium
+# 🕌 SALAM MARKET PRO — Plateforme de Commerce Digital Premium
 
-> *"Le marchÃ© digital nouvelle gÃ©nÃ©ration â€” Frais, Local, LivrÃ© Ã  domicile"*
+> *"Le marché digital nouvelle génération — Frais, Local, Livré à domicile"*
 
 ![Version](https://img.shields.io/badge/version-5.1.0-emerald?style=flat-square)
 ![Status](https://img.shields.io/badge/status-production-ready-brightgreen?style=flat-square)
@@ -12,9 +12,361 @@
 
 ---
 
-## ðŸ“± AperÃ§u
+## 📱 Aperçu
 
-**Salam Market PRO** est une plateforme de commerce digital ultra-premium conÃ§ue pour connecter clients, fournisseurs et administrateurs dans une expÃ©rience fluide et immersive. Avec un design digne des plus grandes places de marchÃ© mondiales, l'application offre une synchronisation en temps rÃ©el entre tous les onglets, un systÃ¨me de fidÃ©litÃ© avancÃ©, et une interface utilisateur d'exception.
+**Salam Market PRO** est une plateforme de commerce digital ultra-premium conçue pour connecter clients, fournisseurs et administrateurs dans une expérience fluide et immersive. Avec un design digne des plus grandes places de marché mondiales, l'application offre une synchronisation en temps réel entre tous les onglets, un système de fidélité avancé, et une interface utilisateur d'exception.
+
+<p align="center">
+  <img src="https://via.placeholder.com/800x400?text=Salam+Market+PRO+Preview" alt="Salam Market PRO Preview" width="800">
+</p>
+
+---
+
+## ✨ Fonctionnalités Principales
+
+### 👑 Espace Administrateur
+| Fonctionnalité | Description |
+|----------------|-------------|
+| 📊 **Dashboard analytique** | Graphiques en temps réel (Chart.js) |
+| 👥 **Gestion utilisateurs** | CRUD complet avec rôles (admin/supplier/client) |
+| 📦 **Gestion produits** | Catalogue, prix, stock, fournisseurs |
+| 📋 **Gestion commandes** | Suivi des statuts, historique complet |
+| 🏪 **Gestion fournisseurs** | Partenaires, catégories, statuts |
+| 🏷️ **Codes promotionnels** | Campagnes marketing personnalisées |
+| 📎 **Export de rapports** | Format JSON |
+| 🔄 **Synchronisation cross-tab** | Modifications instantanées sur tous les onglets |
+
+### 🛒 Espace Client
+| Fonctionnalité | Description |
+|----------------|-------------|
+| 📈 **Dashboard personnel** | Statistiques personnalisées |
+| 🛍️ **Catalogue produits** | Recherche vocale intégrée |
+| ⚖️ **Comparaison produits** | Jusqu'à 4 produits simultanément |
+| 🛒 **Panier dynamique** | Gestion des quantités, codes promo |
+| 💳 **Paiement sécurisé** | Orange Money, MTN Mobile Money, Carte |
+| 🗺️ **Suivi de commande** | Carte interactive avec vue satellite |
+| 💬 **Messagerie intégrée** | Chat temps réel |
+| ⭐ **Programme fidélité** | Points, niveaux, récompenses |
+| 📜 **Historique commandes** | Factures détaillées |
+
+### 🏪 Espace Fournisseur
+| Fonctionnalité | Description |
+|----------------|-------------|
+| 📊 **Tableau de bord** | Ventes, revenus, statistiques |
+| 📦 **Gestion produits** | CRUD complet |
+| 📉 **Gestion stocks** | Alertes stock bas |
+| 📋 **Commandes reçues** | Suivi et mise à jour statut |
+| 📈 **Analytique** | Ventes hebdomadaires/mensuelles |
+| 📎 **Export rapport** | Rapport de stock JSON |
+
+### 💬 Fonctionnalités Transversales
+- 🔄 **Synchronisation temps réel** entre tous les onglets
+- 📱 **Interface responsive** (mobile, tablette, desktop)
+- 🪟 **Design glassmorphisme** avec animations fluides
+- 🔔 **Toasts notifications** élégantes
+- 🌙 **Mode sombre** par défaut
+- 📲 **PWA-ready** (installable sur mobile)
+
+---
+
+## 🎨 Design System
+
+```css
+/* Couleurs principales */
+--emerald-400: #34D399    /* Actions, succès, accents */
+--violet-400: #A78BFA     /* Éléments secondaires */
+--amber-400: #FBBF24      /* Alertes, warnings */
+--rose-400: #FB7185       /* Erreurs, suppressions */
+
+/* Surfaces */
+--surface-deep: #05050A   /* Fond profond */
+--surface-card: rgba(15,15,30,0.75)  /* Cartes glassmorphiques */
+--glass-blur: 80px        /* Flou d'arrière-plan */
+
+/* Typographie */
+--font-display: 'Space Grotesk', sans-serif  /* Titres */
+--font-body: 'Inter', sans-serif             /* Corps */
+```
+
+| Élément | Valeur |
+|---------|--------|
+| **Arrondis** | 10px → 40px (progressifs) |
+| **Ombres** | Multi-niveaux avec glow |
+| **Animations** | spring, expo, bounce |
+| **Durées** | 200ms à 600ms |
+
+---
+
+## 📦 Technologies Utilisées
+
+| Technologie | Version | Usage |
+|-------------|---------|-------|
+| **HTML5** | - | Structure sémantique |
+| **CSS3** | - | Animations, Grid, Flexbox, Glassmorphisme |
+| **JavaScript (ES6+)** | - | Logique métier, synchronisation |
+| **Chart.js** | 4.4.0 | Graphiques analytiques |
+| **Leaflet.js** | 1.9.4 | Cartographie (vue satellite) |
+| **Font Awesome** | 6.5.1 | Iconographie premium |
+| **Google Fonts** | - | Typographie Space Grotesk + Inter |
+
+---
+
+## 🗂️ Structure du Projet
+
+```
+salam-market-pro/
+│
+├── index.html                    # Page d'authentification (design luxe)
+│
+├── js/
+│   └── global-sync.js            # Système de synchronisation cross-tab
+│
+├── pages/
+│   ├── admin.html                # Dashboard Administrateur
+│   ├── dashboard.html            # Dashboard Client
+│   ├── supplier.html             # Espace Fournisseur
+│   ├── products.html             # Catalogue produits
+│   ├── cart.html                 # Panier d'achat
+│   ├── checkout.html             # Paiement sécurisé
+│   ├── orders.html               # Gestion des commandes
+│   ├── tracking.html             # Suivi GPS temps réel
+│   ├── profile.html              # Profil utilisateur + fidélité
+│   ├── chat.html                 # Messagerie temps réel
+│   ├── receipt.html              # Reçu de commande
+│   ├── delivery.html             # Suivi livraisons
+│   ├── register.html             # Inscription (fallback)
+│   ├── settings.html             # Paramètres utilisateur
+│   └── offline.html              # Page hors-ligne
+│
+├── css/
+│   └── main.css                  # Styles globaux de base
+│
+├── images/
+│   └── salam.png                 # Logo (optionnel)
+│
+├── .gitignore
+├── LICENSE
+└── README.md                     # Ce fichier
+```
+
+---
+
+## 🔐 Comptes de Démonstration
+
+| Rôle | Email | Mot de passe | Accès |
+|------|-------|--------------|-------|
+| 👑 **Administrateur** | `admin@salam.cm` | `Admin2025!` | Gestion complète |
+| 🏪 **Fournisseur** | `toumai@salam.cm` | `Toumai2025!` | Gestion produits/stocks |
+| 🛒 **Client** | `client@salam.cm` | `Client2025!` | Achats, fidélité |
+| 👁️ **Visiteur** | (Navigation sans compte) | - | Consultation catalogue |
+
+---
+
+## 🚀 Installation et Démarrage
+
+### 1. Cloner le repository
+
+```bash
+git clone https://github.com/votre-username/salam-market-pro.git
+cd salam-market-pro
+```
+
+### 2. Lancer un serveur local
+
+```bash
+# Option 1 : Python
+python -m http.server 3000
+
+# Option 2 : Node.js (serve)
+npx serve .
+
+# Option 3 : VS Code Live Server
+# Cliquez droit sur index.html → Open with Live Server
+```
+
+### 3. Accéder à l'application
+
+- URL : `http://localhost:3000`
+- Utilisez les identifiants de démonstration ci-dessus
+
+---
+
+## 💡 Fonctionnalités Avancées
+
+### 🔄 Synchronisation Cross-Tab
+```javascript
+// Exemple d'utilisation
+window.SalamSync.onGlobalRefresh(() => {
+    console.log('Rafraîchissement global reçu');
+    loadMyData();
+}, 'ma-page');
+```
+
+### 🗺️ Vue Satellite
+- Bascule **vue satellite / vue rue** en un clic
+- Marqueurs animés avec effet "bounce"
+- Cercle de précision autour de la destination
+
+### 🎙️ Recherche Vocale
+```javascript
+// API Web Speech intégrée
+startVoiceSearch(); // Parlez pour rechercher un produit
+```
+
+### ⭐ Programme de Fidélité
+| Niveau | Points requis | Avantages |
+|--------|---------------|-----------|
+| 🥉 Bronze | 0 - 999 | -5% sur livraison |
+| 🥈 Argent | 1000 - 2499 | -10% sur livraison |
+| 🥇 Or | 2500 - 4999 | Livraison gratuite |
+| 💎 Platine | 5000+ | -15% sur tout |
+
+### 🎁 Récompenses disponibles
+| Récompense | Points | Description |
+|------------|--------|-------------|
+| 🚚 Livraison gratuite | 500 | Une livraison offerte |
+| 🏷️ Réduction 5% | 800 | Sur prochaine commande |
+| 🎁 Produit offert | 1200 | Riz 1kg offert |
+| 💎 Réduction 15% | 2000 | Sur toute la commande |
+
+---
+
+## 🧪 Compatibilité Navigateurs
+
+| Navigateur | Version | Statut |
+|------------|---------|--------|
+| Google Chrome | Dernière | ✅ ✅ ✅ |
+| Mozilla Firefox | Dernière | ✅ ✅ ✅ |
+| Apple Safari | Dernière | ✅ ✅ ✅ |
+| Microsoft Edge | Dernière | ✅ ✅ ✅ |
+| Opera | Dernière | ✅ ✅ ✅ |
+| Chrome Mobile | Dernière | ✅ ✅ ✅ |
+| Safari Mobile | Dernière | ✅ ✅ ✅ |
+
+---
+
+## 📱 PWA Installation
+
+L'application est installable sur mobile :
+
+1. **Android** : Ouvrez Chrome → Menu → "Installer l'application"
+2. **iOS** : Ouvrez Safari → Partager → "Sur l'écran d'accueil"
+3. **Desktop** : Chrome → Icône d'installation dans la barre d'adresse
+
+---
+
+## 🤝 Contribution
+
+Les contributions sont les bienvenues !
+
+```bash
+# 1. Fork le projet
+# 2. Créez votre branche
+git checkout -b feature/amazing-feature
+
+# 3. Committez vos changements
+git commit -m 'Add amazing feature'
+
+# 4. Pushez
+git push origin feature/amazing-feature
+
+# 5. Ouvrez une Pull Request
+```
+
+### Règles de contribution
+- Suivez le style de code existant
+- Testez sur plusieurs navigateurs
+- Documentez les nouvelles fonctionnalités
+- Respectez la structure du projet
+
+---
+
+## 📄 Licence
+
+Distribué sous licence MIT. Voir le fichier `LICENSE` pour plus d'informations.
+
+```
+MIT License
+
+Copyright (c) 2024 Salam Market PRO
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files...
+```
+
+---
+
+## 📞 Contact
+
+- **Email** : `contact@salamarket.cm`
+- **Téléphone** : `+237 6 88 282 662`
+- **Adresse** : Bini-Dang, Ngaoundéré, Cameroun
+- **Site web** : `https://salamarket.cm`
+
+---
+
+## 🙏 Remerciements
+
+- [Font Awesome](https://fontawesome.com/) - Icônes
+- [Google Fonts](https://fonts.google.com/) - Typographies
+- [Chart.js](https://www.chartjs.org/) - Graphiques
+- [Leaflet](https://leafletjs.com/) - Cartographie
+- [OpenStreetMap](https://www.openstreetmap.org/) - Données cartographiques
+- [Esri](https://www.esri.com/) - Tuiles satellites
+
+---
+
+## 📊 Statistiques du Projet
+
+```
+📁 Fichiers : 15+ pages
+📝 Lignes de code : 15,000+ (HTML/CSS/JS)
+🎨 Composants UI : 50+
+📦 Produits catalogue : 12+
+👥 Types d'utilisateurs : 4 (admin/supplier/client/visitor)
+🌍 Langues : FR (français)
+```
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] Application mobile native (React Native)
+- [ ] API REST backend (Node.js/Express)
+- [ ] Base de données PostgreSQL
+- [ ] Authentification JWT
+- [ ] Paiement Stripe intégré
+- [ ] Notifications push réelles
+- [ ] Application desktop (Electron)
+- [ ] Multilingue (anglais, arabe)
+
+---
+
+## ⭐ Support du Projet
+
+Si vous aimez ce projet, n'hésitez pas à :
+
+- ⭐ Mettre une étoile sur GitHub
+- 🍴 Forker le projet
+- 📢 Le partager autour de vous
+- 💰 Faire un don si vous le souhaitez
+
+---
+
+<p align="center">
+  <b>Made with ❤️ au Cameroun</b><br>
+  <sub>© 2024-2025 Salam Market PRO — Tous droits réservés</sub>
+</p>
+
+<p align="center">
+  <a href="https://github.com/votre-username/salam-market-pro">
+    <img src="https://img.shields.io/github/stars/votre-username/salam-market-pro?style=social" alt="GitHub stars">
+  </a>
+  <a href="https://github.com/votre-username/salam-market-pro/network/members">
+    <img src="https://img.shields.io/github/forks/votre-username/salam-market-pro?style=social" alt="GitHub forks">
+  </a>
+</p>
+```
 
 <p align="center">
   <img src="https://via.placeholder.com/800x400?text=Salam+Market+PRO+Preview" alt="Salam Market PRO Preview" width="800">
