@@ -1,0 +1,1355 @@
+<!-- pages/profile.html - Profil utilisateur avec points de fidélité -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0A0A14">
+    <meta name="description" content="Mon profil — Salam Market PRO">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <title>Salam Market PRO · Mon profil</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@400..700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        /* ============================================================
+           DESIGN SYSTEM — Version unifiée
+           ============================================================ */
+        
+        :root {
+            --emerald-400: #34D399;
+            --emerald-500: #10B981;
+            --emerald-600: #059669;
+            --violet-400: #A78BFA;
+            --violet-500: #8B5CF6;
+            --amber-400: #FBBF24;
+            --amber-500: #F59E0B;
+            --blue-400: #60A5FA;
+            --blue-500: #3B82F6;
+            --rose-400: #FB7185;
+            --rose-500: #F43F5E;
+            --gold: #F59E0B;
+            --platinum: #94A3B8;
+            --diamond: #60A5FA;
+            
+            --surface-primary: #0A0A14;
+            --surface-card: rgba(15, 15, 30, 0.85);
+            --surface-card-solid: #0F0F1E;
+            --surface-input: rgba(10, 10, 20, 0.7);
+            --surface-hover: rgba(255, 255, 255, 0.03);
+            
+            --border-subtle: rgba(255, 255, 255, 0.04);
+            --border-default: rgba(255, 255, 255, 0.08);
+            --border-strong: rgba(255, 255, 255, 0.12);
+            --border-accent: rgba(16, 185, 129, 0.25);
+            
+            --text-primary: #F1F5F9;
+            --text-secondary: #CBD5E1;
+            --text-muted: #94A3B8;
+            --text-faint: #64748B;
+            
+            --font-display: 'Space Grotesk', system-ui, sans-serif;
+            --font-body: 'Inter', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --radius-sm: 10px;
+            --radius-md: 14px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+            
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+            
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration-fast: 200ms;
+            --duration-base: 400ms;
+            
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --space-10: 40px;
+            --space-12: 48px;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--surface-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* Background */
+        .bg-decoration {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .bg-gradient-1 {
+            position: absolute;
+            width: 150%;
+            height: 100%;
+            background: radial-gradient(ellipse 80% 60% at 10% -20%, rgba(16, 185, 129, 0.06) 0%, transparent 50%);
+        }
+        
+        /* Layout */
+        .app-layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(10, 10, 20, 0.95);
+            backdrop-filter: blur(40px);
+            border-right: 1px solid var(--border-default);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            padding: var(--space-6) var(--space-4);
+            transition: transform var(--duration-base) var(--ease-out-expo);
+        }
+        
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding-bottom: var(--space-6);
+            margin-bottom: var(--space-4);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        .sidebar-logo {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--emerald-600), var(--emerald-500));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+        
+        .sidebar-brand h2 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; }
+        .sidebar-brand p { font-size: 0.65rem; color: var(--emerald-400); }
+        
+        .sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: var(--space-1); }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-md);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all var(--duration-fast);
+        }
+        
+        .nav-item:hover { background: var(--surface-hover); color: var(--text-secondary); transform: translateX(4px); }
+        .nav-item.active { background: rgba(16, 185, 129, 0.08); color: var(--emerald-400); border-left: 2px solid var(--emerald-500); }
+        .nav-item i { width: 22px; }
+        
+        .sidebar-footer { margin-top: auto; padding-top: var(--space-6); border-top: 1px solid var(--border-subtle); }
+        
+        .btn-logout {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-md);
+            background: transparent;
+            border: 1px solid var(--border-default);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all var(--duration-fast);
+        }
+        
+        .btn-logout:hover { background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.3); color: var(--rose-500); }
+        
+        /* Mobile header */
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(10, 10, 20, 0.95);
+            backdrop-filter: blur(40px);
+            border-bottom: 1px solid var(--border-default);
+            z-index: 99;
+            align-items: center;
+            padding: 0 var(--space-4);
+            gap: var(--space-3);
+        }
+        
+        .menu-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .mobile-logo { font-family: var(--font-display); font-weight: 700; font-size: 1rem; }
+        .mobile-logo span { color: var(--emerald-400); }
+        
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 98;
+        }
+        
+        .overlay.show { display: block; }
+        
+        /* Main content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: var(--space-6);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .profile-container { max-width: 1000px; margin: 0 auto; }
+        
+        /* Profile header */
+        .profile-header {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(139, 92, 246, 0.04));
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            text-align: center;
+            margin-bottom: var(--space-6);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .profile-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--emerald-600), var(--violet-500));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto var(--space-4);
+            border: 3px solid var(--border-accent);
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
+        }
+        
+        .profile-name {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: var(--space-1);
+        }
+        
+        .profile-email {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: var(--space-4);
+        }
+        
+        .profile-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-1) var(--space-3);
+            background: rgba(16, 185, 129, 0.12);
+            border-radius: var(--radius-full);
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--emerald-400);
+        }
+        
+        /* Tabs */
+        .profile-tabs {
+            display: flex;
+            gap: var(--space-1);
+            background: var(--surface-card);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: var(--space-1);
+            margin-bottom: var(--space-6);
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: var(--space-3) var(--space-4);
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-md);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--duration-fast);
+            font-family: inherit;
+        }
+        
+        .tab-btn:hover {
+            color: var(--text-secondary);
+            background: var(--surface-hover);
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--emerald-600), var(--emerald-500));
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        
+        /* Tab content */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s var(--ease-out-expo);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Cards */
+        .card {
+            background: var(--surface-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            margin-bottom: var(--space-6);
+        }
+        
+        .card-header {
+            padding: var(--space-5) var(--space-6);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-3);
+        }
+        
+        .card-header h3 {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .card-header h3 i {
+            color: var(--emerald-400);
+        }
+        
+        .card-body {
+            padding: var(--space-6);
+        }
+        
+        /* Form */
+        .form-group {
+            margin-bottom: var(--space-5);
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: var(--space-2);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            background: var(--surface-input);
+            border: 1.5px solid var(--border-default);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: inherit;
+            outline: none;
+            transition: all var(--duration-fast);
+        }
+        
+        .form-input:focus, .form-select:focus {
+            border-color: var(--border-accent);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.08);
+        }
+        
+        .form-input:read-only {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-4);
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all var(--duration-fast);
+            border: none;
+            font-family: inherit;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--emerald-600), var(--emerald-500));
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-default);
+            color: var(--text-secondary);
+        }
+        
+        .btn-outline:hover {
+            border-color: var(--emerald-400);
+            color: var(--emerald-400);
+        }
+        
+        .btn-danger {
+            background: transparent;
+            border: 1px solid var(--border-default);
+            color: var(--rose-400);
+        }
+        
+        .btn-danger:hover {
+            background: rgba(244, 63, 94, 0.08);
+            border-color: var(--rose-500);
+        }
+        
+        /* Loyalty card */
+        .loyalty-card {
+            background: linear-gradient(135deg, #1a1a2e, #0f3460, #16213e);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            color: white;
+            text-align: center;
+            margin-bottom: var(--space-6);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .loyalty-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+        }
+        
+        .loyalty-level {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: var(--space-2);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .loyalty-points {
+            font-size: 3rem;
+            font-weight: 800;
+            font-family: var(--font-display);
+            margin-bottom: var(--space-2);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .loyalty-next {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            margin-top: var(--space-3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            margin-top: var(--space-4);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--emerald-500), var(--violet-500));
+            border-radius: var(--radius-full);
+            transition: width 0.5s var(--ease-out-expo);
+        }
+        
+        /* Rewards grid */
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .reward-card {
+            background: var(--surface-input);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+            transition: all var(--duration-fast);
+        }
+        
+        .reward-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-accent);
+        }
+        
+        .reward-icon {
+            font-size: 2rem;
+            margin-bottom: var(--space-3);
+        }
+        
+        .reward-name {
+            font-weight: 700;
+            margin-bottom: var(--space-1);
+        }
+        
+        .reward-points {
+            font-size: 0.8rem;
+            color: var(--emerald-400);
+            font-weight: 700;
+            margin-bottom: var(--space-3);
+        }
+        
+        .reward-btn {
+            width: 100%;
+            padding: var(--space-2);
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--border-accent);
+            border-radius: var(--radius-md);
+            color: var(--emerald-400);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--duration-fast);
+        }
+        
+        .reward-btn:hover:not(:disabled) {
+            background: var(--emerald-500);
+            color: white;
+        }
+        
+        .reward-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* History list */
+        .history-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-4);
+            border-bottom: 1px solid var(--border-subtle);
+            flex-wrap: wrap;
+            gap: var(--space-2);
+        }
+        
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        
+        .history-type {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .history-type.earn { color: var(--emerald-400); }
+        .history-type.spend { color: var(--amber-400); }
+        
+        .history-points {
+            font-weight: 700;
+        }
+        
+        .history-date {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        
+        /* Settings toggle */
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-4) 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        .setting-row:last-child {
+            border-bottom: none;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            display: inline-block;
+        }
+        
+        .toggle-switch input {
+            display: none;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 26px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: white;
+            top: 2px;
+            left: 2px;
+            transition: 0.3s;
+        }
+        
+        .toggle-switch input:checked + .toggle-slider {
+            background: var(--emerald-500);
+        }
+        
+        .toggle-switch input:checked + .toggle-slider::before {
+            transform: translateX(24px);
+        }
+        
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: var(--space-5);
+            right: var(--space-5);
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+        
+        .toast {
+            background: var(--surface-card-solid);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            padding: var(--space-4) var(--space-5);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            min-width: 280px;
+            transform: translateX(120%);
+            opacity: 0;
+            transition: all 0.5s var(--ease-out-expo);
+        }
+        
+        .toast.show { transform: translateX(0); opacity: 1; }
+        .toast.success { border-left: 3px solid var(--emerald-500); }
+        .toast.error { border-left: 3px solid var(--rose-500); }
+        .toast.success .toast-icon { color: var(--emerald-400); }
+        .toast.error .toast-icon { color: var(--rose-500); }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .mobile-header { display: flex; }
+            .main-content { margin-left: 0; padding-top: 76px; }
+            .form-row { grid-template-columns: 1fr; }
+            .profile-tabs { flex-direction: column; }
+            .rewards-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-decoration" aria-hidden="true">
+        <div class="bg-gradient-1"></div>
+    </div>
+    
+    <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+    
+    <header class="mobile-header">
+        <button class="menu-btn" onclick="openSidebar()"><i class="fa-solid fa-bars"></i></button>
+        <span class="mobile-logo">Salam <span>Market</span></span>
+    </header>
+    
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo"><i class="fa-solid fa-store"></i></div>
+            <div class="sidebar-brand">
+                <h2>Salam Market</h2>
+                <p>PRO v5.0</p>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-chart-line"></i> Tableau de Bord</a>
+            <a href="products.html" class="nav-item"><i class="fa-solid fa-basket-shopping"></i> Catalogue</a>
+            <a href="cart.html" class="nav-item"><i class="fa-solid fa-cart-shopping"></i> Panier</a>
+            <a href="orders.html" class="nav-item"><i class="fa-solid fa-box"></i> Commandes</a>
+            <a href="tracking.html" class="nav-item"><i class="fa-solid fa-map-location-dot"></i> Suivi Live</a>
+            <a href="chat.html" class="nav-item"><i class="fa-solid fa-comments"></i> Chat</a>
+            <a href="profile.html" class="nav-item active"><i class="fa-solid fa-user"></i> Profil</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</button>
+        </div>
+    </aside>
+    
+    <main class="main-content">
+        <div class="profile-container">
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar">🛒</div>
+                <h1 class="profile-name" id="profileName">Client</h1>
+                <div class="profile-email" id="profileEmail">client@salam.cm</div>
+                <div class="profile-badge" id="profileBadge">
+                    <i class="fa-solid fa-crown"></i> Membre
+                </div>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="profile-tabs">
+                <button class="tab-btn active" data-tab="info">Informations</button>
+                <button class="tab-btn" data-tab="loyalty">Fidélité</button>
+                <button class="tab-btn" data-tab="rewards">Récompenses</button>
+                <button class="tab-btn" data-tab="history">Historique</button>
+                <button class="tab-btn" data-tab="settings">Préférences</button>
+            </div>
+            
+            <!-- Tab: Informations -->
+            <div class="tab-content active" id="tab-info">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-user-pen"></i> Informations personnelles</h3>
+                        <button class="btn-outline btn" id="editInfoBtn" onclick="toggleEditMode()">
+                            <i class="fa-solid fa-pen"></i> Modifier
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <form id="profileForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Nom complet</label>
+                                    <input type="text" class="form-input" id="fullName" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Rôle</label>
+                                    <input type="text" class="form-input" id="userRole" readonly>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-input" id="email" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Téléphone</label>
+                                    <input type="tel" class="form-input" id="phone" readonly>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Adresse</label>
+                                    <input type="text" class="form-input" id="address" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Ville</label>
+                                    <input type="text" class="form-input" id="city" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Membre depuis</label>
+                                <input type="text" class="form-input" id="memberSince" readonly>
+                            </div>
+                            <div class="form-group" id="saveGroup" style="display: none;">
+                                <button type="button" class="btn-primary btn" onclick="saveProfile()">
+                                    <i class="fa-solid fa-check"></i> Enregistrer les modifications
+                                </button>
+                                <button type="button" class="btn-outline btn" onclick="cancelEdit()">
+                                    <i class="fa-solid fa-xmark"></i> Annuler
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-lock"></i> Sécurité</h3>
+                    </div>
+                    <div class="card-body">
+                        <button class="btn-outline btn" onclick="changePassword()">
+                            <i class="fa-solid fa-key"></i> Changer le mot de passe
+                        </button>
+                        <button class="btn-danger btn" style="margin-left: var(--space-3);" onclick="deleteAccount()">
+                            <i class="fa-solid fa-trash-can"></i> Supprimer mon compte
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab: Fidélité -->
+            <div class="tab-content" id="tab-loyalty">
+                <div class="loyalty-card">
+                    <div class="loyalty-level" id="loyaltyLevel">NIVEAU BRONZE</div>
+                    <div class="loyalty-points" id="loyaltyPoints">0</div>
+                    <div>points</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="loyaltyProgress" style="width: 0%;"></div>
+                    </div>
+                    <div class="loyalty-next" id="loyaltyNext">Encore 500 points pour passer au niveau Argent</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-chart-line"></i> Avantages par niveau</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4);">
+                            <div style="text-align: center; padding: var(--space-3); background: var(--surface-input); border-radius: var(--radius-md);">
+                                <div style="font-size: 1.5rem;">🥉</div>
+                                <div style="font-weight: 700;">Bronze</div>
+                                <div style="font-size: 0.7rem; color: var(--text-muted);">0-999 pts</div>
+                                <div style="font-size: 0.7rem; margin-top: var(--space-2);">-5% sur la livraison</div>
+                            </div>
+                            <div style="text-align: center; padding: var(--space-3); background: var(--surface-input); border-radius: var(--radius-md);">
+                                <div style="font-size: 1.5rem;">🥈</div>
+                                <div style="font-weight: 700;">Argent</div>
+                                <div style="font-size: 0.7rem; color: var(--text-muted);">1000-2499 pts</div>
+                                <div style="font-size: 0.7rem; margin-top: var(--space-2);">-10% sur la livraison</div>
+                            </div>
+                            <div style="text-align: center; padding: var(--space-3); background: var(--surface-input); border-radius: var(--radius-md);">
+                                <div style="font-size: 1.5rem;">🥇</div>
+                                <div style="font-weight: 700;">Or</div>
+                                <div style="font-size: 0.7rem; color: var(--text-muted);">2500-4999 pts</div>
+                                <div style="font-size: 0.7rem; margin-top: var(--space-2);">Livraison gratuite</div>
+                            </div>
+                            <div style="text-align: center; padding: var(--space-3); background: var(--surface-input); border-radius: var(--radius-md);">
+                                <div style="font-size: 1.5rem;">💎</div>
+                                <div style="font-weight: 700;">Platine</div>
+                                <div style="font-size: 0.7rem; color: var(--text-muted);">5000+ pts</div>
+                                <div style="font-size: 0.7rem; margin-top: var(--space-2);">-15% sur tout</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab: Récompenses -->
+            <div class="tab-content" id="tab-rewards">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-gift"></i> Récompenses disponibles</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="rewards-grid" id="rewardsGrid"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab: Historique -->
+            <div class="tab-content" id="tab-history">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-clock-rotate-left"></i> Historique des points</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="history-list" id="historyList"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab: Préférences -->
+            <div class="tab-content" id="tab-settings">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-bell"></i> Notifications</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="setting-row">
+                            <div>
+                                <strong>Notifications push</strong>
+                                <p style="font-size: 0.7rem; color: var(--text-muted);">Alertes de commande et livraison</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="notifPush" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-row">
+                            <div>
+                                <strong>Notifications email</strong>
+                                <p style="font-size: 0.7rem; color: var(--text-muted);">Promotions et offres spéciales</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="notifEmail" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-row">
+                            <div>
+                                <strong>Mode sombre</strong>
+                                <p style="font-size: 0.7rem; color: var(--text-muted);">Thème sombre (défaut)</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="darkMode" checked disabled>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <script>
+        // ============================================================
+        // PROFIL UTILISATEUR — Points de fidélité et récompenses
+        // ============================================================
+        
+        (() => {
+            'use strict';
+            
+            // Vérification session
+            const session = JSON.parse(localStorage.getItem('salam_session') || 'null');
+            if (!session) {
+                window.location.href = '../index.html';
+                return;
+            }
+            
+            // Variables
+            let userData = null;
+            let loyaltyData = null;
+            let isEditing = false;
+            
+            // Niveaux de fidélité
+            const LOYALTY_LEVELS = [
+                { name: 'Bronze', min: 0, icon: '🥉', benefits: '-5% sur la livraison', discount: 0.05 },
+                { name: 'Argent', min: 1000, icon: '🥈', benefits: '-10% sur la livraison', discount: 0.10 },
+                { name: 'Or', min: 2500, icon: '🥇', benefits: 'Livraison gratuite', discount: 0.15 },
+                { name: 'Platine', min: 5000, icon: '💎', benefits: '-15% sur tout', discount: 0.15 }
+            ];
+            
+            // Récompenses disponibles
+            const REWARDS = [
+                { id: 1, name: 'Livraison gratuite', points: 500, icon: '🚚', description: 'Une livraison offerte' },
+                { id: 2, name: 'Réduction 5%', points: 800, icon: '🏷️', description: 'Sur votre prochaine commande' },
+                { id: 3, name: 'Produit offert', points: 1200, icon: '🎁', description: 'Riz 1kg offert' },
+                { id: 4, name: 'Réduction 15%', points: 2000, icon: '💎', description: 'Sur toute la commande' }
+            ];
+            
+            // Storage
+            const Storage = {
+                get: (key, defaultVal = null) => {
+                    try { return JSON.parse(localStorage.getItem('salam_' + key) || 'null') || defaultVal; }
+                    catch { return defaultVal; }
+                },
+                set: (key, value) => localStorage.setItem('salam_' + key, JSON.stringify(value))
+            };
+            
+            // ========== CHARGEMENT DES DONNÉES ==========
+            function loadUserData() {
+                const users = Storage.get('users', []);
+                userData = users.find(u => u.id === session.user.id) || session.user;
+                
+                document.getElementById('fullName').value = userData.name || '';
+                document.getElementById('email').value = userData.email || '';
+                document.getElementById('phone').value = userData.phone || '';
+                document.getElementById('address').value = userData.address || '';
+                document.getElementById('city').value = userData.city || 'Ngaoundéré';
+                document.getElementById('userRole').value = userData.role === 'admin' ? 'Administrateur' : (userData.role === 'supplier' ? 'Fournisseur' : 'Client');
+                document.getElementById('memberSince').value = userData.createdAt ? new Date(userData.createdAt).toLocaleDateString('fr-FR') : 'Janvier 2025';
+                
+                document.getElementById('profileName').textContent = userData.name;
+                document.getElementById('profileEmail').textContent = userData.email || userData.phone;
+                document.getElementById('profileAvatar').textContent = userData.role === 'admin' ? '👑' : (userData.role === 'supplier' ? '🏪' : '🛒');
+                
+                const badgeEl = document.getElementById('profileBadge');
+                if (userData.role === 'admin') {
+                    badgeEl.innerHTML = '<i class="fa-solid fa-shield-haltered"></i> Super Admin';
+                } else if (userData.role === 'supplier') {
+                    badgeEl.innerHTML = '<i class="fa-solid fa-store"></i> Fournisseur Partenaire';
+                } else {
+                    badgeEl.innerHTML = '<i class="fa-solid fa-crown"></i> Client VIP';
+                }
+            }
+            
+            function loadLoyaltyData() {
+                loyaltyData = Storage.get('loyalty', {});
+                const userLoyalty = loyaltyData[session.user.id] || { points: 0, history: [] };
+                const points = userLoyalty.points;
+                
+                // Déterminer niveau
+                let currentLevel = LOYALTY_LEVELS[0];
+                let nextLevel = LOYALTY_LEVELS[1];
+                for (let i = LOYALTY_LEVELS.length - 1; i >= 0; i--) {
+                    if (points >= LOYALTY_LEVELS[i].min) {
+                        currentLevel = LOYALTY_LEVELS[i];
+                        nextLevel = LOYALTY_LEVELS[i + 1] || null;
+                        break;
+                    }
+                }
+                
+                document.getElementById('loyaltyPoints').textContent = points.toLocaleString();
+                document.getElementById('loyaltyLevel').innerHTML = `${currentLevel.icon} ${currentLevel.name.toUpperCase()}`;
+                
+                if (nextLevel) {
+                    const nextPoints = nextLevel.min - points;
+                    const progress = (points / nextLevel.min) * 100;
+                    document.getElementById('loyaltyProgress').style.width = Math.min(100, progress) + '%';
+                    document.getElementById('loyaltyNext').textContent = `Encore ${nextPoints.toLocaleString()} points pour passer au niveau ${nextLevel.icon} ${nextLevel.name}`;
+                } else {
+                    document.getElementById('loyaltyProgress').style.width = '100%';
+                    document.getElementById('loyaltyNext').textContent = '🏆 Niveau maximum atteint !';
+                }
+                
+                // Historique
+                const historyList = document.getElementById('historyList');
+                const history = userLoyalty.history || [];
+                
+                if (history.length === 0) {
+                    historyList.innerHTML = '<div style="text-align: center; padding: var(--space-6); color: var(--text-muted);">Aucun historique de points</div>';
+                } else {
+                    historyList.innerHTML = history.reverse().map(h => `
+                        <div class="history-item">
+                            <div class="history-type ${h.type}">
+                                <i class="fa-solid ${h.type === 'earn' ? 'fa-plus-circle' : 'fa-minus-circle'}"></i>
+                                <span>${h.type === 'earn' ? 'Gagnés' : 'Utilisés'}</span>
+                            </div>
+                            <div class="history-points ${h.type === 'earn' ? 'earn' : 'spend'}">
+                                ${h.type === 'earn' ? '+' : '-'} ${h.points.toLocaleString()} pts
+                            </div>
+                            <div class="history-reason">${h.reason || ''}</div>
+                            <div class="history-date">${new Date(h.date).toLocaleDateString('fr-FR')}</div>
+                        </div>
+                    `).join('');
+                }
+            }
+            
+            function loadRewards() {
+                const userLoyalty = loyaltyData[session.user.id] || { points: 0 };
+                const points = userLoyalty.points;
+                const redeemed = userLoyalty.redeemed || [];
+                
+                const rewardsGrid = document.getElementById('rewardsGrid');
+                rewardsGrid.innerHTML = REWARDS.map(r => `
+                    <div class="reward-card">
+                        <div class="reward-icon">${r.icon}</div>
+                        <div class="reward-name">${r.name}</div>
+                        <div class="reward-points">${r.points.toLocaleString()} points</div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: var(--space-3);">${r.description}</div>
+                        <button class="reward-btn" onclick="redeemReward(${r.id}, ${r.points}, '${r.name}')" ${points < r.points ? 'disabled' : ''}>
+                            ${points >= r.points ? 'Échanger' : 'Points insuffisants'}
+                        </button>
+                    </div>
+                `).join('');
+            }
+            
+            // ========== ACTIONS PROFIL ==========
+            function toggleEditMode() {
+                isEditing = true;
+                const inputs = ['fullName', 'email', 'phone', 'address', 'city'];
+                inputs.forEach(id => {
+                    document.getElementById(id).readOnly = false;
+                    document.getElementById(id).style.background = 'rgba(16, 185, 129, 0.05)';
+                });
+                document.getElementById('editInfoBtn').style.display = 'none';
+                document.getElementById('saveGroup').style.display = 'flex';
+            }
+            
+            function saveProfile() {
+                const updatedData = {
+                    id: userData.id,
+                    name: document.getElementById('fullName').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    phone: document.getElementById('phone').value.trim(),
+                    address: document.getElementById('address').value.trim(),
+                    city: document.getElementById('city').value.trim()
+                };
+                
+                if (!updatedData.name) {
+                    showToast('Erreur', 'Le nom est requis', 'error');
+                    return;
+                }
+                
+                // Mettre à jour dans users
+                const users = Storage.get('users', []);
+                const index = users.findIndex(u => u.id === userData.id);
+                if (index !== -1) {
+                    users[index] = { ...users[index], ...updatedData };
+                    Storage.set('users', users);
+                }
+                
+                // Mettre à jour la session
+                const session = Storage.get('session');
+                if (session && session.user) {
+                    session.user.name = updatedData.name;
+                    session.user.email = updatedData.email;
+                    session.user.phone = updatedData.phone;
+                    Storage.set('session', session);
+                }
+                
+                // Réinitialiser l'interface
+                isEditing = false;
+                const inputs = ['fullName', 'email', 'phone', 'address', 'city'];
+                inputs.forEach(id => {
+                    document.getElementById(id).readOnly = true;
+                    document.getElementById(id).style.background = '';
+                });
+                document.getElementById('editInfoBtn').style.display = 'inline-flex';
+                document.getElementById('saveGroup').style.display = 'none';
+                
+                // Recharger les données
+                loadUserData();
+                showToast('Profil mis à jour', 'Vos informations ont été enregistrées', 'success');
+            }
+            
+            function cancelEdit() {
+                isEditing = false;
+                loadUserData(); // Recharge les valeurs originales
+                const inputs = ['fullName', 'email', 'phone', 'address', 'city'];
+                inputs.forEach(id => {
+                    document.getElementById(id).readOnly = true;
+                    document.getElementById(id).style.background = '';
+                });
+                document.getElementById('editInfoBtn').style.display = 'inline-flex';
+                document.getElementById('saveGroup').style.display = 'none';
+            }
+            
+            function changePassword() {
+                const newPassword = prompt('Nouveau mot de passe (minimum 6 caractères) :');
+                if (!newPassword) return;
+                if (newPassword.length < 6) {
+                    showToast('Erreur', 'Le mot de passe doit contenir au moins 6 caractères', 'error');
+                    return;
+                }
+                
+                // Simple hash pour simulation
+                const hashed = btoa(newPassword + 'salam_salt_2026');
+                const users = Storage.get('users', []);
+                const index = users.findIndex(u => u.id === userData.id);
+                if (index !== -1) {
+                    users[index].password = hashed;
+                    Storage.set('users', users);
+                    showToast('Mot de passe changé', 'Votre mot de passe a été mis à jour', 'success');
+                }
+            }
+            
+            function deleteAccount() {
+                if (!confirm('⚠️ Attention : La suppression de votre compte est irréversible. Vos données seront définitivement effacées. Confirmez-vous ?')) return;
+                
+                const users = Storage.get('users', []);
+                const filteredUsers = users.filter(u => u.id !== userData.id);
+                Storage.set('users', filteredUsers);
+                
+                localStorage.removeItem('salam_session');
+                localStorage.removeItem('salam_cart');
+                
+                showToast('Compte supprimé', 'Nous sommes désolés de vous voir partir', 'success');
+                setTimeout(() => window.location.href = '../index.html', 1500);
+            }
+            
+            // ========== RÉCOMPENSES ==========
+            function redeemReward(rewardId, points, name) {
+                if (!confirm(`Échanger ${points} points contre "${name}" ?`)) return;
+                
+                let userLoyalty = loyaltyData[session.user.id] || { points: 0, history: [], redeemed: [] };
+                
+                if (userLoyalty.points < points) {
+                    showToast('Points insuffisants', 'Vous n\'avez pas assez de points', 'error');
+                    return;
+                }
+                
+                userLoyalty.points -= points;
+                userLoyalty.history = userLoyalty.history || [];
+                userLoyalty.history.push({
+                    type: 'spend',
+                    points: points,
+                    reason: `Échange: ${name}`,
+                    date: new Date().toISOString()
+                });
+                userLoyalty.redeemed = userLoyalty.redeemed || [];
+                userLoyalty.redeemed.push({
+                    rewardId: rewardId,
+                    name: name,
+                    points: points,
+                    date: new Date().toISOString()
+                });
+                
+                loyaltyData[session.user.id] = userLoyalty;
+                Storage.set('loyalty', loyaltyData);
+                
+                loadLoyaltyData();
+                loadRewards();
+                showToast('Récompense échangée !', `Vous avez reçu : ${name}`, 'success');
+            }
+            
+            // ========== ONGLETS ==========
+            function initTabs() {
+                const tabs = document.querySelectorAll('.tab-btn');
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        const tabId = tab.dataset.tab;
+                        tabs.forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+                        
+                        document.querySelectorAll('.tab-content').forEach(content => {
+                            content.classList.remove('active');
+                        });
+                        document.getElementById(`tab-${tabId}`).classList.add('active');
+                        
+                        // Recharger les données si nécessaire
+                        if (tabId === 'loyalty') loadLoyaltyData();
+                        if (tabId === 'rewards') loadRewards();
+                        if (tabId === 'history') loadLoyaltyData();
+                    });
+                });
+            }
+            
+            // ========== UTILITAIRES ==========
+            function showToast(title, message, type = 'success') {
+                const container = document.getElementById('toastContainer');
+                if (!container) return;
+                
+                const icons = { success: 'fa-circle-check', error: 'fa-circle-exclamation' };
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.innerHTML = `
+                    <i class="fa-solid ${icons[type] || icons.success} toast-icon"></i>
+                    <div class="toast-content">
+                        <div class="toast-title">${escapeHtml(title)}</div>
+                        <div class="toast-message">${escapeHtml(message)}</div>
+                    </div>
+                    <button class="toast-close" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></button>
+                `;
+                
+                container.appendChild(toast);
+                setTimeout(() => toast.classList.add('show'), 10);
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 500);
+                }, 4000);
+            }
+            
+            function escapeHtml(str) {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+            
+            function openSidebar() {
+                document.getElementById('sidebar').classList.add('open');
+                document.getElementById('overlay').classList.add('show');
+            }
+            
+            function closeSidebar() {
+                document.getElementById('sidebar').classList.remove('open');
+                document.getElementById('overlay').classList.remove('show');
+            }
+            
+            function logout() {
+                localStorage.removeItem('salam_session');
+                localStorage.removeItem('salam_cart');
+                window.location.href = '../index.html';
+            }
+            
+            // Initialisation
+            loadUserData();
+            loadLoyaltyData();
+            initTabs();
+            
+            // Expose globals
+            window.toggleEditMode = toggleEditMode;
+            window.saveProfile = saveProfile;
+            window.cancelEdit = cancelEdit;
+            window.changePassword = changePassword;
+            window.deleteAccount = deleteAccount;
+            window.redeemReward = redeemReward;
+            window.openSidebar = openSidebar;
+            window.closeSidebar = closeSidebar;
+            window.logout = logout;
+        })();
+    </script>
+</body>
+</html>
