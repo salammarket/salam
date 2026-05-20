@@ -1,0 +1,1637 @@
+<!-- pages/supplier.html - Espace Fournisseur complet -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0A0A14">
+    <meta name="description" content="Espace Fournisseur — Salam Market PRO">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <title>Salam Market PRO · Espace Fournisseur</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@400..700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <style>
+        /* ============================================================
+           DESIGN SYSTEM — Version unifiée
+           ============================================================ */
+        
+        :root {
+            --emerald-400: #34D399;
+            --emerald-500: #10B981;
+            --emerald-600: #059669;
+            --violet-400: #A78BFA;
+            --violet-500: #8B5CF6;
+            --amber-400: #FBBF24;
+            --amber-500: #F59E0B;
+            --blue-400: #60A5FA;
+            --blue-500: #3B82F6;
+            --rose-400: #FB7185;
+            --rose-500: #F43F5E;
+            --orange-500: #FF6600;
+            
+            --surface-primary: #0A0A14;
+            --surface-card: rgba(15, 15, 30, 0.85);
+            --surface-card-solid: #0F0F1E;
+            --surface-input: rgba(10, 10, 20, 0.7);
+            --surface-hover: rgba(255, 255, 255, 0.03);
+            
+            --border-subtle: rgba(255, 255, 255, 0.04);
+            --border-default: rgba(255, 255, 255, 0.08);
+            --border-strong: rgba(255, 255, 255, 0.12);
+            --border-accent: rgba(16, 185, 129, 0.25);
+            
+            --text-primary: #F1F5F9;
+            --text-secondary: #CBD5E1;
+            --text-muted: #94A3B8;
+            --text-faint: #64748B;
+            
+            --font-display: 'Space Grotesk', system-ui, sans-serif;
+            --font-body: 'Inter', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --radius-sm: 10px;
+            --radius-md: 14px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+            
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+            
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration-fast: 200ms;
+            --duration-base: 400ms;
+            
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --space-10: 40px;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--surface-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* Background */
+        .bg-decoration {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .bg-gradient-1 {
+            position: absolute;
+            width: 150%;
+            height: 100%;
+            background: radial-gradient(ellipse 80% 60% at 10% -20%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+        }
+        
+        /* Layout */
+        .app-layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(10, 10, 20, 0.95);
+            backdrop-filter: blur(40px);
+            border-right: 1px solid var(--border-default);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            padding: var(--space-6) var(--space-4);
+            transition: transform var(--duration-base) var(--ease-out-expo);
+        }
+        
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding-bottom: var(--space-6);
+            margin-bottom: var(--space-4);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        .sidebar-logo {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--violet-500), var(--emerald-500));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+        
+        .sidebar-brand h2 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; }
+        .sidebar-brand p { font-size: 0.65rem; color: var(--violet-400); }
+        
+        .sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: var(--space-1); }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-md);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all var(--duration-fast);
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+        }
+        
+        .nav-item:hover { background: var(--surface-hover); color: var(--text-secondary); transform: translateX(4px); }
+        .nav-item.active { background: rgba(139, 92, 246, 0.08); color: var(--violet-400); border-left: 2px solid var(--violet-500); }
+        .nav-item i { width: 22px; }
+        
+        .nav-badge {
+            margin-left: auto;
+            background: var(--orange-500);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            font-weight: 700;
+        }
+        
+        .sidebar-footer { margin-top: auto; padding-top: var(--space-6); border-top: 1px solid var(--border-subtle); }
+        
+        .btn-logout {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-md);
+            background: transparent;
+            border: 1px solid var(--border-default);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all var(--duration-fast);
+        }
+        
+        .btn-logout:hover { background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.3); color: var(--rose-500); }
+        
+        /* Mobile header */
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(10, 10, 20, 0.95);
+            backdrop-filter: blur(40px);
+            border-bottom: 1px solid var(--border-default);
+            z-index: 99;
+            align-items: center;
+            padding: 0 var(--space-4);
+            gap: var(--space-3);
+        }
+        
+        .menu-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .mobile-logo { font-family: var(--font-display); font-weight: 700; font-size: 1rem; }
+        .mobile-logo span { color: var(--violet-400); }
+        
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 98;
+        }
+        
+        .overlay.show { display: block; }
+        
+        /* Main content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: var(--space-6);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .supplier-container { max-width: 1400px; margin: 0 auto; }
+        
+        /* Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+        
+        .page-header h1 {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .welcome-badge {
+            background: rgba(139, 92, 246, 0.12);
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            color: var(--violet-400);
+        }
+        
+        /* Stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+        
+        .stat-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+            transition: all var(--duration-fast);
+            cursor: pointer;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--border-accent);
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: var(--space-3);
+        }
+        
+        .stat-value {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+        
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: var(--space-1);
+        }
+        
+        /* Charts row */
+        .charts-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-6);
+            margin-bottom: var(--space-6);
+        }
+        
+        .chart-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+        }
+        
+        .chart-header {
+            padding: var(--space-4) var(--space-6);
+            border-bottom: 1px solid var(--border-subtle);
+            font-weight: 600;
+        }
+        
+        .chart-container {
+            padding: var(--space-4);
+            height: 280px;
+        }
+        
+        /* Section */
+        .section {
+            display: none;
+            animation: fadeIn 0.3s var(--ease-out-expo);
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Tables */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th {
+            text-align: left;
+            padding: var(--space-3) var(--space-4);
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        .data-table td {
+            padding: var(--space-3) var(--space-4);
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .data-table tr:hover td {
+            background: var(--surface-hover);
+        }
+        
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-full);
+            font-size: 0.65rem;
+            font-weight: 700;
+        }
+        
+        .badge-success { background: rgba(16, 185, 129, 0.12); color: var(--emerald-400); }
+        .badge-warning { background: rgba(245, 158, 11, 0.12); color: var(--amber-400); }
+        .badge-info { background: rgba(59, 130, 246, 0.12); color: var(--blue-400); }
+        .badge-danger { background: rgba(244, 63, 94, 0.12); color: var(--rose-400); }
+        .badge-violet { background: rgba(139, 92, 246, 0.12); color: var(--violet-400); }
+        
+        /* Stock alert */
+        .stock-alert {
+            background: rgba(244, 63, 94, 0.12);
+            color: var(--rose-400);
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all var(--duration-fast);
+            border: none;
+            font-family: inherit;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--violet-600), var(--violet-500));
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-default);
+            color: var(--text-secondary);
+        }
+        
+        .btn-outline:hover {
+            border-color: var(--violet-400);
+            color: var(--violet-400);
+        }
+        
+        .btn-danger {
+            background: transparent;
+            border: 1px solid var(--border-default);
+            color: var(--rose-400);
+        }
+        
+        .btn-danger:hover {
+            background: rgba(244, 63, 94, 0.08);
+            border-color: var(--rose-500);
+        }
+        
+        .btn-sm {
+            padding: var(--space-1) var(--space-3);
+            font-size: 0.7rem;
+        }
+        
+        /* Search */
+        .search-box {
+            position: relative;
+            margin-bottom: var(--space-4);
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: var(--space-3);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: var(--space-2) var(--space-3) var(--space-2) 36px;
+            background: var(--surface-input);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-4);
+        }
+        
+        .modal-overlay.show {
+            display: flex;
+        }
+        
+        .modal {
+            background: var(--surface-card-solid);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-xl);
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s var(--ease-out-expo);
+        }
+        
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        .modal-header {
+            padding: var(--space-5) var(--space-6);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h3 {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: var(--space-6);
+        }
+        
+        .modal-footer {
+            padding: var(--space-4) var(--space-6);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--space-3);
+        }
+        
+        /* Form */
+        .form-group {
+            margin-bottom: var(--space-5);
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: var(--space-2);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            background: var(--surface-input);
+            border: 1.5px solid var(--border-default);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: inherit;
+            outline: none;
+            transition: all var(--duration-fast);
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            border-color: var(--border-accent);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.08);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-4);
+        }
+        
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: var(--space-5);
+            right: var(--space-5);
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+        
+        .toast {
+            background: var(--surface-card-solid);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            padding: var(--space-4) var(--space-5);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            min-width: 280px;
+            transform: translateX(120%);
+            opacity: 0;
+            transition: all 0.5s var(--ease-out-expo);
+        }
+        
+        .toast.show { transform: translateX(0); opacity: 1; }
+        .toast.success { border-left: 3px solid var(--emerald-500); }
+        .toast.error { border-left: 3px solid var(--rose-500); }
+        .toast.success .toast-icon { color: var(--emerald-400); }
+        .toast.error .toast-icon { color: var(--rose-500); }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .charts-row { grid-template-columns: 1fr; }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .mobile-header { display: flex; }
+            .main-content { margin-left: 0; padding-top: 76px; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .data-table { min-width: 600px; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-decoration" aria-hidden="true">
+        <div class="bg-gradient-1"></div>
+    </div>
+    
+    <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+    
+    <header class="mobile-header">
+        <button class="menu-btn" onclick="openSidebar()"><i class="fa-solid fa-bars"></i></button>
+        <span class="mobile-logo">Salam <span>Fournisseur</span></span>
+    </header>
+    
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo"><i class="fa-solid fa-store"></i></div>
+            <div class="sidebar-brand">
+                <h2>Salam Market</h2>
+                <p>Fournisseur</p>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <button class="nav-item active" onclick="showSection('dashboard')">
+                <i class="fa-solid fa-chart-line"></i> Tableau de Bord
+            </button>
+            <button class="nav-item" onclick="showSection('products')">
+                <i class="fa-solid fa-boxes-stacked"></i> Mes Produits
+                <span class="nav-badge" id="productsCount">0</span>
+            </button>
+            <button class="nav-item" onclick="showSection('orders')">
+                <i class="fa-solid fa-clipboard-list"></i> Commandes
+                <span class="nav-badge" id="pendingOrdersBadge">0</span>
+            </button>
+            <button class="nav-item" onclick="showSection('stock')">
+                <i class="fa-solid fa-warehouse"></i> Gestion Stock
+            </button>
+            <button class="nav-item" onclick="showSection('analytics')">
+                <i class="fa-solid fa-chart-simple"></i> Analytique
+            </button>
+            <button class="nav-item" onclick="showSection('profile')">
+                <i class="fa-solid fa-user"></i> Mon Profil
+            </button>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</button>
+        </div>
+    </aside>
+    
+    <main class="main-content">
+        <div class="supplier-container">
+            
+            <!-- SECTION: DASHBOARD -->
+            <div class="section active" id="section-dashboard">
+                <div class="page-header">
+                    <div>
+                        <h1><i class="fa-solid fa-chart-line"></i> Tableau de Bord</h1>
+                        <p class="welcome-badge" id="supplierName">Chargement...</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn-outline btn" onclick="refreshAll()">
+                            <i class="fa-solid fa-rotate-right"></i> Actualiser
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="stats-grid" id="dashboardStats"></div>
+                
+                <div class="charts-row">
+                    <div class="chart-card">
+                        <div class="chart-header">📊 Ventes des 7 derniers jours</div>
+                        <div class="chart-container">
+                            <canvas id="weeklySalesChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">📦 Produits par catégorie</div>
+                        <div class="chart-container">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-header">🆕 Dernières commandes reçues</div>
+                    <div class="table-wrapper">
+                        <table class="data-table" id="recentOrdersTable">
+                            <thead>
+                                <tr><th>ID</th><th>Client</th><th>Articles</th><th>Total</th><th>Statut</th><th>Date</th><th>Actions</th></tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION: PRODUITS -->
+            <div class="section" id="section-products">
+                <div class="page-header">
+                    <h1><i class="fa-solid fa-boxes-stacked"></i> Mes Produits</h1>
+                    <div class="header-actions">
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="productSearch" placeholder="Rechercher..." oninput="loadProducts()">
+                        </div>
+                        <button class="btn-primary btn" onclick="openProductModal()">
+                            <i class="fa-solid fa-plus"></i> Ajouter un produit
+                        </button>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="table-wrapper">
+                        <table class="data-table" id="productsTable">
+                            <thead>
+                                <tr>
+                                    <th>Produit</th><th>Catégorie</th><th>Prix (FCFA)</th><th>Stock</th><th>Statut</th><th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION: COMMANDES -->
+            <div class="section" id="section-orders">
+                <div class="page-header">
+                    <h1><i class="fa-solid fa-clipboard-list"></i> Commandes reçues</h1>
+                    <div class="header-actions">
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="orderSearch" placeholder="Rechercher..." oninput="loadSupplierOrders()">
+                        </div>
+                        <select class="btn-outline btn" id="orderStatusFilter" onchange="loadSupplierOrders()">
+                            <option value="all">Tous les statuts</option>
+                            <option value="confirmée">Confirmée</option>
+                            <option value="préparation">Préparation</option>
+                            <option value="livraison">Livraison</option>
+                            <option value="livrée">Livrée</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="table-wrapper">
+                        <table class="data-table" id="supplierOrdersTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th><th>Client</th><th>Produits</th><th>Total</th><th>Statut</th><th>Date</th><th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION: STOCK -->
+            <div class="section" id="section-stock">
+                <div class="page-header">
+                    <h1><i class="fa-solid fa-warehouse"></i> Gestion des stocks</h1>
+                    <div class="header-actions">
+                        <button class="btn-outline btn" onclick="exportStockReport()">
+                            <i class="fa-solid fa-download"></i> Exporter rapport
+                        </button>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="table-wrapper">
+                        <table class="data-table" id="stockTable">
+                            <thead>
+                                <tr>
+                                    <th>Produit</th><th>Stock actuel</th><th>Stock minimum</th><th>Statut</th><th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION: ANALYTIQUE -->
+            <div class="section" id="section-analytics">
+                <div class="page-header">
+                    <h1><i class="fa-solid fa-chart-simple"></i> Analytique</h1>
+                </div>
+                <div class="charts-row">
+                    <div class="chart-card">
+                        <div class="chart-header">📈 Évolution mensuelle des ventes</div>
+                        <div class="chart-container">
+                            <canvas id="monthlySalesChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">🏆 Top 5 des produits</div>
+                        <div class="table-wrapper">
+                            <table class="data-table" id="topProductsTable">
+                                <thead><tr><th>Produit</th><th>Ventes</th><th>Chiffre d'affaires</th></tr></thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION: PROFIL -->
+            <div class="section" id="section-profile">
+                <div class="page-header">
+                    <h1><i class="fa-solid fa-user"></i> Mon Profil</h1>
+                </div>
+                <div class="chart-card">
+                    <div class="card-body" style="padding: var(--space-6);">
+                        <form id="profileForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Nom du fournisseur</label>
+                                    <input type="text" class="form-input" id="supplierProfileName" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-input" id="supplierProfileEmail" readonly>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Téléphone</label>
+                                    <input type="tel" class="form-input" id="supplierProfilePhone" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Adresse</label>
+                                    <input type="text" class="form-input" id="supplierProfileAddress" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Description</label>
+                                <textarea class="form-textarea" id="supplierProfileDescription" rows="3" readonly></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Membre depuis</label>
+                                <input type="text" class="form-input" id="supplierProfileSince" readonly>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn-primary btn" onclick="toggleEditProfile()" id="editProfileBtn">
+                                    <i class="fa-solid fa-pen"></i> Modifier mon profil
+                                </button>
+                                <button type="button" class="btn-outline btn" onclick="saveProfile()" id="saveProfileBtn" style="display: none;">
+                                    <i class="fa-solid fa-check"></i> Enregistrer
+                                </button>
+                                <button type="button" class="btn-danger btn" onclick="cancelEditProfile()" id="cancelProfileBtn" style="display: none;">
+                                    <i class="fa-solid fa-xmark"></i> Annuler
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- MODAL: Produit -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="productModalTitle">Ajouter un produit</h3>
+                <button class="modal-close" onclick="closeProductModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm">
+                    <input type="hidden" id="productId">
+                    <div class="form-group">
+                        <label class="form-label">Nom du produit</label>
+                        <input type="text" class="form-input" id="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Catégorie</label>
+                        <select class="form-select" id="productCategory" required>
+                            <option value="">Sélectionner</option>
+                            <option value="Riz">Riz</option>
+                            <option value="Pâtes">Pâtes</option>
+                            <option value="Huiles">Huiles</option>
+                            <option value="Savons">Savons</option>
+                            <option value="Dentifrices">Dentifrices</option>
+                            <option value="Viandes">Viandes</option>
+                            <option value="Fruits">Fruits</option>
+                            <option value="Légumes">Légumes</option>
+                            <option value="Boissons">Boissons</option>
+                            <option value="Autres">Autres</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Prix (FCFA)</label>
+                            <input type="number" class="form-input" id="productPrice" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Unité</label>
+                            <input type="text" class="form-input" id="productUnit" placeholder="kg, litre, pièce..." required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Stock</label>
+                            <input type="number" class="form-input" id="productStock" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Stock minimum alerte</label>
+                            <input type="number" class="form-input" id="productMinStock" value="10">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" id="productDescription" rows="3" placeholder="Description du produit..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Emoji / Image</label>
+                        <input type="text" class="form-input" id="productImage" value="📦">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline btn" onclick="closeProductModal()">Annuler</button>
+                <button class="btn-primary btn" onclick="saveProduct()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL: Stock -->
+    <div class="modal-overlay" id="stockModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Mettre à jour le stock</h3>
+                <button class="modal-close" onclick="closeStockModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="stockForm">
+                    <input type="hidden" id="stockProductId">
+                    <div class="form-group">
+                        <label class="form-label">Produit</label>
+                        <input type="text" class="form-input" id="stockProductName" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Stock actuel</label>
+                        <input type="number" class="form-input" id="stockCurrentValue" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nouveau stock</label>
+                        <input type="number" class="form-input" id="stockNewValue" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Type d'opération</label>
+                        <select class="form-select" id="stockOperation">
+                            <option value="set">Définir</option>
+                            <option value="add">Ajouter</option>
+                            <option value="remove">Retirer</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline btn" onclick="closeStockModal()">Annuler</button>
+                <button class="btn-primary btn" onclick="updateStock()">Mettre à jour</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <script>
+        // ============================================================
+        // ESPACE FOURNISSEUR — Gestion complète
+        // ============================================================
+        
+        (() => {
+            'use strict';
+            
+            // Vérification session fournisseur
+            const session = JSON.parse(localStorage.getItem('salam_session') || 'null');
+            if (!session || session.user.role !== 'supplier') {
+                window.location.href = '../index.html';
+                return;
+            }
+            
+            const supplier = session.user;
+            const supplierName = supplier.name;
+            
+            // Variables
+            let weeklySalesChart = null;
+            let categoryChart = null;
+            let monthlySalesChart = null;
+            let products = [];
+            let orders = [];
+            
+            // Storage helpers
+            const Storage = {
+                get: (key, defaultVal = null) => {
+                    try { return JSON.parse(localStorage.getItem('salam_' + key) || 'null') || defaultVal; }
+                    catch { return defaultVal; }
+                },
+                set: (key, value) => localStorage.setItem('salam_' + key, JSON.stringify(value))
+            };
+            
+            // ========== INITIALISATION ==========
+            function init() {
+                document.getElementById('supplierName').innerHTML = `<i class="fa-solid fa-store"></i> ${supplierName}`;
+                loadSupplierData();
+                loadProducts();
+                loadSupplierOrders();
+                loadDashboard();
+                initCharts();
+            }
+            
+            function loadSupplierData() {
+                // Charger les données du fournisseur depuis les utilisateurs
+                const users = Storage.get('users', []);
+                const supplierData = users.find(u => u.id === supplier.id) || supplier;
+                
+                document.getElementById('supplierProfileName').value = supplierData.name || '';
+                document.getElementById('supplierProfileEmail').value = supplierData.email || '';
+                document.getElementById('supplierProfilePhone').value = supplierData.phone || '';
+                document.getElementById('supplierProfileAddress').value = supplierData.address || '';
+                document.getElementById('supplierProfileDescription').value = supplierData.description || '';
+                document.getElementById('supplierProfileSince').value = supplierData.createdAt ? new Date(supplierData.createdAt).toLocaleDateString('fr-FR') : 'Janvier 2025';
+            }
+            
+            // ========== DASHBOARD ==========
+            function loadDashboard() {
+                const allProducts = Storage.get('products', []);
+                const supplierProducts = allProducts.filter(p => p.supplier === supplierName);
+                const allOrders = Storage.get('orders', []);
+                const supplierOrders = allOrders.filter(o => o.items.some(i => i.supplier === supplierName));
+                
+                const totalProducts = supplierProducts.length;
+                const totalOrders = supplierOrders.length;
+                const pendingOrders = supplierOrders.filter(o => !['livrée', 'annulée'].includes(o.status)).length;
+                const revenue = supplierOrders.filter(o => o.paymentStatus === 'paid').reduce((sum, o) => sum + (o.total || 0), 0);
+                const lowStock = supplierProducts.filter(p => p.stock <= (p.minStock || 10)).length;
+                
+                document.getElementById('dashboardStats').innerHTML = `
+                    <div class="stat-card" onclick="showSection('products')">
+                        <div class="stat-icon" style="background: rgba(139, 92, 246, 0.08);"><i class="fa-solid fa-boxes-stacked" style="color: var(--violet-400);"></i></div>
+                        <div class="stat-value">${totalProducts}</div>
+                        <div class="stat-label">Produits</div>
+                    </div>
+                    <div class="stat-card" onclick="showSection('orders')">
+                        <div class="stat-icon" style="background: rgba(245, 158, 11, 0.08);"><i class="fa-solid fa-clipboard-list" style="color: var(--amber-400);"></i></div>
+                        <div class="stat-value">${totalOrders}</div>
+                        <div class="stat-label">Commandes</div>
+                    </div>
+                    <div class="stat-card" onclick="showSection('orders')">
+                        <div class="stat-icon" style="background: rgba(59, 130, 246, 0.08);"><i class="fa-solid fa-hourglass-half" style="color: var(--blue-400);"></i></div>
+                        <div class="stat-value">${pendingOrders}</div>
+                        <div class="stat-label">En attente</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.08);"><i class="fa-solid fa-chart-line" style="color: var(--emerald-400);"></i></div>
+                        <div class="stat-value">${revenue.toLocaleString()} FCFA</div>
+                        <div class="stat-label">Chiffre d'affaires</div>
+                    </div>
+                `;
+                
+                document.getElementById('productsCount').textContent = totalProducts;
+                document.getElementById('pendingOrdersBadge').textContent = pendingOrders;
+                
+                if (lowStock > 0) {
+                    showToast('⚠️ Stock critique', `${lowStock} produit(s) en stock bas`, 'warning', 5000);
+                }
+                
+                // Dernières commandes
+                const recentOrders = supplierOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
+                document.querySelector('#recentOrdersTable tbody').innerHTML = recentOrders.map(o => `
+                    <tr>
+                        <td><span class="badge badge-info">#${o.id.slice(-8)}</span></td>
+                        <td>${o.customerName || 'N/A'}</td>
+                        <td>${o.items.filter(i => i.supplier === supplierName).length} art.</td>
+                        <td><strong>${(o.total || 0).toLocaleString()} FCFA</strong></td>
+                        <td><span class="badge ${o.status === 'livrée' ? 'badge-success' : (o.status === 'annulée' ? 'badge-danger' : 'badge-warning')}">${o.status}</span></td>
+                        <td>${new Date(o.createdAt).toLocaleDateString('fr-FR')}</td>
+                        <td><button class="btn-outline btn-sm" onclick="viewOrderDetails('${o.id}')"><i class="fa-solid fa-eye"></i></button></td>
+                    </tr>
+                `).join('');
+            }
+            
+            // ========== PRODUITS ==========
+            function loadProducts() {
+                const allProducts = Storage.get('products', []);
+                const search = document.getElementById('productSearch')?.value.toLowerCase() || '';
+                products = allProducts.filter(p => p.supplier === supplierName);
+                
+                if (search) {
+                    products = products.filter(p => p.name.toLowerCase().includes(search));
+                }
+                
+                document.querySelector('#productsTable tbody').innerHTML = products.map(p => `
+                    <tr>
+                        <td>${p.image || '📦'} ${p.name}</td>
+                        <td>${p.category}</td>
+                        <td>${(p.price || 0).toLocaleString()} FCFA</td>
+                        <td class="${p.stock <= (p.minStock || 10) ? 'stock-alert' : ''}">
+                            ${p.stock || 0} ${p.stock <= (p.minStock || 10) ? '<span class="stock-alert">⚠️ Stock bas</span>' : ''}
+                        </td>
+                        <td><span class="badge ${p.available !== false ? 'badge-success' : 'badge-danger'}">${p.available !== false ? 'Disponible' : 'Indisponible'}</span></td>
+                        <td>
+                            <button class="btn-outline btn-sm" onclick="editProduct(${p.id})"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn-outline btn-sm" onclick="openStockModal(${p.id}, '${p.name}', ${p.stock || 0})"><i class="fa-solid fa-warehouse"></i></button>
+                            <button class="btn-danger btn-sm" onclick="deleteProduct(${p.id})"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+            
+            function openProductModal(id = null) {
+                if (id) {
+                    const product = products.find(p => p.id === id);
+                    if (product) {
+                        document.getElementById('productId').value = product.id;
+                        document.getElementById('productName').value = product.name;
+                        document.getElementById('productCategory').value = product.category;
+                        document.getElementById('productPrice').value = product.price;
+                        document.getElementById('productUnit').value = product.unit || '';
+                        document.getElementById('productStock').value = product.stock;
+                        document.getElementById('productMinStock').value = product.minStock || 10;
+                        document.getElementById('productDescription').value = product.description || '';
+                        document.getElementById('productImage').value = product.image || '📦';
+                        document.getElementById('productModalTitle').textContent = 'Modifier le produit';
+                    }
+                } else {
+                    document.getElementById('productId').value = '';
+                    document.getElementById('productName').value = '';
+                    document.getElementById('productCategory').value = '';
+                    document.getElementById('productPrice').value = '';
+                    document.getElementById('productUnit').value = '';
+                    document.getElementById('productStock').value = '';
+                    document.getElementById('productMinStock').value = '10';
+                    document.getElementById('productDescription').value = '';
+                    document.getElementById('productImage').value = '📦';
+                    document.getElementById('productModalTitle').textContent = 'Ajouter un produit';
+                }
+                document.getElementById('productModal').classList.add('show');
+            }
+            
+            function closeProductModal() {
+                document.getElementById('productModal').classList.remove('show');
+            }
+            
+            function saveProduct() {
+                const id = document.getElementById('productId').value;
+                const name = document.getElementById('productName').value.trim();
+                const category = document.getElementById('productCategory').value;
+                const price = parseFloat(document.getElementById('productPrice').value);
+                const unit = document.getElementById('productUnit').value.trim();
+                const stock = parseInt(document.getElementById('productStock').value);
+                const minStock = parseInt(document.getElementById('productMinStock').value);
+                const description = document.getElementById('productDescription').value;
+                const image = document.getElementById('productImage').value;
+                
+                if (!name || !category || isNaN(price) || isNaN(stock)) {
+                    showToast('Erreur', 'Veuillez remplir tous les champs requis', 'error');
+                    return;
+                }
+                
+                let allProducts = Storage.get('products', []);
+                
+                if (id) {
+                    const index = allProducts.findIndex(p => p.id === parseInt(id));
+                    if (index !== -1) {
+                        allProducts[index] = { ...allProducts[index], name, category, price, unit, stock, minStock, description, image };
+                        Storage.set('products', allProducts);
+                        showToast('Produit modifié', name, 'success');
+                    }
+                } else {
+                    const newProduct = {
+                        id: Date.now(),
+                        name, category, price, unit, stock, minStock, description, image,
+                        supplier: supplierName,
+                        available: true,
+                        createdAt: new Date().toISOString()
+                    };
+                    allProducts.push(newProduct);
+                    Storage.set('products', allProducts);
+                    showToast('Produit ajouté', name, 'success');
+                }
+                
+                closeProductModal();
+                loadProducts();
+                loadDashboard();
+                initCharts();
+            }
+            
+            function editProduct(id) {
+                openProductModal(id);
+            }
+            
+            function deleteProduct(id) {
+                if (!confirm('Supprimer ce produit ? Cette action est irréversible.')) return;
+                let allProducts = Storage.get('products', []);
+                allProducts = allProducts.filter(p => p.id !== id);
+                Storage.set('products', allProducts);
+                loadProducts();
+                loadDashboard();
+                initCharts();
+                showToast('Produit supprimé', '', 'success');
+            }
+            
+            // ========== STOCK ==========
+            function openStockModal(productId, productName, currentStock) {
+                document.getElementById('stockProductId').value = productId;
+                document.getElementById('stockProductName').value = productName;
+                document.getElementById('stockCurrentValue').value = currentStock;
+                document.getElementById('stockNewValue').value = currentStock;
+                document.getElementById('stockOperation').value = 'set';
+                document.getElementById('stockModal').classList.add('show');
+            }
+            
+            function closeStockModal() {
+                document.getElementById('stockModal').classList.remove('show');
+            }
+            
+            function updateStock() {
+                const productId = parseInt(document.getElementById('stockProductId').value);
+                const currentStock = parseInt(document.getElementById('stockCurrentValue').value);
+                let newStock = parseInt(document.getElementById('stockNewValue').value);
+                const operation = document.getElementById('stockOperation').value;
+                
+                let finalStock = currentStock;
+                if (operation === 'add') finalStock = currentStock + newStock;
+                else if (operation === 'remove') finalStock = currentStock - newStock;
+                else finalStock = newStock;
+                
+                if (finalStock < 0) {
+                    showToast('Erreur', 'Le stock ne peut pas être négatif', 'error');
+                    return;
+                }
+                
+                let allProducts = Storage.get('products', []);
+                const index = allProducts.findIndex(p => p.id === productId);
+                if (index !== -1) {
+                    allProducts[index].stock = finalStock;
+                    Storage.set('products', allProducts);
+                    showToast('Stock mis à jour', `Nouveau stock: ${finalStock}`, 'success');
+                    closeStockModal();
+                    loadProducts();
+                    loadDashboard();
+                }
+            }
+            
+            // ========== COMMANDES ==========
+            function loadSupplierOrders() {
+                const allOrders = Storage.get('orders', []);
+                const search = document.getElementById('orderSearch')?.value.toLowerCase() || '';
+                const statusFilter = document.getElementById('orderStatusFilter')?.value || 'all';
+                
+                orders = allOrders.filter(o => o.items.some(i => i.supplier === supplierName));
+                
+                if (statusFilter !== 'all') {
+                    orders = orders.filter(o => o.status === statusFilter);
+                }
+                if (search) {
+                    orders = orders.filter(o => o.id.toLowerCase().includes(search) || (o.customerName || '').toLowerCase().includes(search));
+                }
+                
+                orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                
+                document.querySelector('#supplierOrdersTable tbody').innerHTML = orders.map(o => {
+                    const supplierItems = o.items.filter(i => i.supplier === supplierName);
+                    const supplierTotal = supplierItems.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+                    return `
+                        <tr>
+                            <td><span class="badge badge-info">#${o.id.slice(-8)}</span></td>
+                            <td>${o.customerName || 'N/A'}</td>
+                            <td>${supplierItems.map(i => `${i.name} ×${i.quantity}`).join(', ')}</td>
+                            <td><strong>${supplierTotal.toLocaleString()} FCFA</strong></td>
+                            <td><span class="badge ${o.status === 'livrée' ? 'badge-success' : (o.status === 'annulée' ? 'badge-danger' : 'badge-warning')}">${o.status}</span></td>
+                            <td>${new Date(o.createdAt).toLocaleDateString('fr-FR')}</td>
+                            <td>
+                                <button class="btn-outline btn-sm" onclick="viewOrderDetails('${o.id}')"><i class="fa-solid fa-eye"></i></button>
+                                ${o.status !== 'livrée' && o.status !== 'annulée' ? `<button class="btn-primary btn-sm" onclick="updateOrderStatus('${o.id}', 'préparation')"><i class="fa-solid fa-check"></i> Préparer</button>` : ''}
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+            
+            function updateOrderStatus(orderId, status) {
+                let allOrders = Storage.get('orders', []);
+                const index = allOrders.findIndex(o => o.id === orderId);
+                if (index !== -1) {
+                    allOrders[index].status = status;
+                    if (!allOrders[index].statusHistory) allOrders[index].statusHistory = [];
+                    allOrders[index].statusHistory.push({ status, timestamp: new Date().toISOString(), note: `Mis à jour par ${supplierName}` });
+                    Storage.set('orders', allOrders);
+                    loadSupplierOrders();
+                    loadDashboard();
+                    showToast('Commande mise à jour', `Statut: ${status}`, 'success');
+                }
+            }
+            
+            function viewOrderDetails(orderId) {
+                window.location.href = `tracking.html?id=${orderId}`;
+            }
+            
+            // ========== ANALYTIQUE ==========
+            function initCharts() {
+                const allOrders = Storage.get('orders', []);
+                const supplierOrders = allOrders.filter(o => o.items.some(i => i.supplier === supplierName) && o.paymentStatus === 'paid');
+                const allProducts = Storage.get('products', []);
+                const supplierProducts = allProducts.filter(p => p.supplier === supplierName);
+                
+                // Ventes hebdomadaires
+                const weeklyData = Array(7).fill(0);
+                const days = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+                supplierOrders.forEach(o => {
+                    const day = new Date(o.createdAt).getDay();
+                    const index = day === 0 ? 6 : day - 1;
+                    weeklyData[index] += o.total || 0;
+                });
+                
+                const ctx = document.getElementById('weeklySalesChart')?.getContext('2d');
+                if (ctx) {
+                    if (weeklySalesChart) weeklySalesChart.destroy();
+                    weeklySalesChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: days,
+                            datasets: [{
+                                label: 'Ventes (FCFA)',
+                                data: weeklyData,
+                                backgroundColor: '#8B5CF6',
+                                borderRadius: 8
+                            }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false }
+                    });
+                }
+                
+                // Catégories
+                const categoryMap = new Map();
+                supplierProducts.forEach(p => {
+                    categoryMap.set(p.category, (categoryMap.get(p.category) || 0) + 1);
+                });
+                
+                const ctx2 = document.getElementById('categoryChart')?.getContext('2d');
+                if (ctx2) {
+                    if (categoryChart) categoryChart.destroy();
+                    categoryChart = new Chart(ctx2, {
+                        type: 'doughnut',
+                        data: {
+                            labels: Array.from(categoryMap.keys()),
+                            datasets: [{
+                                data: Array.from(categoryMap.values()),
+                                backgroundColor: ['#8B5CF6', '#10B981', '#F59E0B', '#3B82F6', '#F43F5E']
+                            }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94A3B8' } } } }
+                    });
+                }
+                
+                // Ventes mensuelles
+                const monthlyData = Array(12).fill(0);
+                supplierOrders.forEach(o => {
+                    const month = new Date(o.createdAt).getMonth();
+                    monthlyData[month] += o.total || 0;
+                });
+                
+                const ctx3 = document.getElementById('monthlySalesChart')?.getContext('2d');
+                if (ctx3) {
+                    if (monthlySalesChart) monthlySalesChart.destroy();
+                    monthlySalesChart = new Chart(ctx3, {
+                        type: 'line',
+                        data: {
+                            labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
+                            datasets: [{
+                                label: 'Ventes (FCFA)',
+                                data: monthlyData,
+                                borderColor: '#10B981',
+                                backgroundColor: 'rgba(16, 185, 129, 0.05)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4
+                            }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false }
+                    });
+                }
+                
+                // Top produits
+                const productSales = new Map();
+                supplierOrders.forEach(o => {
+                    o.items.filter(i => i.supplier === supplierName).forEach(item => {
+                        const current = productSales.get(item.id) || { name: item.name, quantity: 0, revenue: 0 };
+                        current.quantity += item.quantity;
+                        current.revenue += item.price * item.quantity;
+                        productSales.set(item.id, current);
+                    });
+                });
+                const topProducts = Array.from(productSales.entries()).sort((a, b) => b[1].revenue - a[1].revenue).slice(0, 5);
+                document.querySelector('#topProductsTable tbody').innerHTML = topProducts.map(([id, data]) => `
+                    <tr><td>${data.name}</td><td>${data.quantity}</td><td>${data.revenue.toLocaleString()} FCFA</td></tr>
+                `).join('');
+            }
+            
+            // ========== PROFIL ==========
+            let isEditingProfile = false;
+            
+            function toggleEditProfile() {
+                isEditingProfile = true;
+                const inputs = ['supplierProfileName', 'supplierProfileEmail', 'supplierProfilePhone', 'supplierProfileAddress', 'supplierProfileDescription'];
+                inputs.forEach(id => {
+                    document.getElementById(id).readOnly = false;
+                    document.getElementById(id).style.background = 'rgba(139, 92, 246, 0.05)';
+                });
+                document.getElementById('editProfileBtn').style.display = 'none';
+                document.getElementById('saveProfileBtn').style.display = 'inline-flex';
+                document.getElementById('cancelProfileBtn').style.display = 'inline-flex';
+            }
+            
+            function saveProfile() {
+                const updatedData = {
+                    name: document.getElementById('supplierProfileName').value.trim(),
+                    email: document.getElementById('supplierProfileEmail').value.trim(),
+                    phone: document.getElementById('supplierProfilePhone').value.trim(),
+                    address: document.getElementById('supplierProfileAddress').value.trim(),
+                    description: document.getElementById('supplierProfileDescription').value.trim()
+                };
+                
+                let users = Storage.get('users', []);
+                const index = users.findIndex(u => u.id === supplier.id);
+                if (index !== -1) {
+                    users[index] = { ...users[index], ...updatedData };
+                    Storage.set('users', users);
+                    
+                    // Mettre à jour session
+                    const session = Storage.get('session');
+                    if (session && session.user) {
+                        session.user.name = updatedData.name;
+                        Storage.set('session', session);
+                    }
+                    
+                    showToast('Profil mis à jour', 'Vos informations ont été enregistrées', 'success');
+                }
+                
+                cancelEditProfile();
+                loadSupplierData();
+            }
+            
+            function cancelEditProfile() {
+                isEditingProfile = false;
+                loadSupplierData();
+                const inputs = ['supplierProfileName', 'supplierProfileEmail', 'supplierProfilePhone', 'supplierProfileAddress', 'supplierProfileDescription'];
+                inputs.forEach(id => {
+                    document.getElementById(id).readOnly = true;
+                    document.getElementById(id).style.background = '';
+                });
+                document.getElementById('editProfileBtn').style.display = 'inline-flex';
+                document.getElementById('saveProfileBtn').style.display = 'none';
+                document.getElementById('cancelProfileBtn').style.display = 'none';
+            }
+            
+            // ========== EXPORT ==========
+            function exportStockReport() {
+                const allProducts = Storage.get('products', []);
+                const supplierProducts = allProducts.filter(p => p.supplier === supplierName);
+                const data = supplierProducts.map(p => ({
+                    'Produit': p.name,
+                    'Catégorie': p.category,
+                    'Prix': p.price + ' FCFA',
+                    'Stock actuel': p.stock,
+                    'Stock minimum': p.minStock || 10,
+                    'Statut': p.stock <= (p.minStock || 10) ? '⚠️ Stock bas' : 'OK'
+                }));
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `stock_${supplierName}_${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                showToast('Export réussi', 'Rapport de stock téléchargé', 'success');
+            }
+            
+            // ========== UTILITAIRES ==========
+            function showSection(section) {
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                document.getElementById(`section-${section}`).classList.add('active');
+                document.querySelector(`.nav-item[onclick="showSection('${section}')"]`).classList.add('active');
+                
+                if (section === 'dashboard') loadDashboard();
+                if (section === 'products') loadProducts();
+                if (section === 'orders') loadSupplierOrders();
+                if (section === 'stock') loadProducts();
+                if (section === 'analytics') initCharts();
+                if (section === 'profile') loadSupplierData();
+                
+                closeSidebar();
+            }
+            
+            function refreshAll() {
+                loadDashboard();
+                loadProducts();
+                loadSupplierOrders();
+                initCharts();
+                showToast('Actualisé', 'Toutes les données ont été mises à jour', 'success');
+            }
+            
+            function showToast(title, message, type = 'success', duration = 4000) {
+                const container = document.getElementById('toastContainer');
+                if (!container) return;
+                
+                const icons = { success: 'fa-circle-check', error: 'fa-circle-exclamation', warning: 'fa-triangle-exclamation' };
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.innerHTML = `
+                    <i class="fa-solid ${icons[type] || icons.success} toast-icon"></i>
+                    <div class="toast-content">
+                        <div class="toast-title">${escapeHtml(title)}</div>
+                        <div class="toast-message">${escapeHtml(message)}</div>
+                    </div>
+                    <button class="toast-close" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></button>
+                `;
+                
+                container.appendChild(toast);
+                setTimeout(() => toast.classList.add('show'), 10);
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 500);
+                }, duration);
+            }
+            
+            function escapeHtml(str) {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+            
+            function openSidebar() {
+                document.getElementById('sidebar').classList.add('open');
+                document.getElementById('overlay').classList.add('show');
+            }
+            
+            function closeSidebar() {
+                document.getElementById('sidebar').classList.remove('open');
+                document.getElementById('overlay').classList.remove('show');
+            }
+            
+            function logout() {
+                localStorage.removeItem('salam_session');
+                localStorage.removeItem('salam_cart');
+                window.location.href = '../index.html';
+            }
+            
+            // Expose globals
+            window.showSection = showSection;
+            window.refreshAll = refreshAll;
+            window.openProductModal = openProductModal;
+            window.closeProductModal = closeProductModal;
+            window.saveProduct = saveProduct;
+            window.editProduct = editProduct;
+            window.deleteProduct = deleteProduct;
+            window.openStockModal = openStockModal;
+            window.closeStockModal = closeStockModal;
+            window.updateStock = updateStock;
+            window.updateOrderStatus = updateOrderStatus;
+            window.viewOrderDetails = viewOrderDetails;
+            window.exportStockReport = exportStockReport;
+            window.toggleEditProfile = toggleEditProfile;
+            window.saveProfile = saveProfile;
+            window.cancelEditProfile = cancelEditProfile;
+            window.openSidebar = openSidebar;
+            window.closeSidebar = closeSidebar;
+            window.logout = logout;
+            
+            // Initialisation
+            init();
+        })();
+    </script>
+</body>
+</html>
