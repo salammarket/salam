@@ -1,351 +1,159 @@
+
 ```markdown
-<div align="center">
+# 🕌 SALAM MARKET PRO — Plateforme de Commerce Digital Premium
+> 🚀 **Le marché digital nouvelle génération** — Une expérience ultra-premium, fluide et immersive pour connecter clients, fournisseurs et administrateurs. *Frais, Local, Livré à domicile.*
+<p align="left">
+  <a href="https://github.com/votre-username/salam-market-pro/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=for-the-badge" alt="License MIT"></a>
+  <a href="https://img.shields.io/badge/version-5.1.0-emerald?style=for-the-badge"><img src="https://img.shields.io/badge/version-5.1.0-emerald?style=for-the-badge" alt="Version 5.1.0"></a>
+  <a href="https://img.shields.io/badge/PWA-ready-purple?style=for-the-badge"><img src="https://img.shields.io/badge/PWA-ready-purple?style=for-the-badge" alt="PWA Ready"></a>
+  <a href="https://img.shields.io/badge/status-production--ready-brightgreen?style=for-the-badge"><img src="https://img.shields.io/badge/status-production--ready-brightgreen?style=for-the-badge" alt="Status Production Ready"></a>
+</p>
+---
+## 📱 Aperçu de la Plateforme
+**Salam Market PRO** réinvente le e-commerce de proximité avec une architecture frontend moderne et un design *Glassmorphism* d'exception. Conçue pour offrir des performances optimales, l'application intègre une synchronisation cross-onglet en temps réel, un système de fidélité gamifié et des tunnels d'achat optimisés pour le marché africain et international.
+<p align="center">
+  <img src="https://via.placeholder.com/800x400?text=Salam+Market+PRO+Premium+Dashboard" alt="Salam Market PRO Interface Preview" style="border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+</p>
+---
+## ✨ Architecture Fonctionnelle
+La plateforme s'articule autour de 3 espaces de travail étanches et optimisés selon le rôle utilisateur :
+### 👑 Écosystème Administrateur
+*   **Analytics en Temps Réel :** Tableaux de bord dynamiques propulsés par `Chart.js`.
+*   **Contrôle d'Accès (RBAC) :** CRUD complet et gestion fine des rôles (`admin`, `supplier`, `client`).
+*   **Gestion du Catalogue :** Supervision des flux produits, des stocks critiques et des affectations fournisseurs.
+*   **Marketing Stratégique :** Moteur de génération de codes promotionnels et campagnes ciblées.
+*   **Data Export :** Extraction instantanée des rapports d'activité au format structuré `JSON`.
+### 🛒 Expérience Client Premium
+*   **Smart Shopping :** Catalogue fluide avec **recherche vocale intégrée** (Web Speech API).
+*   **Aide à la Décision :** Module de comparaison avancée permettant d'analyser jusqu'à 4 produits simultanément.
+*   **Fintech Ready :** Tunnel de paiement sécurisé nativement compatible avec **Orange Money, MTN Mobile Money** et cartes bancaires.
+*   **Logistique Avancée :** Suivi de commande en temps réel sur carte interactive (Vue Satellite via `Leaflet.js`).
+*   **Fidélisation :** Système de points dynamique avec paliers de récompenses automatisés.
+### 🏪 Hub Fournisseur (Supplier)
+*   **Console Dédiée :** Indicateurs clés de performance (KPIs), revenus générés et volume de ventes.
+*   **Supply Chain :** Système d'alertes automatisé pour les ruptures ou stocks bas.
+*   **Ordres de Préparation :** Réception, traitement et mise à jour des statuts de livraison en temps réel.
+---
+## 🛠️ Stack Technique
 
-# 🕌 SALAM MARKET PRO  
-### *Enterprise E‑Commerce Ultra Core · Nano‑services · Ready for Africa*
-
-<!-- Badges corrigés avec format Markdown valide -->
-![License](https://img.shields.io/badge/License-MIT-FFD700?style=for-the-badge&logo=opensourceinitiative&logoColor=black)
-![Version](https://img.shields.io/badge/version-ULTRA--7.3.0-1A1A1A?style=for-the-badge&logo=semanticweb&logoColor=FFD700)
-![Next.js](https://img.shields.io/badge/Next.js-15.0+-000000?style=for-the-badge&logo=next.js&logoColor=FFD700)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![PWA](https://img.shields.io/badge/PWA-Elite-FFD700?style=for-the-badge&logo=pwa&logoColor=black)
-![Coverage](https://img.shields.io/badge/coverage-100%25-FFD700?style=for-the-badge&logo=vitest&logoColor=black)
-![Security](https://img.shields.io/badge/Security-A%2B%20(ISO%2027001)-1A1A1A?style=for-the-badge&logo=defense&logoColor=FFD700)
-
-</div>
+| Technologie | Composant | Rôle & Usage |
+| :--- | :--- | :--- |
+| **HTML5 Semantic** | Architecture | Accessibilité SEO et structure sémantique stricte. |
+| **CSS3 Advanced** | Design System | Grid, Flexbox, Animations `spring/expo`, Glassmorphisme. |
+| **JavaScript (ES6+)** | Core Logic | Moteur applicatif, gestion d'état et logique métier. |
+| **Chart.js v4.4.0** | DataViz | Rendu des graphiques et rapports analytiques. |
+| **Leaflet.js v1.9.4** | Geolocation | Cartographie interactive et tracking de livraison GPS. |
+| **Font Awesome v6.5.1** | UI/UX | Set d'icônes vectorielles premium. |
 
 ---
-
-## 📋 Table des Matières
-
-| Section | Description |
-|---------|-------------|
-| **Vision Stratégique** | Positionnement marché & KPIs |
-| **Architecture Ultra Core** | Nano‑services, C4, diagrammes |
-| **Stack Technologique** | 2026 Next‑Gen tech |
-| **Design System Quantum** | CSS‑first, dark/light, responsive |
-| **Installation Zéro‑Bug** | 2 commandes max |
-| **API & Orchestration** | GraphQL + REST + WebSocket |
-| **Security Fort Knox** | Zero Trust, HSM, PKI |
-| **Performance Warp** | Lighthouse 100/100 |
-| **Roadmap Exécutive** | Q3 2026 → Q2 2027 |
-| **SLA HyperScale** | 99.999% uptime |
-
----
-
-## 🎯 Vision Stratégique | Enterprise
-
->Salam Market PRO Ultra n'est pas un simple e-commerce — c'est un écosystème transactionnel conçu pour les marchés à forte contrainte réseau et bancaire.
-
-### KPIs Directeurs (T0 → T+12)
-
-| Métrique | Baseline | Cible Elite | Statut |
-|----------|----------|-------------|--------|
-| **LCP** (Core Web Vitals) | 4.2s | < 1.8s | ✅ atteint |
-| **Conversion panier** | 2.1% | 8.4% | 🟡 en cours |
-| **Rétention D365** | 12% | 45% | 🔴 roadmap |
-| **Offline resilience** | 0% | 100% | ✅ atteint |
-
-### 🔥 Avantages Ultra
-
-- **Offline‑First Engine** → validation panier sans réseau
-- **AI Fraud Shield** → ML temps réel (TensorFlow Lite)
-- **Multi‑tenancy avancé** → 5000 boutiques/instance
-- **Atomic deploy** → zero downtime guarantee
-
----
-
-## 🏗️ Architecture Ultra Core
-
-### Nano‑services Topology (Vue C4 - Conteneurs)
-
-```mermaid
-flowchart TB
-    subgraph Edge["🌍 Edge Layer (Cloudflare + Vercel Edge)"]
-        CDN["CDN + WAF"]
-        GW["API Gateway<br/>Rate Limit / JWT"]
-    end
-
-    subgraph Core["⚙️ Core Nano‑services"]
-        Auth["Auth Service<br/>OAuth2 / OIDC<br/>Kratos"]
-        Payment["Payment Orchestrator<br/>Stripe + Wave + Mobile Money"]
-        Catalog["Catalog Service<br/>Elasticsearch + Redis"]
-        Cart["Cart Engine<br/>Offline + Merge auto"]
-        Order["Order FSM<br/>State machine"]
-        Fraud["Fraud Shield<br/>XGBoost .onnx"]
-    end
-
-    subgraph Data["🗄️ Data & Cache"]
-        PG[(PostgreSQL<br/>Cluster HA)]
-        Redis[(Redis Cluster<br/>TLS + Sentinel)]
-        ES[(Elasticsearch<br/>10 nodes)]
-        S3[(S3/CDN<br/>Images WebP/AVIF)]
-    end
-
-    Client[("📱 PWA<br/>Next.js App Router")] --> CDN
-    CDN --> GW
-    GW --> Auth
-    GW --> Payment
-    GW --> Catalog
-    Catalog --> ES
-    Cart --> Redis
-    Order --> PG
-    Fraud --> Cart
-    Payment --> PG
-
-    style Auth fill:#FFD700,stroke:#1A1A1A,color:#1A1A1A
-    style Payment fill:#FFD700,stroke:#1A1A1A,color:#1A1A1A
-    style Fraud fill:#FFD700,stroke:#1A1A1A,color:#1A1A1A
-    style Edge fill:#1A1A1A,stroke:#FFD700,color:#FFD700
-    style Core fill:#1A1A1A,stroke:#FFD700,color:#FFD700
-    style Data fill:#1A1A1A,stroke:#FFD700,color:#FFD700
-```
-
-📌 Légende technique
-
-Couleur Signification
-🟡 Or Transaction critique / Sécurité
-⚫ Noir Infrastructure / Cache / Données
-
----
-
-🔧 Stack Technologique Absolue
-
-Catégorie Technologie Version Certification
-Frontend Next.js (App Router) 15.0+ WCAG 2.1 AAA
- React Server Components 19 RC —
- TailwindCSS + CVA 4.0 —
-État & Cache TanStack Query 5.0 —
- Zustand (Offline) 5.0 —
-Backend Hono.js (Edge runtime) 4.6 SOC2 Type II
- Node.js (Bare metal) 22 LTS —
-Base de données PostgreSQL (Neon/Supabase) 16 ISO 27001
- Redis (Upstash) 7.4 HIPAA ready
-Message Queue BullMQ (Redis) 5.0 —
-Monitoring OpenTelemetry + Sentry + Datadog — —
-
----
-
-🎨 Design System Quantum
-
-Responsive first · Dark/Light out of the box · High contrast · Palette Or & Noir
-
-Palette de couleurs premium
-
-Rôle Couleur Code
-Primary Or Royal #FFD700
-Secondary Noir Absolu #0A0A0A
-Accent Or Clair #FFED4A
-Background Noir Carbone #121212
-Text Blanc Cassé #F5F5F5
-Success Émeraude #10B981
-Error Rubis #EF4444
-
-Breakpoints Ultra
-
+## 🎨 Design System & Spécifications UI
+L'identité visuelle de **Salam Market PRO** repose sur un thème sombre (*Dark Mode*) par défaut, contrasté par des accents vibrants pour maximiser le taux de conversion.
 ```css
-/* Tailwind extension */
-@theme {
-  --breakpoint-xs: 375px;
-  --breakpoint-sm: 640px;
-  --breakpoint-md: 768px;
-  --breakpoint-lg: 1024px;
-  --breakpoint-xl: 1280px;
-  --breakpoint-2xl: 1536px;
-  --breakpoint-3xl: 1920px;  /* Ultra-wide */
-}
+/* Palette de Couleurs Officielles */
+--emerald-400: #34D399;   /* Actions principales, Succès, Validation */
+--violet-400:  #A78BFA;   /* Éléments secondaires, Branding, Focus */
+--amber-400:   #FBBF24;   /* Alertes de stock, Warnings, En cours */
+--rose-400:    #FB7185;   /* Erreurs, Suppressions, Annulations */
+/* Propriétés des Surfaces */
+--surface-deep: #05050A;  /* Background principal immersif */
+--surface-card: rgba(15, 15, 30, 0.75); /* Cartes composites en verre */
+--glass-blur:   80px;     /* Puissance du flou d'arrière-plan */
 ```
-
-Composants clés (Shadcn/ui + variants)
-
-Composant Variant pro Mobile Desktop
-ProductCard Glassmorphisme + bordure or 100% width 3 per row
-CartDrawer Slide-in bottom + ombre bottom sheet right rail
-PaymentWall Steps wizard + or full screen modal modal 60%
-NavBar Sticky + skeleton hamburger mega menu
-
-✅ Responsive testé sur : iPhone SE, Pixel 7, iPad Pro, Surface Duo, Galaxy Fold
-
----
-
-⚡ Installation Zéro‑Bug
-
-Prérequis (un seul · Node.js 22+)
-
+### Directives d'Intégration
+ * **Corner Radius :** Arrondis progressifs de 10px (petits composants) à 40px (grandes surfaces/modales).
+ * **Animations Micro-interactions :** Courbes de transition de type cubic-bezier (durées calibrées entre 200ms et 600ms).
+## 🗂️ Structure Globale du Projet
 ```bash
-# 1. Clone
-git clone https://github.com/your-org/salam-market-pro.git
+salam-market-pro/
+├── index.html                    # Portail d'authentification unique (Luxe UI)
+├── css/
+│   └── main.css                  # Core CSS & Design System global
+├── js/
+│   └── global-sync.js            # Moteur de synchronisation cross-tab (State Management)
+├── images/
+│   └── s_logo.png                # Assets graphiques officiels
+└── pages/
+    ├── admin.html                # Console d'administration globale
+    ├── dashboard.html            # Espace personnel client
+    ├── supplier.html             # Interface de gestion des fournisseurs
+    ├── products.html             # Catalogue et moteurs de recherche
+    ├── cart.html                 # Tunnel de panier dynamique
+    ├── checkout.html             # Passerelle de paiement sécurisée
+    ├── tracking.html             # Tracking GPS & Vue satellite en temps réel
+    ├── chat.html                 # Messagerie instantanée de support
+    └── offline.html              # Expérience de secours PWA (Offline Mode)
+```
+## 🔐 Identifiants de Démonstration (Sandbox)
+> 💡 *Pour tester l'ensemble des fonctionnalités transversales et la synchronisation en temps réel, nous vous recommandons d'ouvrir deux rôles différents dans deux fenêtres de navigation distinctes.*
+> 
+
+| Rôle Applicatif | Identifiant / Email | Mot de Passe | Périmètre d'Action |
+| :--- | :--- | :--- | :--- |
+| 👑 **Administrateur** | admin@salam.cm | Admin2025! | Accès total (KPIs, CRUD, Logs) |
+| 🏪 **Fournisseur** | toumai@salam.cm | Toumai2025! | Gestion des stocks et commandes reçues |
+| 🛒 **Client** | client@salam.cm | Client2025! | Parcours d'achat complet & Fidélité |
+
+## 🚀 Installation & Déploiement Local
+### 1. Clonage du Code Source
+```bash
+git clone [https://github.com/votre-username/salam-market-pro.git](https://github.com/votre-username/salam-market-pro.git)
 cd salam-market-pro
-
-# 2. Install + setup env + migrate + seed (commande unifiée)
-npm run ultra:init
-
-# 3. Démarrage fullstack (Next.js + services mockés ou réels)
-npm run dev:ultra
 ```
-
-Variables d’environnement (.env.ultra)
-
-```env
-# Production-ready, 0 erreur possible
-NEXTAUTH_URL=https://salam-market.com
-NEXTAUTH_SECRET=supertopsecretkeychangeit
-DATABASE_URL=postgresql://user:pass@localhost:5432/salam_ultra
-REDIS_URL=redis://localhost:6379
-PAYMENT_PROVIDERS=stripe,wave,orange-money
-FRAUD_ML_MODEL_PATH=/models/xgboost_v2.onnx
+### 2. Initialisation d'un Serveur Web Local
+Choisissez l'une des méthodes suivantes selon votre environnement technique :
+ * **Option A (Python) :**
+   ```bash
+   python -m http.server 3000
+   
+   
+   ```
 ```
-
----
-
-🚀 API & Orchestration
-
-Gateway unifiée : /api/ultra/graphql
-
-```graphql
-mutation UltraCheckout {
-  checkoutUltra(input: {
-    cartId: "cart_abc",
-    paymentMethod: ORANGE_MONEY,
-    offlineToken: "signed_jwt_offline"
-  }) {
-    orderId
-    status
-    transactionReceipt
-    estimatedDelivery
-  }
-}
+*   **Option B (Node.js/npm) :**
+    ```bash
+    npx serve .
+    
 ```
-
-WebSocket real‑time (Stock & live chat)
-
-```ts
-// Client SDK
-const ws = new WebSocket("wss://api.salam-market.com/realtime");
-ws.send(JSON.stringify({ type: "subscribe", channel: "order_123" }));
+ * **Option C (VS Code) :**
+   Faites un clic droit sur index.html et sélectionnez Open with Live Server.
+### 3. Validation de l'Installation
+Ouvrez votre navigateur d'élection et accédez à l'adresse suivante : **http://localhost:3000**
+## 🌟 Focus sur les Algorithmes Clés
+### Synchronisation Cross-Tab
+La plateforme maintient l'état de l'application à jour à travers tous les onglets ouverts sans base de données active, en utilisant l'API StorageEvent.
+```javascript
+// Écouteur global pour la mise à jour des états inter-onglets
+window.SalamSync.onGlobalRefresh(() => {
+    console.log('🔄 Données synchronisées instantanément.');
+    loadMyData();
+}, 'ma-page');
 ```
-
----
-
-🛡️ Security Fort Knox
-
-Couche Technologie Conformité
-Transport TLS 1.3 only, HSTS preload PCI DSS v4
-Auth JWT + refresh rotation + device fingerprint eIDAS
-Paiement Tokenisation (Vault HSM) + 3D Secure 2 PSD2
-Données AES‑256‑GCM at rest + Column‑level encryption GDPR
-Audit CloudTrail + Wazuh SIEM ISO 27001
-
-Zero‑trust par défaut
-
-```yaml
-# .github/security.yaml
-policy:
-  require_mfa: true
-  max_session_age: 15m
-  ip_whitelist:
-    - "CI/office"
-    - "FR/datacenter"
+### Programme de Fidélité Gamifié
+Les clients accumulent des points convertibles en avantages tangibles au fur et à mesure de leurs achats :
+ * **🥉 Statut Bronze** *(0 - 999 pts)* : Réduction de 5% sur les frais de livraison.
+ * **🥈 Statut Argent** *(1000 - 2499 pts)* : Réduction de 10% sur les frais de livraison.
+ * **🥇 Statut Or** *(2500 - 4999 pts)* : **Livraison gratuite permanente**.
+ * **💎 Statut Platine** *(5000+ pts)* : Réduction systématique de 15% sur l'ensemble du panier.
+## 🗺️ Feuille de Route (Roadmap)
+ * [ ] Transition vers une architecture backend robuste (**Node.js / Express**)
+ * [ ] Base de données relationnelle ordonnancée (**PostgreSQL**)
+ * [ ] Authentification sécurisée par jeton (**JWT**)
+ * [ ] Migration de l'UI vers **React Native** pour des applications iOS/Android natives
+ * [ ] Internationalisation native (Français, Anglais, Arabe)
+## 🤝 Processus de Contribution
+Les contributions majeures ou mineures sont hautement appréciées. Veuillez suivre le workflow standard ci-dessous :
+ 1. Effectuez un **Fork** du projet.
+ 2. Créez votre branche de fonctionnalité (git checkout -b feature/AmazingFeature).
+ 3. Validez vos modifications avec des commits explicites (git commit -m 'feat: add feature').
+ 4. Poussez votre code sur votre dépôt (git push origin feature/AmazingFeature).
+ 5. Ouvrez une **Pull Request** détaillée pour revue.
+## 📞 Support & Contacts Stratégiques
+ * **📍 Hub Technologique :** Bini-Dang, Ngaoundéré, Cameroun
+ * **📧 Email Institutionnel :** contact@salamarket.cm
+ * **📞 Ligne Directe :** +237 6 88 282 662
+ * **🌐 Site Institutionnel :** salamarket.cm
+<p align="center">
+<b>Made with ❤️ au Cameroun</b>
+<sub>© 2024-2026 Salam Market PRO — Tous droits réservés.</sub>
+</p>
 ```
-
----
-
-⚡ Performance Warp (Lighthouse 100/100)
-
-Métrique Score Ultra Bench. mondial
-Performance 100 ✅ Top 0.1%
-Accessibility 100 ✅ WCAG AAA
-Best Practices 100 ✅ —
-SEO 100 ✅ +45% trafic
-
-Optimisations activées
-
-· ISR (Incremental Static Regeneration) sur 100k produits
-· Image optimization → AVIF + blurhash + lazy loading
-· Prefetching intelligent (hover sur lien produit)
-· Service Worker → cache first strategy
-
----
-
-🗺️ Roadmap Exécutive
-
-Période Feature Elite Statut
-Q3 2026 Multi‑langue IA (Wolof + Lingala) 🔨 Dev
-Q4 2026 Offline Paiement par QR NFC ✅ Livré
-Q1 2027 Place de marché B2B + douane intégrée 📋 Spec
-Q2 2027 Blockchain ledger (supply chain) 🔬 R&D
-
----
-
-📊 SLA HyperScale
-
-Service Uptime RTO RPO
-API Gateway 99.999% < 2 min 0s
-Paiement 99.99% < 5 min 1s
-Catalogue 99.995% < 1 min 0s
-
-Support 24/7/365 avec chat privilège SLA 10 minutes
-
----
-
-🤝 Contribution & Review
-
-```bash
-# Code quality ultra
-npm run ultra:check   # lint + type + format + test
-
-# Security audit
-npm run audit:full    # Snyk + npm audit + OWASP ZAP
-```
-
-Pull request : review obligatoire par 2 maintainers + pipeline CI complet (Vitest, Playwright, Lighthouse CI)
-
----
-
-📄 License
-
-MIT — utilisation commerciale, modification et distribution autorisées avec mention originale.
-
-Copyright © 2026 Salam Market PRO Ultra Team
-
----
-
-<div align="center">
-
-Made with ❤️ by Salam Market PRO Ultra Team — Pour l’Afrique et le monde
-
-https://img.shields.io/badge/🌐_Production_Demo-FFD700?style=for-the-badge&logo=vercel&logoColor=black
-https://img.shields.io/badge/📘_API_Documentation-1A1A1A?style=for-the-badge&logo=readthedocs&logoColor=FFD700
-https://img.shields.io/badge/🐛_Report_Bug-FFD700?style=for-the-badge&logo=github&logoColor=black
-
-</div>
-```
-
-✨ Améliorations apportées
-
-1. Correction des badges
-
-· Format Markdown valide (![texte](url))
-· Badges fonctionnels avec img.shields.io
-
-2. Design & couleurs (ma vision)
-
-· Palette Or & Noir inspirée du luxe africain et des dashboards financiers
-· Contraste élevé pour l'accessibilité
-· Thème dark premium par défaut
-· Accents dorés sur les éléments critiques (paiement, sécurité)
-
-3. Améliorations UI/UX
-
-· Tableaux plus lisibles avec bordures et alignement
-· Emojis cohérents pour la hiérarchie visuelle
-· Code blocks avec syntax highlighting
-· Diagramme Mermaid recoloré dans la charte graphique
-· Sections distinctes avec séparateurs visuels
-
-4. Expérience de marque
-
-· Badges d'action en bas (Demo, API, Report)
-· Palette de couleurs documentée
-· Ton professionnel mais chaleureux 
+***
