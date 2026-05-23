@@ -1,121 +1,116 @@
-<!-- pages/supplier.html - Espace Fournisseur complet avec Messagerie -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#0A0A14">
-    <meta name="description" content="Espace Fournisseur — Salam Market PRO">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="description" content="Espace Fournisseur Premium — Salam Market PRO">
+    <title>Salam Market PRO · Fournisseur</title>
     
-    <title>Salam Market PRO · Espace Fournisseur</title>
-    
+    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@400..700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <!-- Chart.js -->
+    <!-- Charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     
     <style>
         /* ============================================================
-           DESIGN SYSTEM — Version unifiée
+           DESIGN SYSTEM PREMIUM — Niveau Amazon/Alibaba
            ============================================================ */
         
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         :root {
-            --emerald-400: #34D399;
-            --emerald-500: #10B981;
-            --emerald-600: #059669;
-            --violet-400: #A78BFA;
-            --violet-500: #8B5CF6;
-            --amber-400: #FBBF24;
-            --amber-500: #F59E0B;
-            --blue-400: #60A5FA;
-            --blue-500: #3B82F6;
-            --rose-400: #FB7185;
-            --rose-500: #F43F5E;
-            --orange-500: #FF6600;
+            /* Couleurs principales */
+            --primary-400: #34D399;
+            --primary-500: #10B981;
+            --primary-600: #059669;
+            --primary-700: #047857;
+            --secondary-400: #A78BFA;
+            --secondary-500: #8B5CF6;
+            --secondary-600: #7C3AED;
+            --accent-400: #FBBF24;
+            --accent-500: #F59E0B;
+            --danger-400: #FB7185;
+            --danger-500: #F43F5E;
+            --info-400: #60A5FA;
+            --info-500: #3B82F6;
             
-            --surface-primary: #0A0A14;
-            --surface-card: rgba(15, 15, 30, 0.85);
-            --surface-card-solid: #0F0F1E;
-            --surface-input: rgba(10, 10, 20, 0.7);
-            --surface-hover: rgba(255, 255, 255, 0.03);
-            
-            --border-subtle: rgba(255, 255, 255, 0.04);
-            --border-default: rgba(255, 255, 255, 0.08);
-            --border-strong: rgba(255, 255, 255, 0.12);
-            --border-accent: rgba(16, 185, 129, 0.25);
-            
+            /* Thème clair */
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F8FAFC;
+            --bg-tertiary: #F1F5F9;
+            --bg-card: #FFFFFF;
+            --bg-input: #F8FAFC;
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --text-muted: #94A3B8;
+            --border-color: #E2E8F0;
+            --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
+        
+        /* Thème sombre */
+        body.dark {
+            --bg-primary: #0F172A;
+            --bg-secondary: #1E293B;
+            --bg-tertiary: #334155;
+            --bg-card: #1E293B;
+            --bg-input: #334155;
             --text-primary: #F1F5F9;
             --text-secondary: #CBD5E1;
             --text-muted: #94A3B8;
-            --text-faint: #64748B;
-            
-            --font-display: 'Space Grotesk', system-ui, sans-serif;
-            --font-body: 'Inter', system-ui, sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
-            
-            --radius-sm: 10px;
-            --radius-md: 14px;
-            --radius-lg: 18px;
-            --radius-xl: 24px;
-            --radius-full: 9999px;
-            
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
-            
-            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-            --duration-fast: 200ms;
-            --duration-base: 400ms;
-            
-            --space-1: 4px;
-            --space-2: 8px;
-            --space-3: 12px;
-            --space-4: 16px;
-            --space-5: 20px;
-            --space-6: 24px;
-            --space-8: 32px;
-            --space-10: 40px;
+            --border-color: #334155;
         }
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: var(--font-body);
-            background: var(--surface-primary);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg-secondary);
             color: var(--text-primary);
+            transition: background 0.3s ease, color 0.3s ease;
             min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
         }
         
-        /* Background */
-        .bg-decoration {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
+        /* Scrollbar personnalisée */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
         
-        .bg-gradient-1 {
-            position: absolute;
-            width: 150%;
-            height: 100%;
-            background: radial-gradient(ellipse 80% 60% at 10% -20%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+        ::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-500);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-600);
         }
         
         /* Layout */
-        .app-layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
         
-        /* Sidebar */
+        /* Sidebar Premium */
         .sidebar {
             width: 280px;
-            background: rgba(10, 10, 20, 0.95);
-            backdrop-filter: blur(40px);
-            border-right: 1px solid var(--border-default);
+            background: var(--bg-card);
+            border-right: 1px solid var(--border-color);
             position: fixed;
             top: 0;
             left: 0;
@@ -123,46 +118,57 @@
             z-index: 100;
             display: flex;
             flex-direction: column;
-            padding: var(--space-6) var(--space-4);
-            transition: transform var(--duration-base) var(--ease-out-expo);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
-            gap: var(--space-3);
-            padding-bottom: var(--space-6);
-            margin-bottom: var(--space-4);
-            border-bottom: 1px solid var(--border-subtle);
+            gap: 12px;
         }
         
         .sidebar-logo {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, var(--violet-500), var(--emerald-500));
-            border-radius: var(--radius-md);
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-600), var(--secondary-600));
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.3rem;
         }
         
-        .sidebar-brand h2 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; }
-        .sidebar-brand p { font-size: 0.65rem; color: var(--violet-400); }
+        .sidebar-brand h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
         
-        .sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: var(--space-1); }
+        .sidebar-brand p {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
         
         .nav-item {
             display: flex;
             align-items: center;
-            gap: var(--space-3);
-            padding: var(--space-3) var(--space-4);
-            border-radius: var(--radius-md);
-            color: var(--text-muted);
-            font-size: 0.85rem;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
             font-weight: 500;
-            text-decoration: none;
-            transition: all var(--duration-fast);
+            transition: all 0.2s ease;
             cursor: pointer;
             border: none;
             background: none;
@@ -171,39 +177,104 @@
             font-family: inherit;
         }
         
-        .nav-item:hover { background: var(--surface-hover); color: var(--text-secondary); transform: translateX(4px); }
-        .nav-item.active { background: rgba(139, 92, 246, 0.08); color: var(--violet-400); border-left: 2px solid var(--violet-500); }
-        .nav-item i { width: 22px; }
+        .nav-item i {
+            width: 22px;
+            font-size: 1.1rem;
+        }
+        
+        .nav-item:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            transform: translateX(4px);
+        }
+        
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(139, 92, 246, 0.05));
+            color: var(--primary-500);
+            border-left: 3px solid var(--primary-500);
+        }
         
         .nav-badge {
             margin-left: auto;
-            background: var(--orange-500);
+            background: var(--danger-500);
             color: white;
             padding: 2px 8px;
             border-radius: 20px;
-            font-size: 0.6rem;
-            font-weight: 700;
+            font-size: 0.65rem;
+            font-weight: 600;
         }
         
-        .sidebar-footer { margin-top: auto; padding-top: var(--space-6); border-top: 1px solid var(--border-subtle); }
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .theme-toggle span {
+            font-size: 0.8rem;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 24px;
+            background: var(--border-color);
+            border-radius: 24px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .toggle-switch::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: 0.3s;
+        }
+        
+        .toggle-switch.active {
+            background: var(--primary-500);
+        }
+        
+        .toggle-switch.active::before {
+            transform: translateX(24px);
+        }
         
         .btn-logout {
             display: flex;
             align-items: center;
-            gap: var(--space-3);
+            gap: 12px;
             width: 100%;
-            padding: var(--space-3) var(--space-4);
-            border-radius: var(--radius-md);
+            padding: 10px 12px;
             background: transparent;
-            border: 1px solid var(--border-default);
-            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-secondary);
             cursor: pointer;
-            transition: all var(--duration-fast);
+            transition: all 0.2s ease;
+            font-family: inherit;
         }
         
-        .btn-logout:hover { background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.3); color: var(--rose-500); }
+        .btn-logout:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--danger-500);
+            color: var(--danger-500);
+        }
         
-        /* Mobile header */
+        /* Mobile Header */
         .mobile-header {
             display: none;
             position: fixed;
@@ -211,153 +282,149 @@
             left: 0;
             right: 0;
             height: 60px;
-            background: rgba(10, 10, 20, 0.95);
-            backdrop-filter: blur(40px);
-            border-bottom: 1px solid var(--border-default);
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
             z-index: 99;
             align-items: center;
-            padding: 0 var(--space-4);
-            gap: var(--space-3);
+            justify-content: space-between;
+            padding: 0 16px;
         }
         
         .menu-btn {
             width: 40px;
             height: 40px;
-            border-radius: var(--radius-sm);
-            background: transparent;
+            border-radius: 10px;
+            background: var(--bg-tertiary);
             border: none;
             color: var(--text-primary);
             font-size: 1.2rem;
             cursor: pointer;
         }
         
-        .mobile-logo { font-family: var(--font-display); font-weight: 700; font-size: 1rem; }
-        .mobile-logo span { color: var(--violet-400); }
+        .mobile-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+        }
+        
+        .mobile-logo span {
+            color: var(--primary-500);
+        }
         
         .overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(4px);
             z-index: 98;
         }
         
-        .overlay.show { display: block; }
+        .overlay.show {
+            display: block;
+        }
         
-        /* Main content */
+        /* Main Content */
         .main-content {
             flex: 1;
             margin-left: 280px;
-            padding: var(--space-6);
-            position: relative;
-            z-index: 1;
+            padding: 24px;
+            transition: margin 0.3s ease;
         }
         
-        .supplier-container { max-width: 1400px; margin: 0 auto; }
-        
-        /* Header */
+        /* Page Header */
         .page-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: var(--space-4);
-            margin-bottom: var(--space-6);
+            gap: 16px;
+            margin-bottom: 24px;
         }
         
         .page-header h1 {
-            font-family: var(--font-display);
+            font-family: 'Space Grotesk', sans-serif;
             font-size: 1.8rem;
             font-weight: 700;
         }
         
-        .welcome-badge {
-            background: rgba(139, 92, 246, 0.12);
-            padding: var(--space-2) var(--space-4);
-            border-radius: var(--radius-full);
-            font-size: 0.8rem;
-            color: var(--violet-400);
-        }
-        
-        /* Stats grid */
+        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: var(--space-4);
-            margin-bottom: var(--space-6);
+            gap: 20px;
+            margin-bottom: 32px;
         }
         
         .stat-card {
-            background: var(--surface-card);
-            border: 1px solid var(--border-default);
-            border-radius: var(--radius-lg);
-            padding: var(--space-5);
-            transition: all var(--duration-fast);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 20px;
+            transition: all 0.3s ease;
             cursor: pointer;
         }
         
         .stat-card:hover {
-            transform: translateY(-2px);
-            border-color: var(--border-accent);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-500);
         }
         
         .stat-icon {
             width: 48px;
             height: 48px;
-            border-radius: var(--radius-md);
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.3rem;
-            margin-bottom: var(--space-3);
+            margin-bottom: 16px;
         }
         
         .stat-value {
-            font-family: var(--font-display);
+            font-family: 'Space Grotesk', sans-serif;
             font-size: 1.8rem;
             font-weight: 800;
-            line-height: 1.2;
         }
         
         .stat-label {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-top: var(--space-1);
+            margin-top: 4px;
         }
         
-        /* Charts row */
+        /* Charts */
         .charts-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: var(--space-6);
-            margin-bottom: var(--space-6);
+            gap: 24px;
+            margin-bottom: 32px;
         }
         
         .chart-card {
-            background: var(--surface-card);
-            border: 1px solid var(--border-default);
-            border-radius: var(--radius-xl);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
             overflow: hidden;
         }
         
         .chart-header {
-            padding: var(--space-4) var(--space-6);
-            border-bottom: 1px solid var(--border-subtle);
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
             font-weight: 600;
         }
         
         .chart-container {
-            padding: var(--space-4);
-            height: 280px;
+            padding: 16px;
+            height: 300px;
         }
         
-        /* Section */
+        /* Sections */
         .section {
             display: none;
-            animation: fadeIn 0.3s var(--ease-out-expo);
+            animation: fadeIn 0.4s ease;
         }
         
         .section.active {
@@ -381,274 +448,167 @@
         
         .data-table th {
             text-align: left;
-            padding: var(--space-3) var(--space-4);
+            padding: 12px 16px;
             font-size: 0.7rem;
-            font-weight: 700;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: var(--text-muted);
-            border-bottom: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-color);
         }
         
         .data-table td {
-            padding: var(--space-3) var(--space-4);
+            padding: 12px 16px;
             font-size: 0.85rem;
-            border-bottom: 1px solid var(--border-subtle);
-        }
-        
-        .data-table tr:last-child td {
-            border-bottom: none;
+            border-bottom: 1px solid var(--border-color);
         }
         
         .data-table tr:hover td {
-            background: var(--surface-hover);
+            background: var(--bg-tertiary);
         }
         
         /* Badges */
         .badge {
             display: inline-flex;
             align-items: center;
-            gap: var(--space-1);
-            padding: var(--space-1) var(--space-3);
-            border-radius: var(--radius-full);
-            font-size: 0.65rem;
-            font-weight: 700;
-        }
-        
-        .badge-success { background: rgba(16, 185, 129, 0.12); color: var(--emerald-400); }
-        .badge-warning { background: rgba(245, 158, 11, 0.12); color: var(--amber-400); }
-        .badge-info { background: rgba(59, 130, 246, 0.12); color: var(--blue-400); }
-        .badge-danger { background: rgba(244, 63, 94, 0.12); color: var(--rose-400); }
-        .badge-violet { background: rgba(139, 92, 246, 0.12); color: var(--violet-400); }
-        
-        /* Stock alert */
-        .stock-alert {
-            background: rgba(244, 63, 94, 0.12);
-            color: var(--rose-400);
-            padding: var(--space-1) var(--space-2);
-            border-radius: var(--radius-sm);
-            font-size: 0.65rem;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
             font-weight: 600;
         }
+        
+        .badge-success { background: rgba(16, 185, 129, 0.1); color: var(--primary-500); }
+        .badge-warning { background: rgba(245, 158, 11, 0.1); color: var(--accent-500); }
+        .badge-info { background: rgba(59, 130, 246, 0.1); color: var(--info-500); }
+        .badge-danger { background: rgba(244, 63, 94, 0.1); color: var(--danger-500); }
         
         /* Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
-            gap: var(--space-2);
-            padding: var(--space-2) var(--space-4);
-            border-radius: var(--radius-md);
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 12px;
             font-weight: 600;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             cursor: pointer;
-            transition: all var(--duration-fast);
+            transition: all 0.2s ease;
             border: none;
             font-family: inherit;
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, var(--violet-600), var(--violet-500));
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-500));
             color: white;
         }
         
         .btn-primary:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
         
         .btn-outline {
             background: transparent;
-            border: 1px solid var(--border-default);
+            border: 1px solid var(--border-color);
             color: var(--text-secondary);
         }
         
         .btn-outline:hover {
-            border-color: var(--violet-400);
-            color: var(--violet-400);
-        }
-        
-        .btn-danger {
-            background: transparent;
-            border: 1px solid var(--border-default);
-            color: var(--rose-400);
-        }
-        
-        .btn-danger:hover {
-            background: rgba(244, 63, 94, 0.08);
-            border-color: var(--rose-500);
-        }
-        
-        .btn-sm {
-            padding: var(--space-1) var(--space-3);
-            font-size: 0.7rem;
+            border-color: var(--primary-500);
+            color: var(--primary-500);
         }
         
         /* Search */
         .search-box {
             position: relative;
-            margin-bottom: var(--space-4);
         }
         
         .search-box i {
             position: absolute;
-            left: var(--space-3);
+            left: 12px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
         }
         
         .search-box input {
-            width: 100%;
-            padding: var(--space-2) var(--space-3) var(--space-2) 36px;
-            background: var(--surface-input);
-            border: 1px solid var(--border-default);
-            border-radius: var(--radius-md);
+            padding: 10px 12px 10px 36px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
             color: var(--text-primary);
             font-size: 0.85rem;
-        }
-        
-        /* Modal */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: var(--space-4);
-        }
-        
-        .modal-overlay.show {
-            display: flex;
-        }
-        
-        .modal {
-            background: var(--surface-card-solid);
-            border: 1px solid var(--border-default);
-            border-radius: var(--radius-xl);
-            max-width: 500px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            animation: modalIn 0.3s var(--ease-out-expo);
-        }
-        
-        @keyframes modalIn {
-            from { opacity: 0; transform: scale(0.95) translateY(10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-        
-        .modal-header {
-            padding: var(--space-5) var(--space-6);
-            border-bottom: 1px solid var(--border-subtle);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .modal-header h3 {
-            font-family: var(--font-display);
-            font-size: 1.2rem;
-        }
-        
-        .modal-close {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-        
-        .modal-body {
-            padding: var(--space-6);
-        }
-        
-        .modal-footer {
-            padding: var(--space-4) var(--space-6);
-            border-top: 1px solid var(--border-subtle);
-            display: flex;
-            justify-content: flex-end;
-            gap: var(--space-3);
-        }
-        
-        /* Form */
-        .form-group {
-            margin-bottom: var(--space-5);
-        }
-        
-        .form-label {
-            display: block;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin-bottom: var(--space-2);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        
-        .form-input, .form-select, .form-textarea {
-            width: 100%;
-            padding: var(--space-3) var(--space-4);
-            background: var(--surface-input);
-            border: 1.5px solid var(--border-default);
-            border-radius: var(--radius-md);
-            color: var(--text-primary);
-            font-size: 0.9rem;
-            font-family: inherit;
             outline: none;
-            transition: all var(--duration-fast);
+            width: 250px;
         }
         
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            border-color: var(--border-accent);
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.08);
+        .search-box input:focus {
+            border-color: var(--primary-500);
         }
         
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-4);
-        }
-        
-        /* Chat styles */
+        /* Chat Styles */
         .chat-container {
+            background: var(--bg-card);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            height: 600px;
             display: flex;
             flex-direction: column;
-            height: 550px;
         }
         
-        .chat-conversations {
-            border-right: 1px solid var(--border-subtle);
-            overflow-y: auto;
+        .chat-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
             height: 100%;
         }
         
-        .chat-conversation-item {
+        /* Conversations List */
+        .conversations-list {
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            background: var(--bg-card);
+        }
+        
+        .conversation-search {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .conversation-search input {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 0.85rem;
+        }
+        
+        .conversation-item {
             display: flex;
             align-items: center;
-            gap: var(--space-3);
-            padding: var(--space-3) var(--space-4);
-            border-bottom: 1px solid var(--border-subtle);
+            gap: 12px;
+            padding: 12px 16px;
             cursor: pointer;
-            transition: all var(--duration-fast);
+            transition: all 0.2s ease;
+            border-bottom: 1px solid var(--border-color);
         }
         
-        .chat-conversation-item:hover {
-            background: var(--surface-hover);
+        .conversation-item:hover {
+            background: var(--bg-tertiary);
         }
         
-        .chat-conversation-item.active {
-            background: rgba(139, 92, 246, 0.08);
-            border-left: 3px solid var(--violet-500);
+        .conversation-item.active {
+            background: rgba(16, 185, 129, 0.05);
+            border-left: 3px solid var(--primary-500);
         }
         
-        .chat-conversation-avatar {
+        .conversation-avatar {
             width: 48px;
             height: 48px;
+            background: linear-gradient(135deg, var(--primary-600), var(--secondary-600));
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--emerald-600), var(--violet-500));
             display: flex;
             align-items: center;
             justify-content: center;
@@ -656,20 +616,20 @@
             flex-shrink: 0;
         }
         
-        .chat-conversation-info {
+        .conversation-info {
             flex: 1;
             min-width: 0;
         }
         
-        .chat-conversation-name {
+        .conversation-name {
             font-weight: 600;
             font-size: 0.9rem;
             display: flex;
             align-items: center;
-            gap: var(--space-2);
+            justify-content: space-between;
         }
         
-        .chat-conversation-lastmsg {
+        .conversation-preview {
             font-size: 0.7rem;
             color: var(--text-muted);
             white-space: nowrap;
@@ -677,78 +637,158 @@
             text-overflow: ellipsis;
         }
         
-        .chat-conversation-time {
+        .conversation-time {
             font-size: 0.6rem;
-            color: var(--text-faint);
+            color: var(--text-muted);
         }
         
+        .unread-count {
+            background: var(--primary-500);
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+        
+        /* Chat Messages Area */
         .chat-messages-area {
-            flex: 1;
-            overflow-y: auto;
-            padding: var(--space-4);
             display: flex;
             flex-direction: column;
-            gap: var(--space-3);
+            height: 100%;
         }
         
-        .chat-message {
+        .chat-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
-            max-width: 75%;
-            animation: fadeInMsg 0.3s var(--ease-out-expo);
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
         }
         
-        @keyframes fadeInMsg {
+        .chat-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .chat-user-avatar {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--primary-600), var(--secondary-600));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+        
+        .chat-user-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .chat-user-status {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+        }
+        
+        .channel-selector {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .channel-btn {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+        }
+        
+        .channel-btn.active {
+            background: var(--primary-500);
+            border-color: var(--primary-500);
+            color: white;
+        }
+        
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .message {
+            display: flex;
+            max-width: 70%;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
-        .chat-message.sent {
+        .message.sent {
             align-self: flex-end;
         }
         
-        .chat-message.received {
+        .message.received {
             align-self: flex-start;
         }
         
-        .chat-message-bubble {
-            padding: var(--space-3) var(--space-4);
-            border-radius: var(--radius-lg);
+        .message-bubble {
+            padding: 10px 14px;
+            border-radius: 18px;
             font-size: 0.85rem;
             line-height: 1.4;
         }
         
-        .chat-message.sent .chat-message-bubble {
-            background: linear-gradient(135deg, var(--violet-600), var(--violet-500));
+        .message.sent .message-bubble {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-500));
             color: white;
-            border-bottom-right-radius: var(--radius-sm);
+            border-bottom-right-radius: 4px;
         }
         
-        .chat-message.received .chat-message-bubble {
-            background: var(--surface-input);
-            border: 1px solid var(--border-default);
-            border-bottom-left-radius: var(--radius-sm);
+        .message.received .message-bubble {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-bottom-left-radius: 4px;
         }
         
-        .chat-message-time {
+        .message-time {
             font-size: 0.55rem;
-            color: var(--text-faint);
-            margin-top: var(--space-1);
+            color: var(--text-muted);
+            margin-top: 4px;
             text-align: right;
         }
         
         .chat-input-area {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-color);
             display: flex;
-            gap: var(--space-3);
-            padding: var(--space-4);
-            border-top: 1px solid var(--border-subtle);
+            gap: 12px;
+            align-items: flex-end;
         }
         
         .chat-input {
             flex: 1;
-            padding: var(--space-3) var(--space-4);
-            background: var(--surface-input);
-            border: 1.5px solid var(--border-default);
-            border-radius: var(--radius-lg);
+            padding: 12px 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
             color: var(--text-primary);
             font-size: 0.9rem;
             font-family: inherit;
@@ -757,86 +797,164 @@
         }
         
         .chat-input:focus {
-            border-color: var(--border-accent);
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.08);
-        }
-        
-        .channel-selector {
-            display: flex;
-            gap: var(--space-2);
-            flex-wrap: wrap;
-            margin-bottom: var(--space-3);
-        }
-        
-        .channel-btn {
-            padding: var(--space-2) var(--space-3);
-            border-radius: var(--radius-full);
-            font-size: 0.7rem;
-            font-weight: 600;
-            cursor: pointer;
-            background: transparent;
-            border: 1px solid var(--border-default);
-            color: var(--text-muted);
-            transition: all var(--duration-fast);
-        }
-        
-        .channel-btn.active {
-            background: var(--violet-500);
-            border-color: var(--violet-500);
-            color: white;
-        }
-        
-        .channel-btn:hover:not(.active) {
-            border-color: var(--violet-400);
-            color: var(--violet-400);
+            border-color: var(--primary-500);
         }
         
         .empty-chat {
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100%;
-            color: var(--text-muted);
             text-align: center;
-            gap: var(--space-4);
+            color: var(--text-muted);
+            gap: 16px;
+        }
+        
+        .empty-chat-icon {
+            font-size: 4rem;
+            opacity: 0.5;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal-overlay.show {
+            display: flex;
+        }
+        
+        .modal {
+            background: var(--bg-card);
+            border-radius: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+        
+        .modal-body {
+            padding: 24px;
+        }
+        
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        
+        /* Form */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
         }
         
         /* Toast */
         .toast-container {
             position: fixed;
-            bottom: var(--space-5);
-            right: var(--space-5);
+            bottom: 20px;
+            right: 20px;
             z-index: 200;
             display: flex;
             flex-direction: column;
-            gap: var(--space-3);
+            gap: 12px;
         }
         
         .toast {
-            background: var(--surface-card-solid);
-            border: 1px solid var(--border-default);
-            border-radius: var(--radius-md);
-            padding: var(--space-4) var(--space-5);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px 18px;
             display: flex;
             align-items: center;
-            gap: var(--space-3);
+            gap: 12px;
             min-width: 280px;
             transform: translateX(120%);
             opacity: 0;
-            transition: all 0.5s var(--ease-out-expo);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: var(--shadow-lg);
         }
         
-        .toast.show { transform: translateX(0); opacity: 1; }
-        .toast.success { border-left: 3px solid var(--emerald-500); }
-        .toast.error { border-left: 3px solid var(--rose-500); }
-        .toast.success .toast-icon { color: var(--emerald-400); }
-        .toast.error .toast-icon { color: var(--rose-500); }
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .toast.success { border-left: 3px solid var(--primary-500); }
+        .toast.error { border-left: 3px solid var(--danger-500); }
+        .toast.info { border-left: 3px solid var(--info-500); }
         
         /* Responsive */
         @media (max-width: 1024px) {
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .charts-row { grid-template-columns: 1fr; }
+            .chat-layout { grid-template-columns: 280px 1fr; }
         }
         
         @media (max-width: 768px) {
@@ -845,23 +963,28 @@
             .mobile-header { display: flex; }
             .main-content { margin-left: 0; padding-top: 76px; }
             .stats-grid { grid-template-columns: 1fr; }
-            .data-table { min-width: 600px; }
+            .chat-layout { grid-template-columns: 1fr; }
+            .conversations-list { display: none; }
+            .conversations-list.mobile-visible { display: block; position: absolute; inset: 0; z-index: 10; background: var(--bg-card); }
+            .message { max-width: 85%; }
             .form-row { grid-template-columns: 1fr; }
-            .chat-container { flex-direction: column; }
-            .chat-conversations { border-right: none; border-bottom: 1px solid var(--border-subtle); max-height: 300px; }
+        }
+        
+        @media (max-width: 480px) {
+            .page-header { flex-direction: column; align-items: flex-start; }
+            .stats-grid { gap: 12px; }
+            .stat-card { padding: 16px; }
+            .search-box input { width: 100%; }
         }
     </style>
 </head>
 <body>
-    <div class="bg-decoration" aria-hidden="true">
-        <div class="bg-gradient-1"></div>
-    </div>
-    
     <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
     
     <header class="mobile-header">
         <button class="menu-btn" onclick="openSidebar()"><i class="fa-solid fa-bars"></i></button>
-        <span class="mobile-logo">Salam <span>Fournisseur</span></span>
+        <span class="mobile-logo">Salam <span>Market</span></span>
+        <button class="menu-btn" onclick="toggleMobileChat()"><i class="fa-solid fa-comments"></i></button>
     </header>
     
     <aside class="sidebar" id="sidebar">
@@ -869,7 +992,7 @@
             <div class="sidebar-logo"><i class="fa-solid fa-store"></i></div>
             <div class="sidebar-brand">
                 <h2>Salam Market</h2>
-                <p>Fournisseur</p>
+                <p>Fournisseur PRO</p>
             </div>
         </div>
         <nav class="sidebar-nav">
@@ -877,15 +1000,12 @@
                 <i class="fa-solid fa-chart-line"></i> Tableau de Bord
             </button>
             <button class="nav-item" onclick="showSection('products')">
-                <i class="fa-solid fa-boxes-stacked"></i> Mes Produits
+                <i class="fa-solid fa-boxes-stacked"></i> Produits
                 <span class="nav-badge" id="productsCount">0</span>
             </button>
             <button class="nav-item" onclick="showSection('orders')">
                 <i class="fa-solid fa-clipboard-list"></i> Commandes
                 <span class="nav-badge" id="pendingOrdersBadge">0</span>
-            </button>
-            <button class="nav-item" onclick="showSection('stock')">
-                <i class="fa-solid fa-warehouse"></i> Gestion Stock
             </button>
             <button class="nav-item" onclick="showSection('chat')">
                 <i class="fa-solid fa-comments"></i> Messagerie
@@ -895,11 +1015,17 @@
                 <i class="fa-solid fa-chart-simple"></i> Analytique
             </button>
             <button class="nav-item" onclick="showSection('profile')">
-                <i class="fa-solid fa-user"></i> Mon Profil
+                <i class="fa-solid fa-user"></i> Profil
             </button>
         </nav>
         <div class="sidebar-footer">
-            <button class="btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</button>
+            <div class="theme-toggle">
+                <span><i class="fa-regular fa-moon"></i> Mode sombre</span>
+                <div class="toggle-switch" id="themeToggle" onclick="toggleTheme()"></div>
+            </div>
+            <button class="btn-logout" onclick="logout()">
+                <i class="fa-solid fa-right-from-bracket"></i> Déconnexion
+            </button>
         </div>
     </aside>
     
@@ -911,7 +1037,7 @@
                 <div class="page-header">
                     <div>
                         <h1><i class="fa-solid fa-chart-line"></i> Tableau de Bord</h1>
-                        <p class="welcome-badge" id="supplierName">Chargement...</p>
+                        <p class="welcome-badge" id="supplierName" style="color: var(--text-muted); font-size: 0.85rem;">Chargement...</p>
                     </div>
                     <div class="header-actions">
                         <button class="btn-outline btn" onclick="refreshAll()">
@@ -925,25 +1051,19 @@
                 <div class="charts-row">
                     <div class="chart-card">
                         <div class="chart-header">📊 Ventes des 7 derniers jours</div>
-                        <div class="chart-container">
-                            <canvas id="weeklySalesChart"></canvas>
-                        </div>
+                        <div class="chart-container"><canvas id="weeklySalesChart"></canvas></div>
                     </div>
                     <div class="chart-card">
                         <div class="chart-header">📦 Produits par catégorie</div>
-                        <div class="chart-container">
-                            <canvas id="categoryChart"></canvas>
-                        </div>
+                        <div class="chart-container"><canvas id="categoryChart"></canvas></div>
                     </div>
                 </div>
                 
                 <div class="chart-card">
-                    <div class="chart-header">🆕 Dernières commandes reçues</div>
+                    <div class="chart-header">🆕 Dernières commandes</div>
                     <div class="table-wrapper">
                         <table class="data-table" id="recentOrdersTable">
-                            <thead>
-                                <tr><th>ID</th><th>Client</th><th>Articles</th><th>Total</th><th>Statut</th><th>Date</th><th>Actions</th></tr>
-                            </thead>
+                            <thead><tr><th>ID</th><th>Client</th><th>Total</th><th>Statut</th><th>Date</th></tr></thead>
                             <tbody></tbody>
                         </table>
                     </div>
@@ -955,23 +1075,14 @@
                 <div class="page-header">
                     <h1><i class="fa-solid fa-boxes-stacked"></i> Mes Produits</h1>
                     <div class="header-actions">
-                        <div class="search-box">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" id="productSearch" placeholder="Rechercher..." oninput="loadProducts()">
-                        </div>
-                        <button class="btn-primary btn" onclick="openProductModal()">
-                            <i class="fa-solid fa-plus"></i> Ajouter un produit
-                        </button>
+                        <div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="productSearch" placeholder="Rechercher..."></div>
+                        <button class="btn-primary btn" onclick="openProductModal()"><i class="fa-solid fa-plus"></i> Ajouter</button>
                     </div>
                 </div>
                 <div class="chart-card">
                     <div class="table-wrapper">
                         <table class="data-table" id="productsTable">
-                            <thead>
-                                <tr>
-                                    <th>Produit</th><th>Catégorie</th><th>Prix (FCFA)</th><th>Stock</th><th>Statut</th><th>Actions</th>
-                                </tr>
-                            </thead>
+                            <thead><tr><th>Produit</th><th>Catégorie</th><th>Prix</th><th>Stock</th><th>Actions</th></tr></thead>
                             <tbody></tbody>
                         </table>
                     </div>
@@ -981,14 +1092,11 @@
             <!-- SECTION: COMMANDES -->
             <div class="section" id="section-orders">
                 <div class="page-header">
-                    <h1><i class="fa-solid fa-clipboard-list"></i> Commandes reçues</h1>
+                    <h1><i class="fa-solid fa-clipboard-list"></i> Commandes</h1>
                     <div class="header-actions">
-                        <div class="search-box">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" id="orderSearch" placeholder="Rechercher..." oninput="loadSupplierOrders()">
-                        </div>
-                        <select class="btn-outline btn" id="orderStatusFilter" onchange="loadSupplierOrders()">
-                            <option value="all">Tous les statuts</option>
+                        <div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="orderSearch" placeholder="Rechercher..."></div>
+                        <select class="btn-outline btn" id="orderStatusFilter">
+                            <option value="all">Tous</option>
                             <option value="confirmée">Confirmée</option>
                             <option value="préparation">Préparation</option>
                             <option value="livraison">Livraison</option>
@@ -998,92 +1106,33 @@
                 </div>
                 <div class="chart-card">
                     <div class="table-wrapper">
-                        <table class="data-table" id="supplierOrdersTable">
-                            <thead>
-                                <tr>
-                                    <th>ID</th><th>Client</th><th>Produits</th><th>Total</th><th>Statut</th><th>Date</th><th>Actions</th>
-                                </tr>
-                            </thead>
+                        <table class="data-table" id="ordersTable">
+                            <thead><tr><th>ID</th><th>Client</th><th>Total</th><th>Statut</th><th>Date</th><th>Actions</th></tr></thead>
                             <tbody></tbody>
                         </table>
                     </div>
                 </div>
             </div>
             
-            <!-- SECTION: STOCK -->
-            <div class="section" id="section-stock">
-                <div class="page-header">
-                    <h1><i class="fa-solid fa-warehouse"></i> Gestion des stocks</h1>
-                    <div class="header-actions">
-                        <button class="btn-outline btn" onclick="exportStockReport()">
-                            <i class="fa-solid fa-download"></i> Exporter rapport
-                        </button>
-                    </div>
-                </div>
-                <div class="chart-card">
-                    <div class="table-wrapper">
-                        <table class="data-table" id="stockTable">
-                            <thead>
-                                <tr>
-                                    <th>Produit</th><th>Stock actuel</th><th>Stock minimum</th><th>Statut</th><th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- SECTION: CHAT (Messagerie Fournisseur) -->
+            <!-- SECTION: CHAT -->
             <div class="section" id="section-chat">
                 <div class="page-header">
-                    <div>
-                        <h1><i class="fa-solid fa-comments"></i> Messagerie Clients</h1>
-                        <div class="channel-selector" id="supplierChannelSelector"></div>
-                    </div>
-                    <div class="header-actions">
-                        <button class="btn-outline btn" onclick="refreshChat()">
-                            <i class="fa-solid fa-rotate-right"></i> Rafraîchir
-                        </button>
-                    </div>
+                    <h1><i class="fa-solid fa-comments"></i> Messagerie Client</h1>
+                    <div class="channel-selector" id="channelSelector"></div>
                 </div>
-                
-                <div class="chart-card">
-                    <div class="chat-container">
-                        <div style="display: grid; grid-template-columns: 300px 1fr; height: 550px;">
-                            <!-- Liste des conversations -->
-                            <div class="chat-conversations">
-                                <div style="padding: var(--space-3); border-bottom: 1px solid var(--border-subtle);">
-                                    <input type="text" id="chatSearchInput" placeholder="🔍 Rechercher un client..." style="width: 100%; padding: var(--space-2); background: var(--surface-input); border: 1px solid var(--border-default); border-radius: var(--radius-md); color: var(--text-primary);">
-                                </div>
-                                <div id="conversationsList"></div>
+                <div class="chat-container">
+                    <div class="chat-layout">
+                        <div class="conversations-list" id="conversationsList">
+                            <div class="conversation-search">
+                                <input type="text" id="conversationSearch" placeholder="🔍 Rechercher un client...">
                             </div>
-                            
-                            <!-- Zone de chat active -->
-                            <div style="display: flex; flex-direction: column; height: 100%;">
-                                <div id="activeChatHeader" style="padding: var(--space-4); border-bottom: 1px solid var(--border-subtle); background: var(--surface-hover);">
-                                    <div style="display: flex; align-items: center; gap: var(--space-3);">
-                                        <div id="activeChatAvatar" style="width: 44px; height: 44px; background: linear-gradient(135deg, var(--emerald-600), var(--violet-500)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">🛒</div>
-                                        <div>
-                                            <strong id="activeChatName">Sélectionnez un client</strong><br>
-                                            <small id="activeChatStatus" style="color: var(--text-muted);">Choisissez une conversation</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div id="chatMessages" class="chat-messages-area">
-                                    <div class="empty-chat">
-                                        <i class="fa-regular fa-message" style="font-size: 3rem; opacity: 0.5;"></i>
-                                        <p>Sélectionnez un client pour commencer à discuter</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="chat-input-area">
-                                    <textarea id="chatMessageInput" class="chat-input" placeholder="Votre message..." rows="2" disabled></textarea>
-                                    <button id="sendChatBtn" class="btn-primary" onclick="sendSupplierMessage()" style="padding: var(--space-3) var(--space-5);" disabled>
-                                        <i class="fa-solid fa-paper-plane"></i> Envoyer
-                                    </button>
-                                </div>
+                            <div id="conversationsContainer"></div>
+                        </div>
+                        <div class="chat-messages-area" id="chatMessagesArea">
+                            <div class="empty-chat">
+                                <div class="empty-chat-icon">💬</div>
+                                <h3>Messagerie Salam Market</h3>
+                                <p>Sélectionnez un client pour commencer à discuter</p>
                             </div>
                         </div>
                     </div>
@@ -1092,74 +1141,32 @@
             
             <!-- SECTION: ANALYTIQUE -->
             <div class="section" id="section-analytics">
-                <div class="page-header">
-                    <h1><i class="fa-solid fa-chart-simple"></i> Analytique</h1>
-                </div>
+                <div class="page-header"><h1><i class="fa-solid fa-chart-simple"></i> Analytique avancée</h1></div>
                 <div class="charts-row">
-                    <div class="chart-card">
-                        <div class="chart-header">📈 Évolution mensuelle des ventes</div>
-                        <div class="chart-container">
-                            <canvas id="monthlySalesChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="chart-card">
-                        <div class="chart-header">🏆 Top 5 des produits</div>
-                        <div class="table-wrapper">
-                            <table class="data-table" id="topProductsTable">
-                                <thead><tr><th>Produit</th><th>Ventes</th><th>Chiffre d'affaires</th></tr></thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <div class="chart-card"><div class="chart-header">📈 Ventes mensuelles</div><div class="chart-container"><canvas id="monthlySalesChart"></canvas></div></div>
+                    <div class="chart-card"><div class="chart-header">🏆 Top produits</div><div class="table-wrapper"><table class="data-table" id="topProductsTable"><thead><tr><th>Produit</th><th>Ventes</th><th>CA</th></tr></thead><tbody></tbody></table></div></div>
                 </div>
             </div>
             
             <!-- SECTION: PROFIL -->
             <div class="section" id="section-profile">
-                <div class="page-header">
-                    <h1><i class="fa-solid fa-user"></i> Mon Profil</h1>
-                </div>
+                <div class="page-header"><h1><i class="fa-solid fa-user"></i> Mon Profil</h1></div>
                 <div class="chart-card">
-                    <div class="card-body" style="padding: var(--space-6);">
+                    <div class="card-body" style="padding: 24px;">
                         <form id="profileForm">
                             <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label">Nom du fournisseur</label>
-                                    <input type="text" class="form-input" id="supplierProfileName" readonly>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Email</label>
-                                    <input type="email" class="form-input" id="supplierProfileEmail" readonly>
-                                </div>
+                                <div class="form-group"><label class="form-label">Nom</label><input type="text" class="form-input" id="profileName" readonly></div>
+                                <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="profileEmail" readonly></div>
                             </div>
                             <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label">Téléphone</label>
-                                    <input type="tel" class="form-input" id="supplierProfilePhone" readonly>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Adresse</label>
-                                    <input type="text" class="form-input" id="supplierProfileAddress" readonly>
-                                </div>
+                                <div class="form-group"><label class="form-label">Téléphone</label><input type="tel" class="form-input" id="profilePhone" readonly></div>
+                                <div class="form-group"><label class="form-label">Adresse</label><input type="text" class="form-input" id="profileAddress" readonly></div>
                             </div>
+                            <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="profileDescription" rows="3" readonly></textarea></div>
                             <div class="form-group">
-                                <label class="form-label">Description</label>
-                                <textarea class="form-textarea" id="supplierProfileDescription" rows="3" readonly></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Membre depuis</label>
-                                <input type="text" class="form-input" id="supplierProfileSince" readonly>
-                            </div>
-                            <div class="form-group">
-                                <button type="button" class="btn-primary btn" onclick="toggleEditProfile()" id="editProfileBtn">
-                                    <i class="fa-solid fa-pen"></i> Modifier mon profil
-                                </button>
-                                <button type="button" class="btn-outline btn" onclick="saveProfile()" id="saveProfileBtn" style="display: none;">
-                                    <i class="fa-solid fa-check"></i> Enregistrer
-                                </button>
-                                <button type="button" class="btn-danger btn" onclick="cancelEditProfile()" id="cancelProfileBtn" style="display: none;">
-                                    <i class="fa-solid fa-xmark"></i> Annuler
-                                </button>
+                                <button type="button" class="btn-primary btn" onclick="editProfile()" id="editProfileBtn"><i class="fa-solid fa-pen"></i> Modifier</button>
+                                <button type="button" class="btn-outline btn" onclick="saveProfile()" id="saveProfileBtn" style="display:none;"><i class="fa-solid fa-check"></i> Enregistrer</button>
+                                <button type="button" class="btn-outline btn" onclick="cancelEdit()" id="cancelProfileBtn" style="display:none;"><i class="fa-solid fa-xmark"></i> Annuler</button>
                             </div>
                         </form>
                     </div>
@@ -1171,120 +1178,27 @@
     <!-- MODAL: Produit -->
     <div class="modal-overlay" id="productModal">
         <div class="modal">
-            <div class="modal-header">
-                <h3 id="productModalTitle">Ajouter un produit</h3>
-                <button class="modal-close" onclick="closeProductModal()">&times;</button>
-            </div>
+            <div class="modal-header"><h3 id="productModalTitle">Ajouter un produit</h3><button class="modal-close" onclick="closeProductModal()">&times;</button></div>
             <div class="modal-body">
                 <form id="productForm">
                     <input type="hidden" id="productId">
-                    <div class="form-group">
-                        <label class="form-label">Nom du produit</label>
-                        <input type="text" class="form-input" id="productName" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Catégorie</label>
-                        <select class="form-select" id="productCategory" required>
-                            <option value="">Sélectionner</option>
-                            <option value="Riz">Riz</option>
-                            <option value="Pâtes">Pâtes</option>
-                            <option value="Huiles">Huiles</option>
-                            <option value="Savons">Savons</option>
-                            <option value="Dentifrices">Dentifrices</option>
-                            <option value="Viandes">Viandes</option>
-                            <option value="Fruits">Fruits</option>
-                            <option value="Légumes">Légumes</option>
-                            <option value="Boissons">Boissons</option>
-                            <option value="Autres">Autres</option>
-                        </select>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Prix (FCFA)</label>
-                            <input type="number" class="form-input" id="productPrice" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Unité</label>
-                            <input type="text" class="form-input" id="productUnit" placeholder="kg, litre, pièce..." required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Stock</label>
-                            <input type="number" class="form-input" id="productStock" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Stock minimum alerte</label>
-                            <input type="number" class="form-input" id="productMinStock" value="10">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Description</label>
-                        <textarea class="form-textarea" id="productDescription" rows="3" placeholder="Description du produit..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Emoji / Image</label>
-                        <input type="text" class="form-input" id="productImage" value="📦">
-                    </div>
+                    <div class="form-group"><label class="form-label">Nom</label><input type="text" class="form-input" id="productName" required></div>
+                    <div class="form-group"><label class="form-label">Catégorie</label><select class="form-select" id="productCategory" required><option value="">Sélectionner</option><option value="Riz">Riz</option><option value="Huiles">Huiles</option><option value="Savons">Savons</option><option value="Fruits">Fruits</option><option value="Légumes">Légumes</option></select></div>
+                    <div class="form-row"><div class="form-group"><label class="form-label">Prix (FCFA)</label><input type="number" class="form-input" id="productPrice" required></div><div class="form-group"><label class="form-label">Stock</label><input type="number" class="form-input" id="productStock" required></div></div>
+                    <div class="form-group"><label class="form-label">Unité</label><input type="text" class="form-input" id="productUnit" placeholder="kg, litre, pièce"></div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button class="btn-outline btn" onclick="closeProductModal()">Annuler</button>
-                <button class="btn-primary btn" onclick="saveProduct()">Enregistrer</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- MODAL: Stock -->
-    <div class="modal-overlay" id="stockModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3>Mettre à jour le stock</h3>
-                <button class="modal-close" onclick="closeStockModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="stockForm">
-                    <input type="hidden" id="stockProductId">
-                    <div class="form-group">
-                        <label class="form-label">Produit</label>
-                        <input type="text" class="form-input" id="stockProductName" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Stock actuel</label>
-                        <input type="number" class="form-input" id="stockCurrentValue" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Nouveau stock</label>
-                        <input type="number" class="form-input" id="stockNewValue" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Type d'opération</label>
-                        <select class="form-select" id="stockOperation">
-                            <option value="set">Définir</option>
-                            <option value="add">Ajouter</option>
-                            <option value="remove">Retirer</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-outline btn" onclick="closeStockModal()">Annuler</button>
-                <button class="btn-primary btn" onclick="updateStock()">Mettre à jour</button>
-            </div>
+            <div class="modal-footer"><button class="btn-outline btn" onclick="closeProductModal()">Annuler</button><button class="btn-primary btn" onclick="saveProduct()">Enregistrer</button></div>
         </div>
     </div>
     
     <div class="toast-container" id="toastContainer"></div>
     
     <script>
-        // ============================================================
-        // ESPACE FOURNISSEUR — Gestion complète avec Messagerie
-        // ============================================================
-        
-        (() => {
+        (function() {
             'use strict';
             
-            // Vérification session fournisseur
+            // Vérification session
             const session = JSON.parse(localStorage.getItem('salam_session') || 'null');
             if (!session || session.user.role !== 'supplier') {
                 window.location.href = '../index.html';
@@ -1292,894 +1206,376 @@
             }
             
             const supplier = session.user;
-            const supplierName = supplier.name;
             const supplierId = supplier.id;
+            const supplierName = supplier.name;
             
             // Variables
-            let weeklySalesChart = null;
-            let categoryChart = null;
-            let monthlySalesChart = null;
             let products = [];
             let orders = [];
-            
-            // Variables Chat
             let conversations = [];
-            let currentConversationId = null;
+            let currentChatId = null;
             let currentCustomer = null;
             let chatRefreshInterval = null;
             let selectedChannel = 'all';
             
-            // Numéros pour notifications
-            const REAL_PHONE_NUMBER = '+237688282662';
-            const REAL_EMAIL = 'contact@salamarket.cm';
-            
-            // Storage helpers
+            // Storage
             const Storage = {
-                get: (key, defaultVal = null) => {
-                    try { return JSON.parse(localStorage.getItem('salam_' + key) || 'null') || defaultVal; }
-                    catch { return defaultVal; }
-                },
-                set: (key, value) => localStorage.setItem('salam_' + key, JSON.stringify(value))
+                get: (key, def = null) => { try { return JSON.parse(localStorage.getItem('salam_' + key) || 'null') || def; } catch { return def; } },
+                set: (key, val) => localStorage.setItem('salam_' + key, JSON.stringify(val))
             };
             
-            // ========== NOTIFICATIONS MULTI-CANAUX ==========
-            function sendWhatsApp(phoneNumber, message) {
-                const formattedNumber = phoneNumber.replace(/[^0-9]/g, '');
-                window.open(`https://wa.me/${formattedNumber}?text=${encodeURIComponent(message)}`, '_blank');
+            // Charts
+            let weeklyChart, categoryChart, monthlyChart;
+            
+            // ========== NOTIFICATIONS ==========
+            function sendWhatsApp(phone, msg) {
+                window.open(`https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(msg)}`, '_blank');
             }
             
-            function sendSMS(phoneNumber, message) {
-                window.open(`sms:${phoneNumber}?body=${encodeURIComponent(message)}`, '_blank');
+            function sendSMS(phone, msg) {
+                window.open(`sms:${phone}?body=${encodeURIComponent(msg)}`, '_blank');
             }
             
-            function sendEmail(email, subject, message) {
-                window.open(`mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`, '_blank');
+            function sendEmail(email, subj, msg) {
+                window.open(`mailto:${email}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(msg)}`, '_blank');
             }
             
-            function sendMultiChannelNotification(phoneNumber, email, customerName, message) {
-                const fullMessage = `📱 SALAM MARKET PRO\n\nMessage de ${supplierName} (Fournisseur):\n"${message.substring(0, 200)}"\n\nConnectez-vous à Salam Market pour répondre.`;
-                
-                switch(selectedChannel) {
-                    case 'whatsapp':
-                        sendWhatsApp(phoneNumber, fullMessage);
-                        showToast('WhatsApp', `Message envoyé à ${customerName} via WhatsApp`, 'success');
-                        break;
-                    case 'sms':
-                        sendSMS(phoneNumber, fullMessage.substring(0, 160));
-                        showToast('SMS', `Message envoyé à ${customerName} par SMS`, 'success');
-                        break;
-                    case 'email':
-                        sendEmail(email, `Message de ${supplierName}`, fullMessage);
-                        showToast('Email', `Message envoyé à ${customerName} par email`, 'success');
-                        break;
-                    default:
-                        sendWhatsApp(phoneNumber, fullMessage);
-                        sendSMS(phoneNumber, fullMessage.substring(0, 160));
-                        if (email) sendEmail(email, `Message de ${supplierName}`, fullMessage);
-                        showToast('Multi-canal', `Message envoyé à ${customerName} (WhatsApp + SMS + Email)`, 'success');
+            function sendNotification(customer, message) {
+                const msg = `📱 SALAM MARKET\n\nMessage de ${supplierName}:\n"${message.substring(0, 200)}"`;
+                if (selectedChannel === 'whatsapp') sendWhatsApp(customer.phone, msg);
+                else if (selectedChannel === 'sms') sendSMS(customer.phone, msg.substring(0, 160));
+                else if (selectedChannel === 'email') sendEmail(customer.email, `Message de ${supplierName}`, msg);
+                else {
+                    sendWhatsApp(customer.phone, msg);
+                    sendSMS(customer.phone, msg.substring(0, 160));
+                    if (customer.email) sendEmail(customer.email, `Message de ${supplierName}`, msg);
                 }
+                showToast('Message envoyé', `${customer.name} a été notifié`, 'success');
             }
             
             function renderChannelSelector() {
-                const container = document.getElementById('supplierChannelSelector');
+                const container = document.getElementById('channelSelector');
                 if (!container) return;
                 container.innerHTML = `
-                    <button class="channel-btn ${selectedChannel === 'all' ? 'active' : ''}" onclick="setChannel('all')">
-                        <i class="fa-solid fa-broadcast-tower"></i> Tous
-                    </button>
-                    <button class="channel-btn ${selectedChannel === 'whatsapp' ? 'active' : ''}" onclick="setChannel('whatsapp')">
-                        <i class="fa-brands fa-whatsapp"></i> WhatsApp
-                    </button>
-                    <button class="channel-btn ${selectedChannel === 'sms' ? 'active' : ''}" onclick="setChannel('sms')">
-                        <i class="fa-solid fa-message"></i> SMS
-                    </button>
-                    <button class="channel-btn ${selectedChannel === 'email' ? 'active' : ''}" onclick="setChannel('email')">
-                        <i class="fa-solid fa-envelope"></i> Email
-                    </button>
+                    <button class="channel-btn ${selectedChannel === 'all' ? 'active' : ''}" onclick="setChannel('all')"><i class="fa-solid fa-broadcast-tower"></i> Tous</button>
+                    <button class="channel-btn ${selectedChannel === 'whatsapp' ? 'active' : ''}" onclick="setChannel('whatsapp')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+                    <button class="channel-btn ${selectedChannel === 'sms' ? 'active' : ''}" onclick="setChannel('sms')"><i class="fa-solid fa-message"></i> SMS</button>
+                    <button class="channel-btn ${selectedChannel === 'email' ? 'active' : ''}" onclick="setChannel('email')"><i class="fa-solid fa-envelope"></i> Email</button>
                 `;
             }
             
-            function setChannel(channel) {
+            window.setChannel = function(channel) {
                 selectedChannel = channel;
                 renderChannelSelector();
-                showToast('Canal changé', `Notifications via ${channel === 'all' ? 'tous les canaux' : channel}`, 'info');
-            }
+                showToast('Canal changé', `Notifications : ${channel === 'all' ? 'tous les canaux' : channel}`, 'info');
+            };
             
-            // ========== CHAT FUNCTIONS ==========
-            function loadChatConversations() {
+            // ========== CHAT ==========
+            function loadConversations() {
                 const users = Storage.get('users', []);
                 const messages = JSON.parse(localStorage.getItem('salam_messages') || '[]');
                 const clients = users.filter(u => u.role === 'client');
-                
-                const conversationsMap = new Map();
+                const convMap = new Map();
                 
                 clients.forEach(client => {
-                    const clientMessages = messages.filter(m => 
-                        (m.from === client.id && m.to === supplierId) || 
-                        (m.from === supplierId && m.to === client.id)
-                    );
-                    
-                    if (clientMessages.length > 0 || true) { // Afficher tous les clients même sans messages
-                        const lastMessage = clientMessages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))[0];
-                        const unreadCount = clientMessages.filter(m => m.from === client.id && m.to === supplierId && !m.read).length;
-                        
-                        conversationsMap.set(client.id, {
-                            client: client,
-                            messages: clientMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)),
-                            lastMessage: lastMessage,
-                            unreadCount: unreadCount
-                        });
-                    }
+                    const clientMessages = messages.filter(m => (m.from === client.id && m.to === supplierId) || (m.from === supplierId && m.to === client.id));
+                    const lastMsg = clientMessages.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp))[0];
+                    const unread = clientMessages.filter(m => m.from === client.id && m.to === supplierId && !m.read).length;
+                    convMap.set(client.id, { client, messages: clientMessages.sort((a,b) => new Date(a.timestamp) - new Date(b.timestamp)), lastMessage: lastMsg, unreadCount: unread });
                 });
                 
-                conversations = Array.from(conversationsMap.values());
-                conversations.sort((a, b) => {
-                    const dateA = a.lastMessage ? new Date(a.lastMessage.timestamp) : new Date(0);
-                    const dateB = b.lastMessage ? new Date(b.lastMessage.timestamp) : new Date(0);
-                    return dateB - dateA;
+                conversations = Array.from(convMap.values()).sort((a,b) => {
+                    const da = a.lastMessage ? new Date(a.lastMessage.timestamp) : 0;
+                    const db = b.lastMessage ? new Date(b.lastMessage.timestamp) : 0;
+                    return db - da;
                 });
                 
-                renderConversationsList();
+                renderConversations();
                 updateChatBadge();
-                
-                if (currentConversationId) {
-                    const conv = conversations.find(c => c.client.id === currentConversationId);
-                    if (conv) {
-                        currentCustomer = conv.client;
-                        renderChatMessages(conv.messages);
-                        markMessagesAsRead(currentConversationId);
-                    }
+                if (currentChatId) {
+                    const conv = conversations.find(c => c.client.id === currentChatId);
+                    if (conv) { currentCustomer = conv.client; renderChatMessages(conv.messages); markAsRead(currentChatId); }
                 }
             }
             
-            function renderConversationsList() {
-                const container = document.getElementById('conversationsList');
+            function renderConversations() {
+                const container = document.getElementById('conversationsContainer');
+                const search = document.getElementById('conversationSearch')?.value.toLowerCase() || '';
+                let filtered = conversations.filter(c => c.client.name.toLowerCase().includes(search));
                 if (!container) return;
-                
-                const searchTerm = document.getElementById('chatSearchInput')?.value.toLowerCase() || '';
-                let filtered = [...conversations];
-                if (searchTerm) {
-                    filtered = filtered.filter(c => c.client.name.toLowerCase().includes(searchTerm));
-                }
-                
-                if (filtered.length === 0) {
-                    container.innerHTML = '<div style="text-align:center;padding:var(--space-6);color:var(--text-muted);">Aucun client trouvé</div>';
-                    return;
-                }
-                
-                container.innerHTML = filtered.map(conv => {
-                    const lastMsg = conv.lastMessage;
-                    const lastMsgPreview = lastMsg ? (lastMsg.text.length > 40 ? lastMsg.text.substring(0, 40) + '...' : lastMsg.text) : 'Aucun message';
-                    const lastMsgTime = lastMsg ? formatTime(lastMsg.timestamp) : '';
-                    const isActive = currentConversationId === conv.client.id;
-                    const unreadBadge = conv.unreadCount > 0 ? `<span class="nav-badge" style="background: var(--emerald-500);">${conv.unreadCount}</span>` : '';
-                    
-                    return `
-                        <div class="chat-conversation-item ${isActive ? 'active' : ''}" onclick="selectConversation('${conv.client.id}')">
-                            <div class="chat-conversation-avatar">${conv.client.avatar || '🛒'}</div>
-                            <div class="chat-conversation-info">
-                                <div class="chat-conversation-name">
-                                    ${escapeHtml(conv.client.name)}
-                                    ${unreadBadge}
-                                </div>
-                                <div class="chat-conversation-lastmsg">${escapeHtml(lastMsgPreview)}</div>
+                if (filtered.length === 0) { container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);">Aucun client</div>'; return; }
+                container.innerHTML = filtered.map(conv => `
+                    <div class="conversation-item ${currentChatId === conv.client.id ? 'active' : ''}" onclick="selectConversation('${conv.client.id}')">
+                        <div class="conversation-avatar">${conv.client.avatar || '🛒'}</div>
+                        <div class="conversation-info">
+                            <div class="conversation-name">
+                                ${escapeHtml(conv.client.name)}
+                                ${conv.unreadCount > 0 ? `<span class="unread-count">${conv.unreadCount}</span>` : ''}
                             </div>
-                            <div class="chat-conversation-time">${lastMsgTime}</div>
+                            <div class="conversation-preview">${conv.lastMessage ? escapeHtml(conv.lastMessage.text.substring(0, 40)) : 'Aucun message'}</div>
+                            <div class="conversation-time">${conv.lastMessage ? formatTime(conv.lastMessage.timestamp) : ''}</div>
                         </div>
-                    `;
-                }).join('');
-            }
-            
-            function selectConversation(clientId) {
-                currentConversationId = clientId;
-                const conv = conversations.find(c => c.client.id === clientId);
-                if (conv) {
-                    currentCustomer = conv.client;
-                    renderChatMessages(conv.messages);
-                    markMessagesAsRead(clientId);
-                    
-                    // Activer l'input
-                    document.getElementById('chatMessageInput').disabled = false;
-                    document.getElementById('sendChatBtn').disabled = false;
-                    document.getElementById('chatMessageInput').focus();
-                    
-                    // Mettre à jour l'en-tête
-                    document.getElementById('activeChatName').textContent = currentCustomer.name;
-                    document.getElementById('activeChatAvatar').textContent = currentCustomer.avatar || '🛒';
-                    document.getElementById('activeChatStatus').innerHTML = `<i class="fa-regular fa-circle"></i> En ligne`;
-                }
-                renderConversationsList();
+                    </div>
+                `).join('');
             }
             
             function renderChatMessages(messages) {
-                const container = document.getElementById('chatMessages');
-                if (!container) return;
-                
+                const area = document.getElementById('chatMessagesArea');
                 if (!messages || messages.length === 0) {
-                    container.innerHTML = `
-                        <div class="empty-chat">
-                            <i class="fa-regular fa-comment-dots" style="font-size: 3rem; opacity: 0.5;"></i>
-                            <p>Aucun message avec ce client</p>
-                            <small>Soyez le premier à envoyer un message !</small>
-                        </div>
-                    `;
+                    area.innerHTML = `<div class="empty-chat"><div class="empty-chat-icon">💬</div><h3>Aucun message</h3><p>Soyez le premier à envoyer un message</p></div>`;
                     return;
                 }
-                
-                container.innerHTML = messages.map(msg => {
-                    const isSent = msg.from === supplierId;
-                    const isAI = msg.isAI === true;
-                    return `
-                        <div class="chat-message ${isSent ? 'sent' : 'received'}">
-                            <div>
-                                <div class="chat-message-bubble">
-                                    ${escapeHtml(msg.text)}
-                                    ${isAI ? '<span class="badge-violet" style="margin-left: var(--space-2); font-size: 0.6rem;"><i class="fa-solid fa-robot"></i> IA</span>' : ''}
-                                </div>
-                                <div class="chat-message-time">${formatTime(msg.timestamp)}</div>
-                            </div>
+                area.innerHTML = `
+                    <div class="chat-header">
+                        <div class="chat-user-info">
+                            <div class="chat-user-avatar">${currentCustomer?.avatar || '🛒'}</div>
+                            <div><div class="chat-user-name">${escapeHtml(currentCustomer?.name || 'Client')}</div><div class="chat-user-status"><i class="fa-regular fa-circle"></i> En ligne</div></div>
                         </div>
-                    `;
-                }).join('');
+                    </div>
+                    <div class="messages-container" id="messagesContainer"></div>
+                    <div class="chat-input-area">
+                        <textarea id="chatInput" class="chat-input" placeholder="Votre message..." rows="1"></textarea>
+                        <button class="btn-primary" onclick="sendChatMessage()" style="padding: 12px 20px;"><i class="fa-solid fa-paper-plane"></i> Envoyer</button>
+                    </div>
+                `;
+                const msgContainer = document.getElementById('messagesContainer');
+                msgContainer.innerHTML = messages.map(msg => `
+                    <div class="message ${msg.from === supplierId ? 'sent' : 'received'}">
+                        <div><div class="message-bubble">${escapeHtml(msg.text)}</div><div class="message-time">${formatTime(msg.timestamp)}</div></div>
+                    </div>
+                `).join('');
+                msgContainer.scrollTop = msgContainer.scrollHeight;
                 
-                container.scrollTop = container.scrollHeight;
+                const input = document.getElementById('chatInput');
+                if (input) input.addEventListener('input', function() { this.style.height = 'auto'; this.style.height = Math.min(this.scrollHeight, 100) + 'px'; });
             }
             
-            function sendSupplierMessage() {
-                const input = document.getElementById('chatMessageInput');
-                const text = input.value.trim();
-                
-                if (!text || !currentConversationId || !currentCustomer) {
-                    showToast('Erreur', 'Sélectionnez un client et écrivez un message', 'error');
-                    return;
-                }
-                
-                const message = {
-                    id: Date.now().toString() + '_' + Math.random().toString(36).substr(2, 6),
-                    from: supplierId,
-                    fromName: supplierName,
-                    to: currentConversationId,
-                    text: text,
-                    timestamp: new Date().toISOString(),
-                    read: false
-                };
-                
-                const saved = localStorage.getItem('salam_messages');
-                const allMessages = saved ? JSON.parse(saved) : [];
-                allMessages.push(message);
-                localStorage.setItem('salam_messages', JSON.stringify(allMessages));
-                
+            window.selectConversation = function(clientId) {
+                currentChatId = clientId;
+                const conv = conversations.find(c => c.client.id === clientId);
+                if (conv) { currentCustomer = conv.client; renderChatMessages(conv.messages); markAsRead(clientId); }
+                renderConversations();
+            };
+            
+            window.sendChatMessage = function() {
+                const input = document.getElementById('chatInput');
+                const text = input?.value.trim();
+                if (!text || !currentChatId || !currentCustomer) { showToast('Erreur', 'Sélectionnez un client', 'error'); return; }
+                const message = { id: Date.now() + '_' + Math.random().toString(36).substr(2,6), from: supplierId, fromName: supplierName, to: currentChatId, text, timestamp: new Date().toISOString(), read: false };
+                const messages = JSON.parse(localStorage.getItem('salam_messages') || '[]');
+                messages.push(message);
+                localStorage.setItem('salam_messages', JSON.stringify(messages));
                 input.value = '';
-                input.style.height = 'auto';
-                
-                // Envoyer la notification au client (WhatsApp/SMS/Email)
-                if (currentCustomer.phone || currentCustomer.email) {
-                    sendMultiChannelNotification(
-                        currentCustomer.phone || REAL_PHONE_NUMBER,
-                        currentCustomer.email || REAL_EMAIL,
-                        currentCustomer.name,
-                        text
-                    );
-                }
-                
-                loadChatConversations();
-                showToast('Message envoyé', `À ${currentCustomer.name} : ${text.substring(0, 50)}`, 'success');
-            }
+                sendNotification(currentCustomer, text);
+                loadConversations();
+                showToast('Message envoyé', `À ${currentCustomer.name} : ${text.substring(0,50)}`, 'success');
+            };
             
-            function markMessagesAsRead(clientId) {
-                const saved = localStorage.getItem('salam_messages');
-                if (!saved) return;
-                let allMessages = JSON.parse(saved);
+            function markAsRead(clientId) {
+                let messages = JSON.parse(localStorage.getItem('salam_messages') || '[]');
                 let updated = false;
-                
-                allMessages = allMessages.map(msg => {
-                    if (msg.from === clientId && msg.to === supplierId && !msg.read) {
-                        updated = true;
-                        return { ...msg, read: true };
-                    }
-                    return msg;
-                });
-                
-                if (updated) {
-                    localStorage.setItem('salam_messages', JSON.stringify(allMessages));
-                    loadChatConversations();
-                }
+                messages = messages.map(m => { if (m.from === clientId && m.to === supplierId && !m.read) { updated = true; return { ...m, read: true }; } return m; });
+                if (updated) { localStorage.setItem('salam_messages', JSON.stringify(messages)); loadConversations(); }
             }
             
             function updateChatBadge() {
-                const totalUnread = conversations.reduce((sum, c) => sum + c.unreadCount, 0);
+                const total = conversations.reduce((s,c) => s + c.unreadCount, 0);
                 const badge = document.getElementById('chatBadge');
-                if (badge) {
-                    if (totalUnread > 0) {
-                        badge.textContent = totalUnread > 9 ? '9+' : totalUnread;
-                        badge.style.display = '';
-                    } else {
-                        badge.style.display = 'none';
-                    }
-                }
-            }
-            
-            function refreshChat() {
-                loadChatConversations();
-                showToast('Chat actualisé', 'Les messages ont été mis à jour', 'success');
-            }
-            
-            function startChatAutoRefresh() {
-                if (chatRefreshInterval) clearInterval(chatRefreshInterval);
-                chatRefreshInterval = setInterval(() => {
-                    loadChatConversations();
-                }, 5000);
-            }
-            
-            // ========== INITIALISATION ==========
-            function init() {
-                document.getElementById('supplierName').innerHTML = `<i class="fa-solid fa-store"></i> ${supplierName}`;
-                loadSupplierData();
-                loadProducts();
-                loadSupplierOrders();
-                loadDashboard();
-                initCharts();
-                
-                // Initialiser le chat
-                renderChannelSelector();
-                loadChatConversations();
-                startChatAutoRefresh();
-                
-                // Redimensionnement auto du textarea
-                const textarea = document.getElementById('chatMessageInput');
-                if (textarea) {
-                    textarea.addEventListener('input', function() {
-                        this.style.height = 'auto';
-                        this.style.height = Math.min(this.scrollHeight, 100) + 'px';
-                    });
-                }
-            }
-            
-            function loadSupplierData() {
-                const users = Storage.get('users', []);
-                const supplierData = users.find(u => u.id === supplier.id) || supplier;
-                
-                document.getElementById('supplierProfileName').value = supplierData.name || '';
-                document.getElementById('supplierProfileEmail').value = supplierData.email || '';
-                document.getElementById('supplierProfilePhone').value = supplierData.phone || '';
-                document.getElementById('supplierProfileAddress').value = supplierData.address || '';
-                document.getElementById('supplierProfileDescription').value = supplierData.description || '';
-                document.getElementById('supplierProfileSince').value = supplierData.createdAt ? new Date(supplierData.createdAt).toLocaleDateString('fr-FR') : 'Janvier 2025';
-            }
-            
-            // ========== DASHBOARD ==========
-            function loadDashboard() {
-                const allProducts = Storage.get('products', []);
-                const supplierProducts = allProducts.filter(p => p.supplier === supplierName);
-                const allOrders = Storage.get('orders', []);
-                const supplierOrders = allOrders.filter(o => o.items.some(i => i.supplier === supplierName));
-                
-                const totalProducts = supplierProducts.length;
-                const totalOrders = supplierOrders.length;
-                const pendingOrders = supplierOrders.filter(o => !['livrée', 'annulée'].includes(o.status)).length;
-                const revenue = supplierOrders.filter(o => o.paymentStatus === 'paid').reduce((sum, o) => sum + (o.total || 0), 0);
-                const lowStock = supplierProducts.filter(p => p.stock <= (p.minStock || 10)).length;
-                
-                document.getElementById('dashboardStats').innerHTML = `
-                    <div class="stat-card" onclick="showSection('products')">
-                        <div class="stat-icon" style="background: rgba(139, 92, 246, 0.08);"><i class="fa-solid fa-boxes-stacked" style="color: var(--violet-400);"></i></div>
-                        <div class="stat-value">${totalProducts}</div>
-                        <div class="stat-label">Produits</div>
-                    </div>
-                    <div class="stat-card" onclick="showSection('orders')">
-                        <div class="stat-icon" style="background: rgba(245, 158, 11, 0.08);"><i class="fa-solid fa-clipboard-list" style="color: var(--amber-400);"></i></div>
-                        <div class="stat-value">${totalOrders}</div>
-                        <div class="stat-label">Commandes</div>
-                    </div>
-                    <div class="stat-card" onclick="showSection('orders')">
-                        <div class="stat-icon" style="background: rgba(59, 130, 246, 0.08);"><i class="fa-solid fa-hourglass-half" style="color: var(--blue-400);"></i></div>
-                        <div class="stat-value">${pendingOrders}</div>
-                        <div class="stat-label">En attente</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.08);"><i class="fa-solid fa-chart-line" style="color: var(--emerald-400);"></i></div>
-                        <div class="stat-value">${revenue.toLocaleString()} FCFA</div>
-                        <div class="stat-label">Chiffre d'affaires</div>
-                    </div>
-                `;
-                
-                document.getElementById('productsCount').textContent = totalProducts;
-                document.getElementById('pendingOrdersBadge').textContent = pendingOrders;
-                
-                if (lowStock > 0) {
-                    showToast('⚠️ Stock critique', `${lowStock} produit(s) en stock bas`, 'warning', 5000);
-                }
-                
-                const recentOrders = supplierOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
-                document.querySelector('#recentOrdersTable tbody').innerHTML = recentOrders.map(o => `
-                    <tr>
-                        <td><span class="badge badge-info">#${o.id.slice(-8)}</span></span>
-                        <td>${o.customerName || 'N/A'}</span>
-                        <td>${o.items.filter(i => i.supplier === supplierName).length} art.</span>
-                        <td><strong>${(o.total || 0).toLocaleString()} FCFA</strong></span>
-                        <td><span class="badge ${o.status === 'livrée' ? 'badge-success' : (o.status === 'annulée' ? 'badge-danger' : 'badge-warning')}">${o.status}</span></span>
-                        <td>${new Date(o.createdAt).toLocaleDateString('fr-FR')}</span>
-                        <td><button class="btn-outline btn-sm" onclick="viewOrderDetails('${o.id}')"><i class="fa-solid fa-eye"></i></button></span>
-                    </tr>
-                `).join('');
+                if (badge) { if (total > 0) { badge.textContent = total > 9 ? '9+' : total; badge.style.display = ''; } else badge.style.display = 'none'; }
             }
             
             // ========== PRODUITS ==========
             function loadProducts() {
-                const allProducts = Storage.get('products', []);
-                const search = document.getElementById('productSearch')?.value.toLowerCase() || '';
-                products = allProducts.filter(p => p.supplier === supplierName);
-                
-                if (search) {
-                    products = products.filter(p => p.name.toLowerCase().includes(search));
-                }
-                
-                document.querySelector('#productsTable tbody').innerHTML = products.map(p => `
-                    <tr>
-                        <td>${p.image || '📦'} ${p.name}</span>
-                        <td>${p.category}</span>
-                        <td>${(p.price || 0).toLocaleString()} FCFA</span>
-                        <td class="${p.stock <= (p.minStock || 10) ? 'stock-alert' : ''}">
-                            ${p.stock || 0} ${p.stock <= (p.minStock || 10) ? '<span class="stock-alert">⚠️ Stock bas</span>' : ''}
-                         </span>
-                        <td><span class="badge ${p.available !== false ? 'badge-success' : 'badge-danger'}">${p.available !== false ? 'Disponible' : 'Indisponible'}</span></span>
-                        <td>
-                            <button class="btn-outline btn-sm" onclick="editProduct(${p.id})"><i class="fa-solid fa-pen"></i></button>
-                            <button class="btn-outline btn-sm" onclick="openStockModal(${p.id}, '${p.name}', ${p.stock || 0})"><i class="fa-solid fa-warehouse"></i></button>
-                            <button class="btn-danger btn-sm" onclick="deleteProduct(${p.id})"><i class="fa-solid fa-trash"></i></button>
-                         </span>
-                    </tr>
+                products = Storage.get('products', []).filter(p => p.supplier === supplierName);
+                const tbody = document.querySelector('#productsTable tbody');
+                tbody.innerHTML = products.map(p => `
+                    <tr><td>${p.image || '📦'} ${escapeHtml(p.name)}</td><td>${p.category}</td><td>${(p.price||0).toLocaleString()} FCFA</td><td class="${p.stock <= 5 ? 'badge-danger' : ''}">${p.stock || 0}</td>
+                    <td><button class="btn-outline btn-sm" onclick="editProduct(${p.id})"><i class="fa-solid fa-pen"></i></button> <button class="btn-danger btn-sm" onclick="deleteProduct(${p.id})"><i class="fa-solid fa-trash"></i></button></td></tr>
                 `).join('');
+                document.getElementById('productsCount').textContent = products.length;
             }
             
-            function openProductModal(id = null) {
-                if (id) {
-                    const product = products.find(p => p.id === id);
-                    if (product) {
-                        document.getElementById('productId').value = product.id;
-                        document.getElementById('productName').value = product.name;
-                        document.getElementById('productCategory').value = product.category;
-                        document.getElementById('productPrice').value = product.price;
-                        document.getElementById('productUnit').value = product.unit || '';
-                        document.getElementById('productStock').value = product.stock;
-                        document.getElementById('productMinStock').value = product.minStock || 10;
-                        document.getElementById('productDescription').value = product.description || '';
-                        document.getElementById('productImage').value = product.image || '📦';
-                        document.getElementById('productModalTitle').textContent = 'Modifier le produit';
-                    }
-                } else {
-                    document.getElementById('productId').value = '';
-                    document.getElementById('productName').value = '';
-                    document.getElementById('productCategory').value = '';
-                    document.getElementById('productPrice').value = '';
-                    document.getElementById('productUnit').value = '';
-                    document.getElementById('productStock').value = '';
-                    document.getElementById('productMinStock').value = '10';
-                    document.getElementById('productDescription').value = '';
-                    document.getElementById('productImage').value = '📦';
-                    document.getElementById('productModalTitle').textContent = 'Ajouter un produit';
-                }
+            window.openProductModal = function(id) {
+                if (id) { const p = products.find(p => p.id === id); if(p) { document.getElementById('productId').value = p.id; document.getElementById('productName').value = p.name; document.getElementById('productCategory').value = p.category; document.getElementById('productPrice').value = p.price; document.getElementById('productStock').value = p.stock; document.getElementById('productUnit').value = p.unit || ''; document.getElementById('productModalTitle').textContent = 'Modifier'; } }
+                else { document.getElementById('productId').value = ''; document.getElementById('productName').value = ''; document.getElementById('productCategory').value = ''; document.getElementById('productPrice').value = ''; document.getElementById('productStock').value = ''; document.getElementById('productUnit').value = ''; document.getElementById('productModalTitle').textContent = 'Ajouter'; }
                 document.getElementById('productModal').classList.add('show');
-            }
+            };
             
-            function closeProductModal() {
-                document.getElementById('productModal').classList.remove('show');
-            }
+            window.closeProductModal = () => document.getElementById('productModal').classList.remove('show');
             
-            function saveProduct() {
+            window.saveProduct = function() {
                 const id = document.getElementById('productId').value;
                 const name = document.getElementById('productName').value.trim();
                 const category = document.getElementById('productCategory').value;
                 const price = parseFloat(document.getElementById('productPrice').value);
-                const unit = document.getElementById('productUnit').value.trim();
                 const stock = parseInt(document.getElementById('productStock').value);
-                const minStock = parseInt(document.getElementById('productMinStock').value);
-                const description = document.getElementById('productDescription').value;
-                const image = document.getElementById('productImage').value;
-                
-                if (!name || !category || isNaN(price) || isNaN(stock)) {
-                    showToast('Erreur', 'Veuillez remplir tous les champs requis', 'error');
-                    return;
-                }
-                
+                const unit = document.getElementById('productUnit').value.trim();
+                if (!name || !category || isNaN(price)) { showToast('Erreur', 'Champs requis', 'error'); return; }
                 let allProducts = Storage.get('products', []);
-                
                 if (id) {
-                    const index = allProducts.findIndex(p => p.id === parseInt(id));
-                    if (index !== -1) {
-                        allProducts[index] = { ...allProducts[index], name, category, price, unit, stock, minStock, description, image };
-                        Storage.set('products', allProducts);
-                        showToast('Produit modifié', name, 'success');
-                    }
+                    const idx = allProducts.findIndex(p => p.id === parseInt(id));
+                    if (idx !== -1) { allProducts[idx] = { ...allProducts[idx], name, category, price, stock, unit }; Storage.set('products', allProducts); showToast('Succès', 'Produit modifié', 'success'); }
                 } else {
-                    const newProduct = {
-                        id: Date.now(),
-                        name, category, price, unit, stock, minStock, description, image,
-                        supplier: supplierName,
-                        available: true,
-                        createdAt: new Date().toISOString()
-                    };
-                    allProducts.push(newProduct);
-                    Storage.set('products', allProducts);
-                    showToast('Produit ajouté', name, 'success');
+                    const newProduct = { id: Date.now(), name, category, price, stock, unit, supplier: supplierName, available: true, createdAt: new Date().toISOString() };
+                    allProducts.push(newProduct); Storage.set('products', allProducts); showToast('Succès', 'Produit ajouté', 'success');
                 }
-                
-                closeProductModal();
-                loadProducts();
-                loadDashboard();
-                initCharts();
-            }
+                closeProductModal(); loadProducts(); loadDashboard();
+            };
             
-            function editProduct(id) {
-                openProductModal(id);
-            }
-            
-            function deleteProduct(id) {
-                if (!confirm('Supprimer ce produit ? Cette action est irréversible.')) return;
-                let allProducts = Storage.get('products', []);
-                allProducts = allProducts.filter(p => p.id !== id);
-                Storage.set('products', allProducts);
-                loadProducts();
-                loadDashboard();
-                initCharts();
-                showToast('Produit supprimé', '', 'success');
-            }
-            
-            // ========== STOCK ==========
-            function openStockModal(productId, productName, currentStock) {
-                document.getElementById('stockProductId').value = productId;
-                document.getElementById('stockProductName').value = productName;
-                document.getElementById('stockCurrentValue').value = currentStock;
-                document.getElementById('stockNewValue').value = currentStock;
-                document.getElementById('stockOperation').value = 'set';
-                document.getElementById('stockModal').classList.add('show');
-            }
-            
-            function closeStockModal() {
-                document.getElementById('stockModal').classList.remove('show');
-            }
-            
-            function updateStock() {
-                const productId = parseInt(document.getElementById('stockProductId').value);
-                const currentStock = parseInt(document.getElementById('stockCurrentValue').value);
-                let newStock = parseInt(document.getElementById('stockNewValue').value);
-                const operation = document.getElementById('stockOperation').value;
-                
-                let finalStock = currentStock;
-                if (operation === 'add') finalStock = currentStock + newStock;
-                else if (operation === 'remove') finalStock = currentStock - newStock;
-                else finalStock = newStock;
-                
-                if (finalStock < 0) {
-                    showToast('Erreur', 'Le stock ne peut pas être négatif', 'error');
-                    return;
-                }
-                
-                let allProducts = Storage.get('products', []);
-                const index = allProducts.findIndex(p => p.id === productId);
-                if (index !== -1) {
-                    allProducts[index].stock = finalStock;
-                    Storage.set('products', allProducts);
-                    showToast('Stock mis à jour', `Nouveau stock: ${finalStock}`, 'success');
-                    closeStockModal();
-                    loadProducts();
-                    loadDashboard();
-                }
-            }
+            window.editProduct = (id) => openProductModal(id);
+            window.deleteProduct = (id) => { if(confirm('Supprimer ?')) { let allProducts = Storage.get('products', []).filter(p => p.id !== id); Storage.set('products', allProducts); loadProducts(); loadDashboard(); showToast('Supprimé', '', 'success'); } };
             
             // ========== COMMANDES ==========
-            function loadSupplierOrders() {
-                const allOrders = Storage.get('orders', []);
-                const search = document.getElementById('orderSearch')?.value.toLowerCase() || '';
-                const statusFilter = document.getElementById('orderStatusFilter')?.value || 'all';
-                
-                orders = allOrders.filter(o => o.items.some(i => i.supplier === supplierName));
-                
-                if (statusFilter !== 'all') {
-                    orders = orders.filter(o => o.status === statusFilter);
-                }
-                if (search) {
-                    orders = orders.filter(o => o.id.toLowerCase().includes(search) || (o.customerName || '').toLowerCase().includes(search));
-                }
-                
-                orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                
-                document.querySelector('#supplierOrdersTable tbody').innerHTML = orders.map(o => {
-                    const supplierItems = o.items.filter(i => i.supplier === supplierName);
-                    const supplierTotal = supplierItems.reduce((sum, i) => sum + (i.price * i.quantity), 0);
-                    return `
-                        <tr>
-                            <td><span class="badge badge-info">#${o.id.slice(-8)}</span></span>
-                            <td>${o.customerName || 'N/A'}</span>
-                            <td>${supplierItems.map(i => `${i.name} ×${i.quantity}`).join(', ')}</span>
-                            <td><strong>${supplierTotal.toLocaleString()} FCFA</strong></span>
-                            <td><span class="badge ${o.status === 'livrée' ? 'badge-success' : (o.status === 'annulée' ? 'badge-danger' : 'badge-warning')}">${o.status}</span></span>
-                            <td>${new Date(o.createdAt).toLocaleDateString('fr-FR')}</span>
-                            <td>
-                                <button class="btn-outline btn-sm" onclick="viewOrderDetails('${o.id}')"><i class="fa-solid fa-eye"></i></button>
-                                ${o.status !== 'livrée' && o.status !== 'annulée' ? `<button class="btn-primary btn-sm" onclick="updateOrderStatus('${o.id}', 'préparation')"><i class="fa-solid fa-check"></i> Préparer</button>` : ''}
-                             </span>
-                        </tr>
-                    `;
-                }).join('');
-            }
-            
-            function updateOrderStatus(orderId, status) {
+            function loadOrders() {
                 let allOrders = Storage.get('orders', []);
-                const index = allOrders.findIndex(o => o.id === orderId);
-                if (index !== -1) {
-                    allOrders[index].status = status;
-                    if (!allOrders[index].statusHistory) allOrders[index].statusHistory = [];
-                    allOrders[index].statusHistory.push({ status, timestamp: new Date().toISOString(), note: `Mis à jour par ${supplierName}` });
-                    Storage.set('orders', allOrders);
-                    loadSupplierOrders();
-                    loadDashboard();
-                    showToast('Commande mise à jour', `Statut: ${status}`, 'success');
-                }
+                orders = allOrders.filter(o => o.items?.some(i => i.supplier === supplierName));
+                const search = document.getElementById('orderSearch')?.value.toLowerCase() || '';
+                const status = document.getElementById('orderStatusFilter')?.value || 'all';
+                let filtered = orders.filter(o => (status === 'all' || o.status === status) && (o.id.toLowerCase().includes(search) || (o.customerName || '').toLowerCase().includes(search)));
+                document.querySelector('#ordersTable tbody').innerHTML = filtered.map(o => {
+                    const total = o.items.filter(i => i.supplier === supplierName).reduce((s,i) => s + (i.price * i.quantity), 0);
+                    return `<tr><td><span class="badge badge-info">#${o.id.slice(-8)}</span></td><td>${escapeHtml(o.customerName || 'N/A')}</td><td>${total.toLocaleString()} FCFA</td><td><span class="badge ${o.status === 'livrée' ? 'badge-success' : o.status === 'annulée' ? 'badge-danger' : 'badge-warning'}">${o.status}</span></td><td>${new Date(o.createdAt).toLocaleDateString()}</td><td><button class="btn-outline btn-sm" onclick="updateOrderStatus('${o.id}', 'préparation')">Préparer</button></td></tr>`;
+                }).join('');
+                const pending = orders.filter(o => !['livrée','annulée'].includes(o.status)).length;
+                document.getElementById('pendingOrdersBadge').textContent = pending;
             }
             
-            function viewOrderDetails(orderId) {
-                window.location.href = `tracking.html?id=${orderId}`;
+            window.updateOrderStatus = (id, status) => {
+                let allOrders = Storage.get('orders', []);
+                const idx = allOrders.findIndex(o => o.id === id);
+                if (idx !== -1) { allOrders[idx].status = status; Storage.set('orders', allOrders); loadOrders(); loadDashboard(); showToast('Commande', `Statut: ${status}`, 'success'); }
+            };
+            
+            // ========== DASHBOARD ==========
+            function loadDashboard() {
+                const supplierProducts = products;
+                const supplierOrders = orders;
+                const totalProducts = supplierProducts.length;
+                const totalOrders = supplierOrders.length;
+                const pending = supplierOrders.filter(o => !['livrée','annulée'].includes(o.status)).length;
+                const revenue = supplierOrders.filter(o => o.paymentStatus === 'paid').reduce((s,o) => s + (o.total||0), 0);
+                document.getElementById('dashboardStats').innerHTML = `
+                    <div class="stat-card" onclick="showSection('products')"><div class="stat-icon" style="background: rgba(16,185,129,0.1);"><i class="fa-solid fa-boxes-stacked" style="color: var(--primary-500);"></i></div><div class="stat-value">${totalProducts}</div><div class="stat-label">Produits</div></div>
+                    <div class="stat-card" onclick="showSection('orders')"><div class="stat-icon" style="background: rgba(139,92,246,0.1);"><i class="fa-solid fa-clipboard-list" style="color: var(--secondary-500);"></i></div><div class="stat-value">${totalOrders}</div><div class="stat-label">Commandes</div></div>
+                    <div class="stat-card" onclick="showSection('orders')"><div class="stat-icon" style="background: rgba(245,158,11,0.1);"><i class="fa-solid fa-hourglass-half" style="color: var(--accent-500);"></i></div><div class="stat-value">${pending}</div><div class="stat-label">En attente</div></div>
+                    <div class="stat-card"><div class="stat-icon" style="background: rgba(59,130,246,0.1);"><i class="fa-solid fa-chart-line" style="color: var(--info-500);"></i></div><div class="stat-value">${revenue.toLocaleString()} FCFA</div><div class="stat-label">Chiffre d'affaires</div></div>
+                `;
+                const recent = supplierOrders.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0,5);
+                document.querySelector('#recentOrdersTable tbody').innerHTML = recent.map(o => `<tr><td><span class="badge badge-info">#${o.id.slice(-8)}</span></td><td>${escapeHtml(o.customerName || 'N/A')}</td><td>${(o.total||0).toLocaleString()} FCFA</td><td><span class="badge ${o.status === 'livrée' ? 'badge-success' : 'badge-warning'}">${o.status}</span></td><td>${new Date(o.createdAt).toLocaleDateString()}</td></tr>`).join('');
+                initCharts();
             }
             
-            // ========== ANALYTIQUE ==========
             function initCharts() {
-                const allOrders = Storage.get('orders', []);
-                const supplierOrders = allOrders.filter(o => o.items.some(i => i.supplier === supplierName) && o.paymentStatus === 'paid');
-                const allProducts = Storage.get('products', []);
-                const supplierProducts = allProducts.filter(p => p.supplier === supplierName);
+                const weekly = Array(7).fill(0);
+                const days = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+                orders.forEach(o => { const day = new Date(o.createdAt).getDay(); const idx = day === 0 ? 6 : day - 1; weekly[idx] += o.total || 0; });
+                const ctx1 = document.getElementById('weeklySalesChart')?.getContext('2d');
+                if(ctx1) { if(weeklyChart) weeklyChart.destroy(); weeklyChart = new Chart(ctx1, { type:'bar', data:{ labels:days, datasets:[{ label:'Ventes (FCFA)', data:weekly, backgroundColor:'#10B981', borderRadius:8 }] }, options:{ responsive:true, maintainAspectRatio:false } }); }
                 
-                const weeklyData = Array(7).fill(0);
-                const days = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-                supplierOrders.forEach(o => {
-                    const day = new Date(o.createdAt).getDay();
-                    const index = day === 0 ? 6 : day - 1;
-                    weeklyData[index] += o.total || 0;
-                });
-                
-                const ctx = document.getElementById('weeklySalesChart')?.getContext('2d');
-                if (ctx) {
-                    if (weeklySalesChart) weeklySalesChart.destroy();
-                    weeklySalesChart = new Chart(ctx, {
-                        type: 'bar',
-                        data: { labels: days, datasets: [{ label: 'Ventes (FCFA)', data: weeklyData, backgroundColor: '#8B5CF6', borderRadius: 8 }] },
-                        options: { responsive: true, maintainAspectRatio: false }
-                    });
-                }
-                
-                const categoryMap = new Map();
-                supplierProducts.forEach(p => {
-                    categoryMap.set(p.category, (categoryMap.get(p.category) || 0) + 1);
-                });
-                
+                const catMap = new Map();
+                products.forEach(p => catMap.set(p.category, (catMap.get(p.category)||0)+1));
                 const ctx2 = document.getElementById('categoryChart')?.getContext('2d');
-                if (ctx2) {
-                    if (categoryChart) categoryChart.destroy();
-                    categoryChart = new Chart(ctx2, {
-                        type: 'doughnut',
-                        data: { labels: Array.from(categoryMap.keys()), datasets: [{ data: Array.from(categoryMap.values()), backgroundColor: ['#8B5CF6', '#10B981', '#F59E0B', '#3B82F6', '#F43F5E'] }] },
-                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94A3B8' } } } }
-                    });
-                }
+                if(ctx2) { if(categoryChart) categoryChart.destroy(); categoryChart = new Chart(ctx2, { type:'doughnut', data:{ labels:Array.from(catMap.keys()), datasets:[{ data:Array.from(catMap.values()), backgroundColor:['#10B981','#8B5CF6','#F59E0B','#3B82F6','#F43F5E'] }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ color:'var(--text-muted)' } } } } }); }
                 
-                const monthlyData = Array(12).fill(0);
-                supplierOrders.forEach(o => {
-                    const month = new Date(o.createdAt).getMonth();
-                    monthlyData[month] += o.total || 0;
-                });
-                
+                const monthly = Array(12).fill(0);
+                orders.forEach(o => { const month = new Date(o.createdAt).getMonth(); monthly[month] += o.total || 0; });
                 const ctx3 = document.getElementById('monthlySalesChart')?.getContext('2d');
-                if (ctx3) {
-                    if (monthlySalesChart) monthlySalesChart.destroy();
-                    monthlySalesChart = new Chart(ctx3, {
-                        type: 'line',
-                        data: { labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'], datasets: [{ label: 'Ventes (FCFA)', data: monthlyData, borderColor: '#10B981', backgroundColor: 'rgba(16,185,129,0.05)', borderWidth: 2, fill: true, tension: 0.4 }] },
-                        options: { responsive: true, maintainAspectRatio: false }
-                    });
-                }
+                if(ctx3) { if(monthlyChart) monthlyChart.destroy(); monthlyChart = new Chart(ctx3, { type:'line', data:{ labels:['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc'], datasets:[{ label:'Ventes (FCFA)', data:monthly, borderColor:'#10B981', backgroundColor:'rgba(16,185,129,0.05)', borderWidth:2, fill:true, tension:0.4 }] }, options:{ responsive:true, maintainAspectRatio:false } }); }
                 
                 const productSales = new Map();
-                supplierOrders.forEach(o => {
-                    o.items.filter(i => i.supplier === supplierName).forEach(item => {
-                        const current = productSales.get(item.id) || { name: item.name, quantity: 0, revenue: 0 };
-                        current.quantity += item.quantity;
-                        current.revenue += item.price * item.quantity;
-                        productSales.set(item.id, current);
-                    });
-                });
-                const topProducts = Array.from(productSales.entries()).sort((a, b) => b[1].revenue - a[1].revenue).slice(0, 5);
-                document.querySelector('#topProductsTable tbody').innerHTML = topProducts.map(([id, data]) => `
-                    <tr><td>${data.name}</td><td>${data.quantity}</td><td>${data.revenue.toLocaleString()} FCFA</td></tr>
-                `).join('');
+                orders.forEach(o => { o.items.filter(i => i.supplier === supplierName).forEach(item => { const cur = productSales.get(item.id) || { name: item.name, qty: 0, rev: 0 }; cur.qty += item.quantity; cur.rev += item.price * item.quantity; productSales.set(item.id, cur); }); });
+                const top = Array.from(productSales.entries()).sort((a,b) => b[1].rev - a[1].rev).slice(0,5);
+                document.querySelector('#topProductsTable tbody').innerHTML = top.map(([id,d]) => `<tr><td>${escapeHtml(d.name)}</td><td>${d.qty}</td><td>${d.rev.toLocaleString()} FCFA</td></tr>`).join('');
             }
             
             // ========== PROFIL ==========
-            let isEditingProfile = false;
+            function loadProfile() {
+                const users = Storage.get('users', []);
+                const user = users.find(u => u.id === supplierId) || supplier;
+                document.getElementById('profileName').value = user.name || '';
+                document.getElementById('profileEmail').value = user.email || '';
+                document.getElementById('profilePhone').value = user.phone || '';
+                document.getElementById('profileAddress').value = user.address || '';
+                document.getElementById('profileDescription').value = user.description || '';
+                document.getElementById('supplierName').innerHTML = `<i class="fa-solid fa-store"></i> ${user.name}`;
+            }
             
-            function toggleEditProfile() {
-                isEditingProfile = true;
-                const inputs = ['supplierProfileName', 'supplierProfileEmail', 'supplierProfilePhone', 'supplierProfileAddress', 'supplierProfileDescription'];
-                inputs.forEach(id => {
-                    document.getElementById(id).readOnly = false;
-                    document.getElementById(id).style.background = 'rgba(139, 92, 246, 0.05)';
-                });
+            let isEditing = false;
+            window.editProfile = () => {
+                isEditing = true;
+                ['profileName','profileEmail','profilePhone','profileAddress','profileDescription'].forEach(id => { document.getElementById(id).readOnly = false; document.getElementById(id).style.background = 'var(--bg-input)'; });
                 document.getElementById('editProfileBtn').style.display = 'none';
                 document.getElementById('saveProfileBtn').style.display = 'inline-flex';
                 document.getElementById('cancelProfileBtn').style.display = 'inline-flex';
-            }
-            
-            function saveProfile() {
-                const updatedData = {
-                    name: document.getElementById('supplierProfileName').value.trim(),
-                    email: document.getElementById('supplierProfileEmail').value.trim(),
-                    phone: document.getElementById('supplierProfilePhone').value.trim(),
-                    address: document.getElementById('supplierProfileAddress').value.trim(),
-                    description: document.getElementById('supplierProfileDescription').value.trim()
-                };
-                
+            };
+            window.saveProfile = () => {
+                const updates = { name: document.getElementById('profileName').value.trim(), email: document.getElementById('profileEmail').value.trim(), phone: document.getElementById('profilePhone').value.trim(), address: document.getElementById('profileAddress').value.trim(), description: document.getElementById('profileDescription').value.trim() };
                 let users = Storage.get('users', []);
-                const index = users.findIndex(u => u.id === supplier.id);
-                if (index !== -1) {
-                    users[index] = { ...users[index], ...updatedData };
-                    Storage.set('users', users);
-                    
-                    const session = Storage.get('session');
-                    if (session && session.user) {
-                        session.user.name = updatedData.name;
-                        Storage.set('session', session);
-                    }
-                    
-                    showToast('Profil mis à jour', 'Vos informations ont été enregistrées', 'success');
-                }
-                
-                cancelEditProfile();
-                loadSupplierData();
-            }
-            
-            function cancelEditProfile() {
-                isEditingProfile = false;
-                loadSupplierData();
-                const inputs = ['supplierProfileName', 'supplierProfileEmail', 'supplierProfilePhone', 'supplierProfileAddress', 'supplierProfileDescription'];
-                inputs.forEach(id => {
-                    document.getElementById(id).readOnly = true;
-                    document.getElementById(id).style.background = '';
-                });
-                document.getElementById('editProfileBtn').style.display = 'inline-flex';
-                document.getElementById('saveProfileBtn').style.display = 'none';
-                document.getElementById('cancelProfileBtn').style.display = 'none';
-            }
-            
-            // ========== EXPORT ==========
-            function exportStockReport() {
-                const allProducts = Storage.get('products', []);
-                const supplierProducts = allProducts.filter(p => p.supplier === supplierName);
-                const data = supplierProducts.map(p => ({
-                    'Produit': p.name, 'Catégorie': p.category, 'Prix': p.price + ' FCFA',
-                    'Stock actuel': p.stock, 'Stock minimum': p.minStock || 10,
-                    'Statut': p.stock <= (p.minStock || 10) ? '⚠️ Stock bas' : 'OK'
-                }));
-                
-                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `stock_${supplierName}_${new Date().toISOString().split('T')[0]}.json`;
-                a.click();
-                URL.revokeObjectURL(url);
-                showToast('Export réussi', 'Rapport de stock téléchargé', 'success');
-            }
+                const idx = users.findIndex(u => u.id === supplierId);
+                if (idx !== -1) { users[idx] = { ...users[idx], ...updates }; Storage.set('users', users); }
+                const sess = Storage.get('session');
+                if (sess && sess.user) { sess.user.name = updates.name; Storage.set('session', sess); }
+                cancelEdit(); loadProfile(); showToast('Profil mis à jour', '', 'success');
+            };
+            window.cancelEdit = () => { isEditing = false; loadProfile(); ['profileName','profileEmail','profilePhone','profileAddress','profileDescription'].forEach(id => { document.getElementById(id).readOnly = true; document.getElementById(id).style.background = ''; }); document.getElementById('editProfileBtn').style.display = 'inline-flex'; document.getElementById('saveProfileBtn').style.display = 'none'; document.getElementById('cancelProfileBtn').style.display = 'none'; };
             
             // ========== UTILITAIRES ==========
-            function showSection(section) {
+            window.showSection = function(section) {
                 document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
                 document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
                 document.getElementById(`section-${section}`).classList.add('active');
                 document.querySelector(`.nav-item[onclick="showSection('${section}')"]`).classList.add('active');
-                
                 if (section === 'dashboard') loadDashboard();
                 if (section === 'products') loadProducts();
-                if (section === 'orders') loadSupplierOrders();
-                if (section === 'stock') loadProducts();
-                if (section === 'chat') { loadChatConversations(); document.getElementById('chatMessageInput').focus(); }
-                if (section === 'analytics') initCharts();
-                if (section === 'profile') loadSupplierData();
-                
+                if (section === 'orders') loadOrders();
+                if (section === 'chat') loadConversations();
+                if (section === 'profile') loadProfile();
                 closeSidebar();
-            }
+                if (window.innerWidth <= 768 && section === 'chat') document.querySelector('.conversations-list')?.classList.add('mobile-visible');
+            };
             
-            function refreshAll() {
-                loadDashboard();
-                loadProducts();
-                loadSupplierOrders();
-                initCharts();
-                showToast('Actualisé', 'Toutes les données ont été mises à jour', 'success');
-            }
+            window.refreshAll = function() { loadDashboard(); loadProducts(); loadOrders(); loadConversations(); showToast('Actualisé', 'Données mises à jour', 'success'); };
+            window.toggleMobileChat = function() { document.querySelector('.conversations-list')?.classList.toggle('mobile-visible'); };
             
-            function formatTime(isoString) {
-                const date = new Date(isoString);
-                const now = new Date();
-                const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
-                if (diffDays === 0) return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-                if (diffDays === 1) return 'Hier';
-                if (diffDays < 7) return date.toLocaleDateString('fr-FR', { weekday: 'short' });
-                return date.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
-            }
+            function startAutoRefresh() { if (chatRefreshInterval) clearInterval(chatRefreshInterval); chatRefreshInterval = setInterval(() => { if (document.getElementById('section-chat').classList.contains('active')) loadConversations(); }, 5000); }
             
-            function showToast(title, message, type = 'success', duration = 4000) {
+            function formatTime(iso) { const d = new Date(iso), now = new Date(), diff = Math.floor((now - d) / (1000*60*60*24)); if(diff===0) return d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}); if(diff===1) return 'Hier'; if(diff<7) return d.toLocaleDateString('fr-FR',{weekday:'short'}); return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'short'}); }
+            function escapeHtml(str) { if(!str) return ''; const div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
+            
+            function showToast(title, msg, type='success', duration=3000) {
                 const container = document.getElementById('toastContainer');
-                if (!container) return;
-                
-                const icons = { success: 'fa-circle-check', error: 'fa-circle-exclamation', warning: 'fa-triangle-exclamation' };
-                const toast = document.createElement('div');
-                toast.className = `toast ${type}`;
-                toast.innerHTML = `
-                    <i class="fa-solid ${icons[type] || icons.success} toast-icon"></i>
-                    <div class="toast-content">
-                        <div class="toast-title">${escapeHtml(title)}</div>
-                        <div class="toast-message">${escapeHtml(message)}</div>
-                    </div>
-                    <button class="toast-close" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></button>
-                `;
-                
-                container.appendChild(toast);
-                setTimeout(() => toast.classList.add('show'), 10);
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                    setTimeout(() => toast.remove(), 500);
-                }, duration);
+                if(!container) return;
+                const icons = { success:'fa-circle-check', error:'fa-circle-exclamation', info:'fa-circle-info' };
+                const toast = document.createElement('div'); toast.className = `toast ${type}`;
+                toast.innerHTML = `<i class="fa-solid ${icons[type]} toast-icon"></i><div><div class="toast-title">${escapeHtml(title)}</div><div class="toast-message">${escapeHtml(msg)}</div></div><button class="toast-close" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></button>`;
+                container.appendChild(toast); setTimeout(()=>toast.classList.add('show'),10);
+                setTimeout(()=>{ toast.classList.remove('show'); setTimeout(()=>toast.remove(),500); }, duration);
             }
             
-            function escapeHtml(str) {
-                if (!str) return '';
-                const div = document.createElement('div');
-                div.textContent = str;
-                return div.innerHTML;
+            function toggleTheme() {
+                document.body.classList.toggle('dark');
+                const toggle = document.getElementById('themeToggle');
+                if(document.body.classList.contains('dark')) toggle.classList.add('active');
+                else toggle.classList.remove('active');
+                localStorage.setItem('salam_theme', document.body.classList.contains('dark') ? 'dark' : 'light');
             }
             
-            function openSidebar() {
-                document.getElementById('sidebar').classList.add('open');
-                document.getElementById('overlay').classList.add('show');
-            }
-            
-            function closeSidebar() {
-                document.getElementById('sidebar').classList.remove('open');
-                document.getElementById('overlay').classList.remove('show');
-            }
-            
-            function logout() {
-                if (chatRefreshInterval) clearInterval(chatRefreshInterval);
-                localStorage.removeItem('salam_session');
-                localStorage.removeItem('salam_cart');
-                window.location.href = '../index.html';
-            }
-            
-            // Expose globals
-            window.showSection = showSection;
-            window.refreshAll = refreshAll;
-            window.openProductModal = openProductModal;
-            window.closeProductModal = closeProductModal;
-            window.saveProduct = saveProduct;
-            window.editProduct = editProduct;
-            window.deleteProduct = deleteProduct;
-            window.openStockModal = openStockModal;
-            window.closeStockModal = closeStockModal;
-            window.updateStock = updateStock;
-            window.updateOrderStatus = updateOrderStatus;
-            window.viewOrderDetails = viewOrderDetails;
-            window.exportStockReport = exportStockReport;
-            window.toggleEditProfile = toggleEditProfile;
-            window.saveProfile = saveProfile;
-            window.cancelEditProfile = cancelEditProfile;
-            window.selectConversation = selectConversation;
-            window.sendSupplierMessage = sendSupplierMessage;
-            window.refreshChat = refreshChat;
-            window.setChannel = setChannel;
-            window.openSidebar = openSidebar;
-            window.closeSidebar = closeSidebar;
-            window.logout = logout;
+            function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('show'); }
+            function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
+            function logout() { if(chatRefreshInterval) clearInterval(chatRefreshInterval); localStorage.removeItem('salam_session'); localStorage.removeItem('salam_cart'); window.location.href='../index.html'; }
             
             // Initialisation
-            init();
+            const savedTheme = localStorage.getItem('salam_theme');
+            if(savedTheme === 'dark') { document.body.classList.add('dark'); document.getElementById('themeToggle')?.classList.add('active'); }
+            
+            document.getElementById('productSearch')?.addEventListener('input', () => loadProducts());
+            document.getElementById('orderSearch')?.addEventListener('input', () => loadOrders());
+            document.getElementById('orderStatusFilter')?.addEventListener('change', () => loadOrders());
+            document.getElementById('conversationSearch')?.addEventListener('input', () => renderConversations());
+            
+            loadDashboard(); loadProducts(); loadOrders(); loadProfile(); renderChannelSelector(); startAutoRefresh();
+            
+            window.openSidebar = openSidebar; window.closeSidebar = closeSidebar; window.logout = logout; window.toggleTheme = toggleTheme;
         })();
     </script>
 </body>
