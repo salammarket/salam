@@ -1,4 +1,4 @@
-<!-- pages/supplier.html - Espace Fournisseur complet -->
+<!-- pages/supplier.html - Espace Fournisseur complet avec Messagerie -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -612,6 +612,196 @@
             gap: var(--space-4);
         }
         
+        /* Chat styles */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 550px;
+        }
+        
+        .chat-conversations {
+            border-right: 1px solid var(--border-subtle);
+            overflow-y: auto;
+            height: 100%;
+        }
+        
+        .chat-conversation-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            border-bottom: 1px solid var(--border-subtle);
+            cursor: pointer;
+            transition: all var(--duration-fast);
+        }
+        
+        .chat-conversation-item:hover {
+            background: var(--surface-hover);
+        }
+        
+        .chat-conversation-item.active {
+            background: rgba(139, 92, 246, 0.08);
+            border-left: 3px solid var(--violet-500);
+        }
+        
+        .chat-conversation-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--emerald-600), var(--violet-500));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        
+        .chat-conversation-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .chat-conversation-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .chat-conversation-lastmsg {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .chat-conversation-time {
+            font-size: 0.6rem;
+            color: var(--text-faint);
+        }
+        
+        .chat-messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-4);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+        
+        .chat-message {
+            display: flex;
+            max-width: 75%;
+            animation: fadeInMsg 0.3s var(--ease-out-expo);
+        }
+        
+        @keyframes fadeInMsg {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .chat-message.sent {
+            align-self: flex-end;
+        }
+        
+        .chat-message.received {
+            align-self: flex-start;
+        }
+        
+        .chat-message-bubble {
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-lg);
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+        
+        .chat-message.sent .chat-message-bubble {
+            background: linear-gradient(135deg, var(--violet-600), var(--violet-500));
+            color: white;
+            border-bottom-right-radius: var(--radius-sm);
+        }
+        
+        .chat-message.received .chat-message-bubble {
+            background: var(--surface-input);
+            border: 1px solid var(--border-default);
+            border-bottom-left-radius: var(--radius-sm);
+        }
+        
+        .chat-message-time {
+            font-size: 0.55rem;
+            color: var(--text-faint);
+            margin-top: var(--space-1);
+            text-align: right;
+        }
+        
+        .chat-input-area {
+            display: flex;
+            gap: var(--space-3);
+            padding: var(--space-4);
+            border-top: 1px solid var(--border-subtle);
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: var(--space-3) var(--space-4);
+            background: var(--surface-input);
+            border: 1.5px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: inherit;
+            resize: none;
+            outline: none;
+        }
+        
+        .chat-input:focus {
+            border-color: var(--border-accent);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.08);
+        }
+        
+        .channel-selector {
+            display: flex;
+            gap: var(--space-2);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-3);
+        }
+        
+        .channel-btn {
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-full);
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: transparent;
+            border: 1px solid var(--border-default);
+            color: var(--text-muted);
+            transition: all var(--duration-fast);
+        }
+        
+        .channel-btn.active {
+            background: var(--violet-500);
+            border-color: var(--violet-500);
+            color: white;
+        }
+        
+        .channel-btn:hover:not(.active) {
+            border-color: var(--violet-400);
+            color: var(--violet-400);
+        }
+        
+        .empty-chat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-muted);
+            text-align: center;
+            gap: var(--space-4);
+        }
+        
         /* Toast */
         .toast-container {
             position: fixed;
@@ -657,6 +847,8 @@
             .stats-grid { grid-template-columns: 1fr; }
             .data-table { min-width: 600px; }
             .form-row { grid-template-columns: 1fr; }
+            .chat-container { flex-direction: column; }
+            .chat-conversations { border-right: none; border-bottom: 1px solid var(--border-subtle); max-height: 300px; }
         }
     </style>
 </head>
@@ -694,6 +886,10 @@
             </button>
             <button class="nav-item" onclick="showSection('stock')">
                 <i class="fa-solid fa-warehouse"></i> Gestion Stock
+            </button>
+            <button class="nav-item" onclick="showSection('chat')">
+                <i class="fa-solid fa-comments"></i> Messagerie
+                <span class="nav-badge" id="chatBadge">0</span>
             </button>
             <button class="nav-item" onclick="showSection('analytics')">
                 <i class="fa-solid fa-chart-simple"></i> Analytique
@@ -834,6 +1030,62 @@
                             </thead>
                             <tbody></tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION: CHAT (Messagerie Fournisseur) -->
+            <div class="section" id="section-chat">
+                <div class="page-header">
+                    <div>
+                        <h1><i class="fa-solid fa-comments"></i> Messagerie Clients</h1>
+                        <div class="channel-selector" id="supplierChannelSelector"></div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn-outline btn" onclick="refreshChat()">
+                            <i class="fa-solid fa-rotate-right"></i> Rafraîchir
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chat-container">
+                        <div style="display: grid; grid-template-columns: 300px 1fr; height: 550px;">
+                            <!-- Liste des conversations -->
+                            <div class="chat-conversations">
+                                <div style="padding: var(--space-3); border-bottom: 1px solid var(--border-subtle);">
+                                    <input type="text" id="chatSearchInput" placeholder="🔍 Rechercher un client..." style="width: 100%; padding: var(--space-2); background: var(--surface-input); border: 1px solid var(--border-default); border-radius: var(--radius-md); color: var(--text-primary);">
+                                </div>
+                                <div id="conversationsList"></div>
+                            </div>
+                            
+                            <!-- Zone de chat active -->
+                            <div style="display: flex; flex-direction: column; height: 100%;">
+                                <div id="activeChatHeader" style="padding: var(--space-4); border-bottom: 1px solid var(--border-subtle); background: var(--surface-hover);">
+                                    <div style="display: flex; align-items: center; gap: var(--space-3);">
+                                        <div id="activeChatAvatar" style="width: 44px; height: 44px; background: linear-gradient(135deg, var(--emerald-600), var(--violet-500)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">🛒</div>
+                                        <div>
+                                            <strong id="activeChatName">Sélectionnez un client</strong><br>
+                                            <small id="activeChatStatus" style="color: var(--text-muted);">Choisissez une conversation</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div id="chatMessages" class="chat-messages-area">
+                                    <div class="empty-chat">
+                                        <i class="fa-regular fa-message" style="font-size: 3rem; opacity: 0.5;"></i>
+                                        <p>Sélectionnez un client pour commencer à discuter</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="chat-input-area">
+                                    <textarea id="chatMessageInput" class="chat-input" placeholder="Votre message..." rows="2" disabled></textarea>
+                                    <button id="sendChatBtn" class="btn-primary" onclick="sendSupplierMessage()" style="padding: var(--space-3) var(--space-5);" disabled>
+                                        <i class="fa-solid fa-paper-plane"></i> Envoyer
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1026,7 +1278,7 @@
     
     <script>
         // ============================================================
-        // ESPACE FOURNISSEUR — Gestion complète
+        // ESPACE FOURNISSEUR — Gestion complète avec Messagerie
         // ============================================================
         
         (() => {
@@ -1041,6 +1293,7 @@
             
             const supplier = session.user;
             const supplierName = supplier.name;
+            const supplierId = supplier.id;
             
             // Variables
             let weeklySalesChart = null;
@@ -1048,6 +1301,17 @@
             let monthlySalesChart = null;
             let products = [];
             let orders = [];
+            
+            // Variables Chat
+            let conversations = [];
+            let currentConversationId = null;
+            let currentCustomer = null;
+            let chatRefreshInterval = null;
+            let selectedChannel = 'all';
+            
+            // Numéros pour notifications
+            const REAL_PHONE_NUMBER = '+237688282662';
+            const REAL_EMAIL = 'contact@salamarket.cm';
             
             // Storage helpers
             const Storage = {
@@ -1058,6 +1322,295 @@
                 set: (key, value) => localStorage.setItem('salam_' + key, JSON.stringify(value))
             };
             
+            // ========== NOTIFICATIONS MULTI-CANAUX ==========
+            function sendWhatsApp(phoneNumber, message) {
+                const formattedNumber = phoneNumber.replace(/[^0-9]/g, '');
+                window.open(`https://wa.me/${formattedNumber}?text=${encodeURIComponent(message)}`, '_blank');
+            }
+            
+            function sendSMS(phoneNumber, message) {
+                window.open(`sms:${phoneNumber}?body=${encodeURIComponent(message)}`, '_blank');
+            }
+            
+            function sendEmail(email, subject, message) {
+                window.open(`mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`, '_blank');
+            }
+            
+            function sendMultiChannelNotification(phoneNumber, email, customerName, message) {
+                const fullMessage = `📱 SALAM MARKET PRO\n\nMessage de ${supplierName} (Fournisseur):\n"${message.substring(0, 200)}"\n\nConnectez-vous à Salam Market pour répondre.`;
+                
+                switch(selectedChannel) {
+                    case 'whatsapp':
+                        sendWhatsApp(phoneNumber, fullMessage);
+                        showToast('WhatsApp', `Message envoyé à ${customerName} via WhatsApp`, 'success');
+                        break;
+                    case 'sms':
+                        sendSMS(phoneNumber, fullMessage.substring(0, 160));
+                        showToast('SMS', `Message envoyé à ${customerName} par SMS`, 'success');
+                        break;
+                    case 'email':
+                        sendEmail(email, `Message de ${supplierName}`, fullMessage);
+                        showToast('Email', `Message envoyé à ${customerName} par email`, 'success');
+                        break;
+                    default:
+                        sendWhatsApp(phoneNumber, fullMessage);
+                        sendSMS(phoneNumber, fullMessage.substring(0, 160));
+                        if (email) sendEmail(email, `Message de ${supplierName}`, fullMessage);
+                        showToast('Multi-canal', `Message envoyé à ${customerName} (WhatsApp + SMS + Email)`, 'success');
+                }
+            }
+            
+            function renderChannelSelector() {
+                const container = document.getElementById('supplierChannelSelector');
+                if (!container) return;
+                container.innerHTML = `
+                    <button class="channel-btn ${selectedChannel === 'all' ? 'active' : ''}" onclick="setChannel('all')">
+                        <i class="fa-solid fa-broadcast-tower"></i> Tous
+                    </button>
+                    <button class="channel-btn ${selectedChannel === 'whatsapp' ? 'active' : ''}" onclick="setChannel('whatsapp')">
+                        <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                    </button>
+                    <button class="channel-btn ${selectedChannel === 'sms' ? 'active' : ''}" onclick="setChannel('sms')">
+                        <i class="fa-solid fa-message"></i> SMS
+                    </button>
+                    <button class="channel-btn ${selectedChannel === 'email' ? 'active' : ''}" onclick="setChannel('email')">
+                        <i class="fa-solid fa-envelope"></i> Email
+                    </button>
+                `;
+            }
+            
+            function setChannel(channel) {
+                selectedChannel = channel;
+                renderChannelSelector();
+                showToast('Canal changé', `Notifications via ${channel === 'all' ? 'tous les canaux' : channel}`, 'info');
+            }
+            
+            // ========== CHAT FUNCTIONS ==========
+            function loadChatConversations() {
+                const users = Storage.get('users', []);
+                const messages = JSON.parse(localStorage.getItem('salam_messages') || '[]');
+                const clients = users.filter(u => u.role === 'client');
+                
+                const conversationsMap = new Map();
+                
+                clients.forEach(client => {
+                    const clientMessages = messages.filter(m => 
+                        (m.from === client.id && m.to === supplierId) || 
+                        (m.from === supplierId && m.to === client.id)
+                    );
+                    
+                    if (clientMessages.length > 0 || true) { // Afficher tous les clients même sans messages
+                        const lastMessage = clientMessages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))[0];
+                        const unreadCount = clientMessages.filter(m => m.from === client.id && m.to === supplierId && !m.read).length;
+                        
+                        conversationsMap.set(client.id, {
+                            client: client,
+                            messages: clientMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)),
+                            lastMessage: lastMessage,
+                            unreadCount: unreadCount
+                        });
+                    }
+                });
+                
+                conversations = Array.from(conversationsMap.values());
+                conversations.sort((a, b) => {
+                    const dateA = a.lastMessage ? new Date(a.lastMessage.timestamp) : new Date(0);
+                    const dateB = b.lastMessage ? new Date(b.lastMessage.timestamp) : new Date(0);
+                    return dateB - dateA;
+                });
+                
+                renderConversationsList();
+                updateChatBadge();
+                
+                if (currentConversationId) {
+                    const conv = conversations.find(c => c.client.id === currentConversationId);
+                    if (conv) {
+                        currentCustomer = conv.client;
+                        renderChatMessages(conv.messages);
+                        markMessagesAsRead(currentConversationId);
+                    }
+                }
+            }
+            
+            function renderConversationsList() {
+                const container = document.getElementById('conversationsList');
+                if (!container) return;
+                
+                const searchTerm = document.getElementById('chatSearchInput')?.value.toLowerCase() || '';
+                let filtered = [...conversations];
+                if (searchTerm) {
+                    filtered = filtered.filter(c => c.client.name.toLowerCase().includes(searchTerm));
+                }
+                
+                if (filtered.length === 0) {
+                    container.innerHTML = '<div style="text-align:center;padding:var(--space-6);color:var(--text-muted);">Aucun client trouvé</div>';
+                    return;
+                }
+                
+                container.innerHTML = filtered.map(conv => {
+                    const lastMsg = conv.lastMessage;
+                    const lastMsgPreview = lastMsg ? (lastMsg.text.length > 40 ? lastMsg.text.substring(0, 40) + '...' : lastMsg.text) : 'Aucun message';
+                    const lastMsgTime = lastMsg ? formatTime(lastMsg.timestamp) : '';
+                    const isActive = currentConversationId === conv.client.id;
+                    const unreadBadge = conv.unreadCount > 0 ? `<span class="nav-badge" style="background: var(--emerald-500);">${conv.unreadCount}</span>` : '';
+                    
+                    return `
+                        <div class="chat-conversation-item ${isActive ? 'active' : ''}" onclick="selectConversation('${conv.client.id}')">
+                            <div class="chat-conversation-avatar">${conv.client.avatar || '🛒'}</div>
+                            <div class="chat-conversation-info">
+                                <div class="chat-conversation-name">
+                                    ${escapeHtml(conv.client.name)}
+                                    ${unreadBadge}
+                                </div>
+                                <div class="chat-conversation-lastmsg">${escapeHtml(lastMsgPreview)}</div>
+                            </div>
+                            <div class="chat-conversation-time">${lastMsgTime}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            function selectConversation(clientId) {
+                currentConversationId = clientId;
+                const conv = conversations.find(c => c.client.id === clientId);
+                if (conv) {
+                    currentCustomer = conv.client;
+                    renderChatMessages(conv.messages);
+                    markMessagesAsRead(clientId);
+                    
+                    // Activer l'input
+                    document.getElementById('chatMessageInput').disabled = false;
+                    document.getElementById('sendChatBtn').disabled = false;
+                    document.getElementById('chatMessageInput').focus();
+                    
+                    // Mettre à jour l'en-tête
+                    document.getElementById('activeChatName').textContent = currentCustomer.name;
+                    document.getElementById('activeChatAvatar').textContent = currentCustomer.avatar || '🛒';
+                    document.getElementById('activeChatStatus').innerHTML = `<i class="fa-regular fa-circle"></i> En ligne`;
+                }
+                renderConversationsList();
+            }
+            
+            function renderChatMessages(messages) {
+                const container = document.getElementById('chatMessages');
+                if (!container) return;
+                
+                if (!messages || messages.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-chat">
+                            <i class="fa-regular fa-comment-dots" style="font-size: 3rem; opacity: 0.5;"></i>
+                            <p>Aucun message avec ce client</p>
+                            <small>Soyez le premier à envoyer un message !</small>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = messages.map(msg => {
+                    const isSent = msg.from === supplierId;
+                    const isAI = msg.isAI === true;
+                    return `
+                        <div class="chat-message ${isSent ? 'sent' : 'received'}">
+                            <div>
+                                <div class="chat-message-bubble">
+                                    ${escapeHtml(msg.text)}
+                                    ${isAI ? '<span class="badge-violet" style="margin-left: var(--space-2); font-size: 0.6rem;"><i class="fa-solid fa-robot"></i> IA</span>' : ''}
+                                </div>
+                                <div class="chat-message-time">${formatTime(msg.timestamp)}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                container.scrollTop = container.scrollHeight;
+            }
+            
+            function sendSupplierMessage() {
+                const input = document.getElementById('chatMessageInput');
+                const text = input.value.trim();
+                
+                if (!text || !currentConversationId || !currentCustomer) {
+                    showToast('Erreur', 'Sélectionnez un client et écrivez un message', 'error');
+                    return;
+                }
+                
+                const message = {
+                    id: Date.now().toString() + '_' + Math.random().toString(36).substr(2, 6),
+                    from: supplierId,
+                    fromName: supplierName,
+                    to: currentConversationId,
+                    text: text,
+                    timestamp: new Date().toISOString(),
+                    read: false
+                };
+                
+                const saved = localStorage.getItem('salam_messages');
+                const allMessages = saved ? JSON.parse(saved) : [];
+                allMessages.push(message);
+                localStorage.setItem('salam_messages', JSON.stringify(allMessages));
+                
+                input.value = '';
+                input.style.height = 'auto';
+                
+                // Envoyer la notification au client (WhatsApp/SMS/Email)
+                if (currentCustomer.phone || currentCustomer.email) {
+                    sendMultiChannelNotification(
+                        currentCustomer.phone || REAL_PHONE_NUMBER,
+                        currentCustomer.email || REAL_EMAIL,
+                        currentCustomer.name,
+                        text
+                    );
+                }
+                
+                loadChatConversations();
+                showToast('Message envoyé', `À ${currentCustomer.name} : ${text.substring(0, 50)}`, 'success');
+            }
+            
+            function markMessagesAsRead(clientId) {
+                const saved = localStorage.getItem('salam_messages');
+                if (!saved) return;
+                let allMessages = JSON.parse(saved);
+                let updated = false;
+                
+                allMessages = allMessages.map(msg => {
+                    if (msg.from === clientId && msg.to === supplierId && !msg.read) {
+                        updated = true;
+                        return { ...msg, read: true };
+                    }
+                    return msg;
+                });
+                
+                if (updated) {
+                    localStorage.setItem('salam_messages', JSON.stringify(allMessages));
+                    loadChatConversations();
+                }
+            }
+            
+            function updateChatBadge() {
+                const totalUnread = conversations.reduce((sum, c) => sum + c.unreadCount, 0);
+                const badge = document.getElementById('chatBadge');
+                if (badge) {
+                    if (totalUnread > 0) {
+                        badge.textContent = totalUnread > 9 ? '9+' : totalUnread;
+                        badge.style.display = '';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                }
+            }
+            
+            function refreshChat() {
+                loadChatConversations();
+                showToast('Chat actualisé', 'Les messages ont été mis à jour', 'success');
+            }
+            
+            function startChatAutoRefresh() {
+                if (chatRefreshInterval) clearInterval(chatRefreshInterval);
+                chatRefreshInterval = setInterval(() => {
+                    loadChatConversations();
+                }, 5000);
+            }
+            
             // ========== INITIALISATION ==========
             function init() {
                 document.getElementById('supplierName').innerHTML = `<i class="fa-solid fa-store"></i> ${supplierName}`;
@@ -1066,10 +1619,23 @@
                 loadSupplierOrders();
                 loadDashboard();
                 initCharts();
+                
+                // Initialiser le chat
+                renderChannelSelector();
+                loadChatConversations();
+                startChatAutoRefresh();
+                
+                // Redimensionnement auto du textarea
+                const textarea = document.getElementById('chatMessageInput');
+                if (textarea) {
+                    textarea.addEventListener('input', function() {
+                        this.style.height = 'auto';
+                        this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+                    });
+                }
             }
             
             function loadSupplierData() {
-                // Charger les données du fournisseur depuis les utilisateurs
                 const users = Storage.get('users', []);
                 const supplierData = users.find(u => u.id === supplier.id) || supplier;
                 
@@ -1124,17 +1690,16 @@
                     showToast('⚠️ Stock critique', `${lowStock} produit(s) en stock bas`, 'warning', 5000);
                 }
                 
-                // Dernières commandes
                 const recentOrders = supplierOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
                 document.querySelector('#recentOrdersTable tbody').innerHTML = recentOrders.map(o => `
                     <tr>
-                        <td><span class="badge badge-info">#${o.id.slice(-8)}</span></td>
-                        <td>${o.customerName || 'N/A'}</td>
-                        <td>${o.items.filter(i => i.supplier === supplierName).length} art.</td>
-                        <td><strong>${(o.total || 0).toLocaleString()} FCFA</strong></td>
-                        <td><span class="badge ${o.status === 'livrée' ? 'badge-success' : (o.status === 'annulée' ? 'badge-danger' : 'badge-warning')}">${o.status}</span></td>
-                        <td>${new Date(o.createdAt).toLocaleDateString('fr-FR')}</td>
-                        <td><button class="btn-outline btn-sm" onclick="viewOrderDetails('${o.id}')"><i class="fa-solid fa-eye"></i></button></td>
+                        <td><span class="badge badge-info">#${o.id.slice(-8)}</span></span>
+                        <td>${o.customerName || 'N/A'}</span>
+                        <td>${o.items.filter(i => i.supplier === supplierName).length} art.</span>
+                        <td><strong>${(o.total || 0).toLocaleString()} FCFA</strong></span>
+                        <td><span class="badge ${o.status === 'livrée' ? 'badge-success' : (o.status === 'annulée' ? 'badge-danger' : 'badge-warning')}">${o.status}</span></span>
+                        <td>${new Date(o.createdAt).toLocaleDateString('fr-FR')}</span>
+                        <td><button class="btn-outline btn-sm" onclick="viewOrderDetails('${o.id}')"><i class="fa-solid fa-eye"></i></button></span>
                     </tr>
                 `).join('');
             }
@@ -1151,18 +1716,18 @@
                 
                 document.querySelector('#productsTable tbody').innerHTML = products.map(p => `
                     <tr>
-                        <td>${p.image || '📦'} ${p.name}</td>
-                        <td>${p.category}</td>
-                        <td>${(p.price || 0).toLocaleString()} FCFA</td>
+                        <td>${p.image || '📦'} ${p.name}</span>
+                        <td>${p.category}</span>
+                        <td>${(p.price || 0).toLocaleString()} FCFA</span>
                         <td class="${p.stock <= (p.minStock || 10) ? 'stock-alert' : ''}">
                             ${p.stock || 0} ${p.stock <= (p.minStock || 10) ? '<span class="stock-alert">⚠️ Stock bas</span>' : ''}
-                        </td>
-                        <td><span class="badge ${p.available !== false ? 'badge-success' : 'badge-danger'}">${p.available !== false ? 'Disponible' : 'Indisponible'}</span></td>
+                         </span>
+                        <td><span class="badge ${p.available !== false ? 'badge-success' : 'badge-danger'}">${p.available !== false ? 'Disponible' : 'Indisponible'}</span></span>
                         <td>
                             <button class="btn-outline btn-sm" onclick="editProduct(${p.id})"><i class="fa-solid fa-pen"></i></button>
                             <button class="btn-outline btn-sm" onclick="openStockModal(${p.id}, '${p.name}', ${p.stock || 0})"><i class="fa-solid fa-warehouse"></i></button>
                             <button class="btn-danger btn-sm" onclick="deleteProduct(${p.id})"><i class="fa-solid fa-trash"></i></button>
-                        </td>
+                         </span>
                     </tr>
                 `).join('');
             }
@@ -1324,16 +1889,16 @@
                     const supplierTotal = supplierItems.reduce((sum, i) => sum + (i.price * i.quantity), 0);
                     return `
                         <tr>
-                            <td><span class="badge badge-info">#${o.id.slice(-8)}</span></td>
-                            <td>${o.customerName || 'N/A'}</td>
-                            <td>${supplierItems.map(i => `${i.name} ×${i.quantity}`).join(', ')}</td>
-                            <td><strong>${supplierTotal.toLocaleString()} FCFA</strong></td>
-                            <td><span class="badge ${o.status === 'livrée' ? 'badge-success' : (o.status === 'annulée' ? 'badge-danger' : 'badge-warning')}">${o.status}</span></td>
-                            <td>${new Date(o.createdAt).toLocaleDateString('fr-FR')}</td>
+                            <td><span class="badge badge-info">#${o.id.slice(-8)}</span></span>
+                            <td>${o.customerName || 'N/A'}</span>
+                            <td>${supplierItems.map(i => `${i.name} ×${i.quantity}`).join(', ')}</span>
+                            <td><strong>${supplierTotal.toLocaleString()} FCFA</strong></span>
+                            <td><span class="badge ${o.status === 'livrée' ? 'badge-success' : (o.status === 'annulée' ? 'badge-danger' : 'badge-warning')}">${o.status}</span></span>
+                            <td>${new Date(o.createdAt).toLocaleDateString('fr-FR')}</span>
                             <td>
                                 <button class="btn-outline btn-sm" onclick="viewOrderDetails('${o.id}')"><i class="fa-solid fa-eye"></i></button>
                                 ${o.status !== 'livrée' && o.status !== 'annulée' ? `<button class="btn-primary btn-sm" onclick="updateOrderStatus('${o.id}', 'préparation')"><i class="fa-solid fa-check"></i> Préparer</button>` : ''}
-                            </td>
+                             </span>
                         </tr>
                     `;
                 }).join('');
@@ -1364,7 +1929,6 @@
                 const allProducts = Storage.get('products', []);
                 const supplierProducts = allProducts.filter(p => p.supplier === supplierName);
                 
-                // Ventes hebdomadaires
                 const weeklyData = Array(7).fill(0);
                 const days = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
                 supplierOrders.forEach(o => {
@@ -1378,20 +1942,11 @@
                     if (weeklySalesChart) weeklySalesChart.destroy();
                     weeklySalesChart = new Chart(ctx, {
                         type: 'bar',
-                        data: {
-                            labels: days,
-                            datasets: [{
-                                label: 'Ventes (FCFA)',
-                                data: weeklyData,
-                                backgroundColor: '#8B5CF6',
-                                borderRadius: 8
-                            }]
-                        },
+                        data: { labels: days, datasets: [{ label: 'Ventes (FCFA)', data: weeklyData, backgroundColor: '#8B5CF6', borderRadius: 8 }] },
                         options: { responsive: true, maintainAspectRatio: false }
                     });
                 }
                 
-                // Catégories
                 const categoryMap = new Map();
                 supplierProducts.forEach(p => {
                     categoryMap.set(p.category, (categoryMap.get(p.category) || 0) + 1);
@@ -1402,18 +1957,11 @@
                     if (categoryChart) categoryChart.destroy();
                     categoryChart = new Chart(ctx2, {
                         type: 'doughnut',
-                        data: {
-                            labels: Array.from(categoryMap.keys()),
-                            datasets: [{
-                                data: Array.from(categoryMap.values()),
-                                backgroundColor: ['#8B5CF6', '#10B981', '#F59E0B', '#3B82F6', '#F43F5E']
-                            }]
-                        },
+                        data: { labels: Array.from(categoryMap.keys()), datasets: [{ data: Array.from(categoryMap.values()), backgroundColor: ['#8B5CF6', '#10B981', '#F59E0B', '#3B82F6', '#F43F5E'] }] },
                         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94A3B8' } } } }
                     });
                 }
                 
-                // Ventes mensuelles
                 const monthlyData = Array(12).fill(0);
                 supplierOrders.forEach(o => {
                     const month = new Date(o.createdAt).getMonth();
@@ -1425,23 +1973,11 @@
                     if (monthlySalesChart) monthlySalesChart.destroy();
                     monthlySalesChart = new Chart(ctx3, {
                         type: 'line',
-                        data: {
-                            labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
-                            datasets: [{
-                                label: 'Ventes (FCFA)',
-                                data: monthlyData,
-                                borderColor: '#10B981',
-                                backgroundColor: 'rgba(16, 185, 129, 0.05)',
-                                borderWidth: 2,
-                                fill: true,
-                                tension: 0.4
-                            }]
-                        },
+                        data: { labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'], datasets: [{ label: 'Ventes (FCFA)', data: monthlyData, borderColor: '#10B981', backgroundColor: 'rgba(16,185,129,0.05)', borderWidth: 2, fill: true, tension: 0.4 }] },
                         options: { responsive: true, maintainAspectRatio: false }
                     });
                 }
                 
-                // Top produits
                 const productSales = new Map();
                 supplierOrders.forEach(o => {
                     o.items.filter(i => i.supplier === supplierName).forEach(item => {
@@ -1487,7 +2023,6 @@
                     users[index] = { ...users[index], ...updatedData };
                     Storage.set('users', users);
                     
-                    // Mettre à jour session
                     const session = Storage.get('session');
                     if (session && session.user) {
                         session.user.name = updatedData.name;
@@ -1519,11 +2054,8 @@
                 const allProducts = Storage.get('products', []);
                 const supplierProducts = allProducts.filter(p => p.supplier === supplierName);
                 const data = supplierProducts.map(p => ({
-                    'Produit': p.name,
-                    'Catégorie': p.category,
-                    'Prix': p.price + ' FCFA',
-                    'Stock actuel': p.stock,
-                    'Stock minimum': p.minStock || 10,
+                    'Produit': p.name, 'Catégorie': p.category, 'Prix': p.price + ' FCFA',
+                    'Stock actuel': p.stock, 'Stock minimum': p.minStock || 10,
                     'Statut': p.stock <= (p.minStock || 10) ? '⚠️ Stock bas' : 'OK'
                 }));
                 
@@ -1548,6 +2080,7 @@
                 if (section === 'products') loadProducts();
                 if (section === 'orders') loadSupplierOrders();
                 if (section === 'stock') loadProducts();
+                if (section === 'chat') { loadChatConversations(); document.getElementById('chatMessageInput').focus(); }
                 if (section === 'analytics') initCharts();
                 if (section === 'profile') loadSupplierData();
                 
@@ -1560,6 +2093,16 @@
                 loadSupplierOrders();
                 initCharts();
                 showToast('Actualisé', 'Toutes les données ont été mises à jour', 'success');
+            }
+            
+            function formatTime(isoString) {
+                const date = new Date(isoString);
+                const now = new Date();
+                const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+                if (diffDays === 0) return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                if (diffDays === 1) return 'Hier';
+                if (diffDays < 7) return date.toLocaleDateString('fr-FR', { weekday: 'short' });
+                return date.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
             }
             
             function showToast(title, message, type = 'success', duration = 4000) {
@@ -1587,6 +2130,7 @@
             }
             
             function escapeHtml(str) {
+                if (!str) return '';
                 const div = document.createElement('div');
                 div.textContent = str;
                 return div.innerHTML;
@@ -1603,6 +2147,7 @@
             }
             
             function logout() {
+                if (chatRefreshInterval) clearInterval(chatRefreshInterval);
                 localStorage.removeItem('salam_session');
                 localStorage.removeItem('salam_cart');
                 window.location.href = '../index.html';
@@ -1625,6 +2170,10 @@
             window.toggleEditProfile = toggleEditProfile;
             window.saveProfile = saveProfile;
             window.cancelEditProfile = cancelEditProfile;
+            window.selectConversation = selectConversation;
+            window.sendSupplierMessage = sendSupplierMessage;
+            window.refreshChat = refreshChat;
+            window.setChannel = setChannel;
             window.openSidebar = openSidebar;
             window.closeSidebar = closeSidebar;
             window.logout = logout;
