@@ -33,7 +33,7 @@
             --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
             --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
             --radius-sm: 10px; --radius-md: 14px; --radius-lg: 18px;
-            --radius-xl: 24px; --radius-2xl: 32px; --radius-full: 9999px;
+            --radius-xl: 24px; --radius-full: 9999px;
             --ease-out-expo: cubic-bezier(0.16,1,0.3,1);
             --duration-fast: 200ms; --duration-base: 400ms;
             --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
@@ -269,13 +269,13 @@
             <!-- PRODUITS -->
             <div class="section" id="section-products">
                 <div class="page-header"><h1><i class="fa-solid fa-boxes-stacked"></i> Mes Produits</h1><div class="header-actions"><div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="productSearch" placeholder="Rechercher..."></div><button class="btn-primary btn" id="addProductBtn"><i class="fa-solid fa-plus"></i> Ajouter</button></div></div>
-                <div class="chart-card"><div class="table-wrapper"><table class="data-table" id="productsTable"><thead><tr><th>Produit</th><th>Catégorie</th><th>Prix</th><th>Stock</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
+                <div class="chart-card"><div class="table-wrapper"><table class="data-table" id="productsTable"><thead><tr><th>Produit</th><th>Catégorie</th><th>Prix</th><th>Stock</th><th>Actions</th></tr></thead><tbody></tbody></td></div></div>
             </div>
             
             <!-- COMMANDES -->
             <div class="section" id="section-orders">
                 <div class="page-header"><h1><i class="fa-solid fa-clipboard-list"></i> Commandes</h1><div class="header-actions"><div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="orderSearch" placeholder="Rechercher..."></div><select class="btn-outline btn" id="orderStatusFilter"><option value="all">Tous</option><option value="confirmée">Confirmée</option><option value="préparation">Préparation</option><option value="livraison">Livraison</option><option value="livrée">Livrée</option></select></div></div>
-                <div class="chart-card"><div class="table-wrapper"><table class="data-table" id="ordersTable"><thead><tr><th>ID</th><th>Client</th><th>Total</th><th>Statut</th><th>Date</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
+                <div class="chart-card"><div class="table-wrapper"><table class="data-table" id="ordersTable"><thead><tr><th>ID</th><th>Client</th><th>Total</th><th>Statut</th><th>Date</th><th>Actions</th><tr></thead><tbody></tbody></table></div></div>
             </div>
             
             <!-- STOCK -->
@@ -324,6 +324,59 @@
         (function() {
             'use strict';
             
+            // ========== INITIALISATION DES DONNÉES PAR DÉFAUT ==========
+            function initDefaultData() {
+                // Utilisateurs par défaut
+                let users = JSON.parse(localStorage.getItem('salam_users') || '[]');
+                if (users.length === 0) {
+                    users = [
+                        { id: 'ADM-001', name: 'Admin Principal', email: 'admin@salam.cm', phone: '+237600000000', password: 'Admin2025!', role: 'admin', avatar: '👑', status: 'active', createdAt: new Date().toISOString() },
+                        { id: 'SUP-001', name: 'BOUTIQUE LE TOUMAI', email: 'toumai@salam.cm', phone: '+237699887766', password: 'Toumai2025!', role: 'supplier', avatar: '🏪', status: 'active', createdAt: new Date().toISOString() },
+                        { id: 'CLI-001', name: 'Client Test', email: 'client@salam.cm', phone: '+237612345678', password: 'Client2025!', role: 'client', avatar: '🛒', status: 'active', createdAt: new Date().toISOString() },
+                        { id: 'CLI-002', name: 'Jean Dupont', email: 'jean@example.com', phone: '+237612345679', password: 'Client2025!', role: 'client', avatar: '🛒', status: 'active', createdAt: new Date().toISOString() }
+                    ];
+                    localStorage.setItem('salam_users', JSON.stringify(users));
+                    console.log('✅ Utilisateurs par défaut initialisés');
+                }
+                
+                // Produits par défaut
+                let products = JSON.parse(localStorage.getItem('salam_products') || '[]');
+                if (products.length === 0) {
+                    products = [
+                        { id: 1, name: 'Riz Parfumé Mama Gold', category: 'Riz', price: 900, stock: 50, unit: 'kg', minStock: 10, image: '🍚', supplier: 'BOUTIQUE LE TOUMAI', sales: 245, available: true, createdAt: new Date().toISOString() },
+                        { id: 2, name: 'Riz Tanti', category: 'Riz', price: 800, stock: 30, unit: 'kg', minStock: 10, image: '🍚', supplier: 'BOUTIQUE LE TOUMAI', sales: 189, available: true, createdAt: new Date().toISOString() },
+                        { id: 3, name: 'Huile Mayor 1L', category: 'Huiles', price: 1300, stock: 20, unit: 'L', minStock: 5, image: '🫒', supplier: 'BOUTIQUE LE TOUMAI', sales: 156, available: true, createdAt: new Date().toISOString() },
+                        { id: 4, name: 'PHARMAPUR Herbal', category: 'Savons', price: 350, stock: 100, unit: 'unité', minStock: 20, image: '🧼', supplier: 'BOUTIQUE LE TOUMAI', sales: 312, available: true, createdAt: new Date().toISOString() },
+                        { id: 5, name: 'Colgate Blancheur', category: 'Dentifrices', price: 1800, stock: 25, unit: 'tube', minStock: 10, image: '🦷', supplier: 'BOUTIQUE LE TOUMAI', sales: 98, available: true, createdAt: new Date().toISOString() }
+                    ];
+                    localStorage.setItem('salam_products', JSON.stringify(products));
+                    console.log('✅ Produits par défaut initialisés');
+                }
+                
+                // Commandes par défaut
+                let orders = JSON.parse(localStorage.getItem('salam_orders') || '[]');
+                if (orders.length === 0) {
+                    orders = [
+                        { id: 'CMD-' + Date.now().toString(36).toUpperCase(), userId: 'CLI-001', customerName: 'Client Test', items: [{ id: 1, name: 'Riz Parfumé Mama Gold', price: 900, quantity: 2, image: '🍚', supplier: 'BOUTIQUE LE TOUMAI' }], total: 1800, status: 'livrée', paymentStatus: 'paid', createdAt: new Date().toISOString() },
+                        { id: 'CMD-' + (Date.now()+1).toString(36).toUpperCase(), userId: 'CLI-002', customerName: 'Jean Dupont', items: [{ id: 3, name: 'Huile Mayor 1L', price: 1300, quantity: 1, image: '🫒', supplier: 'BOUTIQUE LE TOUMAI' }], total: 1300, status: 'confirmée', paymentStatus: 'pending', createdAt: new Date().toISOString() }
+                    ];
+                    localStorage.setItem('salam_orders', JSON.stringify(orders));
+                    console.log('✅ Commandes par défaut initialisées');
+                }
+                
+                // Messages par défaut
+                let messages = JSON.parse(localStorage.getItem('salam_messages') || '[]');
+                if (messages.length === 0) {
+                    messages = [
+                        { id: 'msg1', from: 'CLI-001', fromName: 'Client Test', to: 'SUP-001', text: 'Bonjour, est-ce que le riz est disponible ?', timestamp: new Date().toISOString(), read: false },
+                        { id: 'msg2', from: 'SUP-001', fromName: 'BOUTIQUE LE TOUMAI', to: 'CLI-001', text: 'Bonjour, oui il est disponible. Combien en voulez-vous ?', timestamp: new Date(Date.now() - 3600000).toISOString(), read: true }
+                    ];
+                    localStorage.setItem('salam_messages', JSON.stringify(messages));
+                    console.log('✅ Messages par défaut initialisés');
+                }
+            }
+            
+            // ========== THEME SOMBRE ==========
             function initTheme() {
                 const savedTheme = localStorage.getItem('salam_theme');
                 const themeSwitch = document.getElementById('themeSwitch');
@@ -340,6 +393,9 @@
                     });
                 }
             }
+            
+            // ========== SESSION ==========
+            initDefaultData();
             
             const session = JSON.parse(localStorage.getItem('salam_session') || 'null');
             if (!session || session.user.role !== 'supplier') { window.location.href = '../index.html'; return; }
@@ -360,6 +416,7 @@
                 set: function(k,v) { localStorage.setItem('salam_'+k, JSON.stringify(v)); }
             };
             
+            // ========== NOTIFICATIONS ==========
             function sendWhatsApp(phone, msg) { window.open('https://wa.me/' + (phone || DEFAULT_PHONE).replace(/[^0-9]/g, '') + '?text=' + encodeURIComponent(msg), '_blank'); return true; }
             function sendSMS(phone, msg) { window.open('sms:' + (phone || DEFAULT_PHONE) + '?body=' + encodeURIComponent(msg), '_blank'); return true; }
             function sendEmail(email, msg) { window.open('mailto:' + (email || 'client@salam.cm') + '?subject=Message de ' + supplierName + ' - Salam Market&body=' + encodeURIComponent(msg), '_blank'); return true; }
@@ -465,12 +522,30 @@
             
             window.toggleMobileChat = () => document.getElementById('chatConversations').classList.toggle('mobile-visible');
             
+            // ========== PRODUITS ==========
             function loadProducts() {
-                products = Storage.get('products', []).filter(p => p.supplier === supplierName);
+                const allProducts = Storage.get('products', []);
+                products = allProducts.filter(p => p.supplier === supplierName);
                 const tbody = document.querySelector('#productsTable tbody');
-                if(tbody) tbody.innerHTML = products.map(p => `<tr><td>${p.image || '📦'} ${escapeHtml(p.name)}</td><td>${escapeHtml(p.category)}</td><td>${(p.price||0).toLocaleString()} FCFA</td><td class="${p.stock <= (p.minStock||10) ? 'stock-alert' : ''}">${p.stock || 0}${p.stock <= (p.minStock||10) ? ' ⚠️' : ''}</td><td><button class="btn-outline btn-sm" onclick="editProduct(${p.id})"><i class="fa-solid fa-pen"></i></button> <button class="btn-outline btn-sm" onclick="openStockModal(${p.id}, '${p.name}', ${p.stock||0})"><i class="fa-solid fa-warehouse"></i></button> <button class="btn-danger btn-sm" onclick="deleteProduct(${p.id})"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('');
+                if(tbody) tbody.innerHTML = products.map(p => `
+                    <tr>
+                        <td>${p.image || '📦'} ${escapeHtml(p.name)}</span>
+                        <td>${escapeHtml(p.category)}</span>
+                        <td>${(p.price||0).toLocaleString()} FCFA</span>
+                        <td class="${p.stock <= (p.minStock||10) ? 'stock-alert' : ''}">${p.stock || 0}${p.stock <= (p.minStock||10) ? ' ⚠️' : ''}</span>
+                        <td><button class="btn-outline btn-sm" onclick="editProduct(${p.id})"><i class="fa-solid fa-pen"></i></button> <button class="btn-outline btn-sm" onclick="openStockModal(${p.id}, '${p.name}', ${p.stock||0})"><i class="fa-solid fa-warehouse"></i></button> <button class="btn-danger btn-sm" onclick="deleteProduct(${p.id})"><i class="fa-solid fa-trash"></i></button></span>
+                    </tr>
+                `).join('');
                 document.getElementById('productsCount').textContent = products.length;
-                document.querySelector('#stockTable tbody').innerHTML = products.map(p => `<tr><td>${escapeHtml(p.name)}</td><td>${p.stock || 0}</td><td>${p.minStock || 10}</td><td><span class="badge ${p.stock <= (p.minStock||10) ? 'badge-danger' : 'badge-success'}">${p.stock <= (p.minStock||10) ? 'Stock bas' : 'OK'}</span></td><td><button class="btn-outline btn-sm" onclick="openStockModal(${p.id}, '${p.name}', ${p.stock||0})"><i class="fa-solid fa-pen"></i></button></td></tr>`).join('');
+                document.querySelector('#stockTable tbody').innerHTML = products.map(p => `
+                    <tr>
+                        <td>${escapeHtml(p.name)}</span>
+                        <td>${p.stock || 0}</span>
+                        <td>${p.minStock || 10}</span>
+                        <td><span class="badge ${p.stock <= (p.minStock||10) ? 'badge-danger' : 'badge-success'}">${p.stock <= (p.minStock||10) ? 'Stock bas' : 'OK'}</span>
+                        <td><button class="btn-outline btn-sm" onclick="openStockModal(${p.id}, '${p.name}', ${p.stock||0})"><i class="fa-solid fa-pen"></i></button></span>
+                    </tr>
+                `).join('');
             }
             
             function openProductModal(id) {
@@ -517,6 +592,7 @@
                 if(idx !== -1) { allProducts[idx].stock = final; Storage.set('products', allProducts); showToast('Stock mis à jour', 'Nouveau stock: ' + final, 'success'); closeStockModal(); loadProducts(); loadDashboard(); }
             }
             
+            // ========== COMMANDES ==========
             function loadOrders() {
                 let allOrders = Storage.get('orders', []);
                 orders = allOrders.filter(o => o.items?.some(i => i.supplier === supplierName));
@@ -524,7 +600,15 @@
                 const status = document.getElementById('orderStatusFilter')?.value || 'all';
                 let filtered = orders.filter(o => (status === 'all' || o.status === status) && (o.id.toLowerCase().includes(search) || (o.customerName || '').toLowerCase().includes(search)));
                 const tbody = document.querySelector('#ordersTable tbody');
-                if(tbody) tbody.innerHTML = filtered.map(o => { const total = o.items.filter(i => i.supplier === supplierName).reduce((s,i) => s + (i.price * i.quantity),0); return `<tr><td><span class="badge badge-info">#${o.id.slice(-8)}</span></td><td>${escapeHtml(o.customerName || 'N/A')}</td><td>${total.toLocaleString()} FCFA</td><td><span class="badge ${o.status === 'livrée' ? 'badge-success' : o.status === 'annulée' ? 'badge-danger' : 'badge-warning'}">${o.status}</span></td><td>${new Date(o.createdAt).toLocaleDateString()}</td><td><button class="btn-outline btn-sm" onclick="updateOrderStatus('${o.id}', 'préparation')">Préparer</button></td></tr>`; }).join('');
+                if(tbody) tbody.innerHTML = filtered.map(o => { const total = o.items.filter(i => i.supplier === supplierName).reduce((s,i) => s + (i.price * i.quantity),0); return `<tr>
+                        <td><span class="badge badge-info">#${o.id.slice(-8)}</span></td>
+                        <td>${escapeHtml(o.customerName || 'N/A')}</td>
+                        <td>${total.toLocaleString()} FCFA</span></td>
+                        <td><span class="badge ${o.status === 'livrée' ? 'badge-success' : o.status === 'annulée' ? 'badge-danger' : 'badge-warning'}">${o.status}</span></td>
+                        <td>${new Date(o.createdAt).toLocaleDateString()}</td>
+                        <td><button class="btn-outline btn-sm" onclick="updateOrderStatus('${o.id}', 'préparation')">Préparer</button></td>
+                    </tr>`;
+                }).join('');
                 const pending = orders.filter(o => !['livrée','annulée'].includes(o.status)).length;
                 document.getElementById('pendingOrdersBadge').textContent = pending;
             }
@@ -534,8 +618,11 @@
                 if(idx !== -1) { allOrders[idx].status = status; Storage.set('orders', allOrders); loadOrders(); loadDashboard(); showToast('Commande mise à jour', 'Statut: ' + status, 'success'); }
             }
             
+            // ========== DASHBOARD ==========
             function loadDashboard() {
-                const totalProducts = products.length;
+                const allProducts = Storage.get('products', []);
+                const supplierProducts = allProducts.filter(p => p.supplier === supplierName);
+                const totalProducts = supplierProducts.length;
                 const totalOrders = orders.length;
                 const pending = orders.filter(o => !['livrée','annulée'].includes(o.status)).length;
                 const revenue = orders.filter(o => o.paymentStatus === 'paid').reduce((s,o) => s + (o.total||0), 0);
@@ -543,7 +630,7 @@
                 document.querySelectorAll('.stat-card[data-section]').forEach(card => { card.onclick = () => showSection(card.dataset.section); });
                 const recent = orders.slice().sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0,5);
                 const recentTbody = document.querySelector('#recentOrdersTable tbody');
-                if(recentTbody) recentTbody.innerHTML = recent.map(o => `<tr><td><span class="badge badge-info">#${o.id.slice(-8)}</span></td><td>${escapeHtml(o.customerName || 'N/A')}</td><td>${(o.total||0).toLocaleString()} FCFA</td><td><span class="badge ${o.status === 'livrée' ? 'badge-success' : 'badge-warning'}">${o.status}</span></td><td>${new Date(o.createdAt).toLocaleDateString()}</td></tr>`).join('');
+                if(recentTbody) recentTbody.innerHTML = recent.map(o => `<td><span class="badge badge-info">#${o.id.slice(-8)}</span></td><td>${escapeHtml(o.customerName || 'N/A')}</td><td>${(o.total||0).toLocaleString()} FCFA</span><td><span class="badge ${o.status === 'livrée' ? 'badge-success' : 'badge-warning'}">${o.status}</span><td>${new Date(o.createdAt).toLocaleDateString()}</td></tr>`).join('');
                 initCharts();
             }
             
@@ -565,9 +652,10 @@
                 orders.forEach(o => { o.items.filter(i => i.supplier === supplierName).forEach(item => { const cur = productSales.get(item.id) || { name: item.name, qty: 0, rev: 0 }; cur.qty += item.quantity; cur.rev += item.price * item.quantity; productSales.set(item.id, cur); }); });
                 const top = Array.from(productSales.entries()).sort((a,b) => b[1].rev - a[1].rev).slice(0,5);
                 const topTbody = document.querySelector('#topProductsTable tbody');
-                if(topTbody) topTbody.innerHTML = top.map(([id,d]) => `<tr><td>${escapeHtml(d.name)}</td><td>${d.qty}</td><td>${d.rev.toLocaleString()} FCFA</td></tr>`).join('');
+                if(topTbody) topTbody.innerHTML = top.map(([id,d]) => `<td>${escapeHtml(d.name)}</td><td>${d.qty}</td><td>${d.rev.toLocaleString()} FCFA</td>`).join('');
             }
             
+            // ========== PROFIL ==========
             function loadProfile() {
                 const users = Storage.get('users', []);
                 const user = users.find(u => u.id === supplierId) || supplier;
@@ -623,7 +711,7 @@
                 if(section === 'products') loadProducts();
                 if(section === 'orders') loadOrders();
                 if(section === 'stock') loadProducts();
-                if(section === 'chat') { loadConversations(); document.getElementById('chatMessageInput'); }
+                if(section === 'chat') { loadConversations(); setTimeout(() => document.getElementById('chatMessageInput')?.focus(), 100); }
                 if(section === 'analytics') initCharts();
                 if(section === 'profile') loadProfile();
                 closeSidebar();
