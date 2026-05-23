@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#0A0A14">
-    <meta name="description" content="Administration — Salam Market PRO">
+    meta name="description" content="Administration — Salam Market PRO">
     <meta name="apple-mobile-web-app-capable" content="yes">
     
     <title>Salam Market PRO · Administration</title>
@@ -813,30 +813,30 @@
             </div>
         </div>
         <nav class="sidebar-nav">
-            <button class="nav-item" onclick="showSection('dashboard')">
+            <button class="nav-item" data-section="dashboard">
                 <i class="fa-solid fa-gauge-high"></i> Tableau de Bord
             </button>
-            <button class="nav-item" onclick="showSection('orders')">
+            <button class="nav-item" data-section="orders">
                 <i class="fa-solid fa-box"></i> Commandes
                 <span class="nav-badge" id="pendingOrdersBadge">0</span>
             </button>
-            <button class="nav-item" onclick="showSection('users')">
+            <button class="nav-item" data-section="users">
                 <i class="fa-solid fa-users"></i> Utilisateurs
             </button>
-            <button class="nav-item" onclick="showSection('products')">
+            <button class="nav-item" data-section="products">
                 <i class="fa-solid fa-basket-shopping"></i> Produits
             </button>
-            <button class="nav-item" onclick="showSection('suppliers')">
+            <button class="nav-item" data-section="suppliers">
                 <i class="fa-solid fa-shop"></i> Fournisseurs
             </button>
-            <button class="nav-item" onclick="showSection('promos')">
+            <button class="nav-item" data-section="promos">
                 <i class="fa-solid fa-tags"></i> Promotions
             </button>
-            <button class="nav-item" onclick="showSection('messages')">
+            <button class="nav-item" data-section="messages">
                 <i class="fa-solid fa-envelope"></i> Messagerie
                 <span class="nav-badge" id="unreadMessagesBadge">0</span>
             </button>
-            <button class="nav-item" onclick="showSection('settings')">
+            <button class="nav-item" data-section="settings">
                 <i class="fa-solid fa-gear"></i> Paramètres
             </button>
         </nav>
@@ -1279,6 +1279,7 @@
             let categoryChart = null;
             let currentUserId = null;
             let currentConversationId = null;
+            let currentSection = 'dashboard';
             
             // Storage helpers
             const Storage = {
@@ -1381,15 +1382,69 @@
             // Initialisation des données
             initDefaultData();
             
+            // ========== NAVIGATION ==========
+            function initNavigation() {
+                // Récupérer tous les boutons de navigation
+                const navButtons = document.querySelectorAll('.nav-item');
+                
+                // Ajouter l'événement click à chaque bouton
+                navButtons.forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const sectionId = this.getAttribute('data-section');
+                        if (sectionId) {
+                            showSection(sectionId);
+                        }
+                    });
+                });
+                
+                // Afficher la section dashboard par défaut
+                showSection('dashboard');
+            }
+            
+            function showSection(sectionId) {
+                // Cacher toutes les sections
+                const allSections = document.querySelectorAll('.section');
+                allSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Afficher la section sélectionnée
+                const targetSection = document.getElementById(`section-${sectionId}`);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                }
+                
+                // Mettre à jour l'état actif des boutons
+                const navButtons = document.querySelectorAll('.nav-item');
+                navButtons.forEach(button => {
+                    const btnSection = button.getAttribute('data-section');
+                    if (btnSection === sectionId) {
+                        button.classList.add('active');
+                    } else {
+                        button.classList.remove('active');
+                    }
+                });
+                
+                // Mettre à jour la section courante
+                currentSection = sectionId;
+                
+                // Charger les données de la section
+                if (sectionId === 'dashboard') loadDashboard();
+                if (sectionId === 'orders') loadOrders();
+                if (sectionId === 'users') loadUsers();
+                if (sectionId === 'products') loadProducts();
+                if (sectionId === 'suppliers') loadSuppliers();
+                if (sectionId === 'promos') loadPromos();
+                if (sectionId === 'messages') loadMessages();
+                
+                // Fermer le sidebar sur mobile
+                closeSidebar();
+            }
+            
             // ========== INITIALISATION ==========
             function init() {
-                loadDashboard();
-                loadOrders();
-                loadUsers();
-                loadProducts();
-                loadSuppliers();
-                loadPromos();
-                loadMessages();
+                initNavigation();
                 updatePendingBadge();
                 updateUnreadBadge();
             }
@@ -1397,13 +1452,15 @@
             function updatePendingBadge() {
                 const orders = Storage.get('orders', []);
                 const pending = orders.filter(o => !['livrée', 'annulée'].includes(o.status)).length;
-                document.getElementById('pendingOrdersBadge').textContent = pending;
+                const badge = document.getElementById('pendingOrdersBadge');
+                if (badge) badge.textContent = pending;
             }
             
             function updateUnreadBadge() {
                 const messages = Storage.get('messages', []);
                 const unread = messages.filter(m => !m.read && !m.isFromAdmin).length;
-                document.getElementById('unreadMessagesBadge').textContent = unread;
+                const badge = document.getElementById('unreadMessagesBadge');
+                if (badge) badge.textContent = unread;
             }
             
             // ========== DASHBOARD ==========
@@ -1411,56 +1468,64 @@
                 const orders = Storage.get('orders', []);
                 const users = Storage.get('users', []);
                 const products = Storage.get('products', []);
-                const suppliers = Storage.get('suppliers', []);
                 
                 const totalRevenue = orders.filter(o => o.paymentStatus === 'paid').reduce((sum, o) => sum + (o.total || 0), 0);
                 const totalOrders = orders.length;
                 const pendingOrders = orders.filter(o => !['livrée', 'annulée'].includes(o.status)).length;
                 const totalUsers = users.length;
                 
-                document.getElementById('dashboardStats').innerHTML = `
-                    <div class="stat-card" onclick="showSection('orders')">
-                        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.08);"><i class="fa-solid fa-coins" style="color: var(--emerald-400);"></i></div>
-                        <div class="stat-value">${totalRevenue.toLocaleString()} FCFA</div>
-                        <div class="stat-label">Chiffre d'affaires</div>
-                    </div>
-                    <div class="stat-card" onclick="showSection('orders')">
-                        <div class="stat-icon" style="background: rgba(245, 158, 11, 0.08);"><i class="fa-solid fa-clock" style="color: var(--amber-400);"></i></div>
-                        <div class="stat-value">${pendingOrders}</div>
-                        <div class="stat-label">Commandes en attente</div>
-                    </div>
-                    <div class="stat-card" onclick="showSection('orders')">
-                        <div class="stat-icon" style="background: rgba(59, 130, 246, 0.08);"><i class="fa-solid fa-box" style="color: var(--blue-400);"></i></div>
-                        <div class="stat-value">${totalOrders}</div>
-                        <div class="stat-label">Commandes totales</div>
-                    </div>
-                    <div class="stat-card" onclick="showSection('users')">
-                        <div class="stat-icon" style="background: rgba(139, 92, 246, 0.08);"><i class="fa-solid fa-users" style="color: var(--violet-400);"></i></div>
-                        <div class="stat-value">${totalUsers}</div>
-                        <div class="stat-label">Utilisateurs</div>
-                    </div>
-                `;
+                const statsContainer = document.getElementById('dashboardStats');
+                if (statsContainer) {
+                    statsContainer.innerHTML = `
+                        <div class="stat-card" onclick="showSection('orders')">
+                            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.08);"><i class="fa-solid fa-coins" style="color: var(--emerald-400);"></i></div>
+                            <div class="stat-value">${totalRevenue.toLocaleString()} FCFA</div>
+                            <div class="stat-label">Chiffre d'affaires</div>
+                        </div>
+                        <div class="stat-card" onclick="showSection('orders')">
+                            <div class="stat-icon" style="background: rgba(245, 158, 11, 0.08);"><i class="fa-solid fa-clock" style="color: var(--amber-400);"></i></div>
+                            <div class="stat-value">${pendingOrders}</div>
+                            <div class="stat-label">Commandes en attente</div>
+                        </div>
+                        <div class="stat-card" onclick="showSection('orders')">
+                            <div class="stat-icon" style="background: rgba(59, 130, 246, 0.08);"><i class="fa-solid fa-box" style="color: var(--blue-400);"></i></div>
+                            <div class="stat-value">${totalOrders}</div>
+                            <div class="stat-label">Commandes totales</div>
+                        </div>
+                        <div class="stat-card" onclick="showSection('users')">
+                            <div class="stat-icon" style="background: rgba(139, 92, 246, 0.08);"><i class="fa-solid fa-users" style="color: var(--violet-400);"></i></div>
+                            <div class="stat-value">${totalUsers}</div>
+                            <div class="stat-label">Utilisateurs</div>
+                        </div>
+                    `;
+                }
                 
                 // Derniers utilisateurs
                 const recentUsers = [...users].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
-                document.querySelector('#recentUsersTable tbody').innerHTML = recentUsers.map(u => `
-                    <tr>
-                        <td>${u.name}</td>
-                        <td><span class="badge ${u.role === 'admin' ? 'badge-danger' : (u.role === 'supplier' ? 'badge-warning' : 'badge-info')}">${u.role}</span></td>
-                        <td>${u.createdAt ? new Date(u.createdAt).toLocaleDateString('fr-FR') : '-'}</td>
-                    </tr>
-                `).join('');
+                const recentUsersTable = document.querySelector('#recentUsersTable tbody');
+                if (recentUsersTable) {
+                    recentUsersTable.innerHTML = recentUsers.map(u => `
+                        <tr>
+                            <td>${u.name}</td>
+                            <td><span class="badge ${u.role === 'admin' ? 'badge-danger' : (u.role === 'supplier' ? 'badge-warning' : 'badge-info')}">${u.role}</span></td>
+                            <td>${u.createdAt ? new Date(u.createdAt).toLocaleDateString('fr-FR') : '-'}</td>
+                        </tr>
+                    `).join('');
+                }
                 
                 // Dernières commandes
                 const recentOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
-                document.querySelector('#recentOrdersTable tbody').innerHTML = recentOrders.map(o => `
-                    <tr>
-                        <td><span class="badge badge-info">#${o.id}</span></td>
-                        <td>${o.customerName || 'N/A'}</td>
-                        <td>${(o.total || 0).toLocaleString()} FCFA</span></td>
-                        <td><span class="badge ${o.status === 'livrée' ? 'badge-success' : (o.status === 'annulée' ? 'badge-danger' : 'badge-warning')}">${o.status}</span></td>
-                    </tr>
-                `).join('');
+                const recentOrdersTable = document.querySelector('#recentOrdersTable tbody');
+                if (recentOrdersTable) {
+                    recentOrdersTable.innerHTML = recentOrders.map(o => `
+                        <tr>
+                            <td><span class="badge badge-info">#${o.id}</span></td>
+                            <td>${o.customerName || 'N/A'}</td>
+                            <td>${(o.total || 0).toLocaleString()} FCFA</span></td>
+                            <td><span class="badge ${o.status === 'livrée' ? 'badge-success' : (o.status === 'annulée' ? 'badge-danger' : 'badge-warning')}">${o.status}</span></td>
+                        </tr>
+                    `).join('');
+                }
                 
                 initCharts(orders);
             }
@@ -1474,8 +1539,8 @@
                 });
                 
                 const ctx = document.getElementById('salesChart')?.getContext('2d');
-                if (ctx && salesChart) salesChart.destroy();
                 if (ctx) {
+                    if (salesChart) salesChart.destroy();
                     salesChart = new Chart(ctx, {
                         type: 'line',
                         data: {
@@ -1506,8 +1571,8 @@
                 });
                 
                 const ctx2 = document.getElementById('categoryChart')?.getContext('2d');
-                if (ctx2 && categoryChart) categoryChart.destroy();
                 if (ctx2) {
+                    if (categoryChart) categoryChart.destroy();
                     categoryChart = new Chart(ctx2, {
                         type: 'doughnut',
                         data: {
@@ -1541,28 +1606,31 @@
                 
                 orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 
-                document.querySelector('#ordersTable tbody').innerHTML = orders.map(o => `
-                    <tr>
-                        <td><span class="badge badge-info">#${o.id}</span></td>
-                        <td>${o.customerName || 'N/A'}</td>
-                        <td>${o.items?.length || 0} art.</td>
-                        <td><strong>${(o.total || 0).toLocaleString()} FCFA</strong></td>
-                        <td><span class="badge ${o.paymentStatus === 'paid' ? 'badge-success' : 'badge-warning'}">${o.paymentStatus === 'paid' ? 'Payé' : 'En attente'}</span></td>
-                        <td>
-                            <select class="btn-outline btn-sm" onchange="updateOrderStatus('${o.id}', this.value)">
-                                <option value="confirmée" ${o.status === 'confirmée' ? 'selected' : ''}>Confirmée</option>
-                                <option value="préparation" ${o.status === 'préparation' ? 'selected' : ''}>Préparation</option>
-                                <option value="livraison" ${o.status === 'livraison' ? 'selected' : ''}>Livraison</option>
-                                <option value="livrée" ${o.status === 'livrée' ? 'selected' : ''}>Livrée</option>
-                                <option value="annulée" ${o.status === 'annulée' ? 'selected' : ''}>Annulée</option>
-                            </select>
-                        </td>
-                        <td>${new Date(o.createdAt).toLocaleDateString('fr-FR')}</span></td>
-                        <td>
-                            <button class="btn-outline btn-sm" onclick="deleteOrder('${o.id}')"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `).join('');
+                const ordersTable = document.querySelector('#ordersTable tbody');
+                if (ordersTable) {
+                    ordersTable.innerHTML = orders.map(o => `
+                        <tr>
+                            <td><span class="badge badge-info">#${o.id}</span></td>
+                            <td>${o.customerName || 'N/A'}</td>
+                            <td>${o.items?.length || 0} art.}</td>
+                            <td><strong>${(o.total || 0).toLocaleString()} FCFA</strong></td>
+                            <td><span class="badge ${o.paymentStatus === 'paid' ? 'badge-success' : 'badge-warning'}">${o.paymentStatus === 'paid' ? 'Payé' : 'En attente'}</span></td>
+                            <td>
+                                <select class="btn-outline btn-sm" onchange="updateOrderStatus('${o.id}', this.value)">
+                                    <option value="confirmée" ${o.status === 'confirmée' ? 'selected' : ''}>Confirmée</option>
+                                    <option value="préparation" ${o.status === 'préparation' ? 'selected' : ''}>Préparation</option>
+                                    <option value="livraison" ${o.status === 'livraison' ? 'selected' : ''}>Livraison</option>
+                                    <option value="livrée" ${o.status === 'livrée' ? 'selected' : ''}>Livrée</option>
+                                    <option value="annulée" ${o.status === 'annulée' ? 'selected' : ''}>Annulée</option>
+                                </select>
+                            </span></td>
+                            <td>${new Date(o.createdAt).toLocaleDateString('fr-FR')}</span></td>
+                            <td>
+                                <button class="btn-outline btn-sm" onclick="deleteOrder('${o.id}')"><i class="fa-solid fa-trash"></i></button>
+                            </span></td>
+                        </tr>
+                    `).join('');
+                }
             }
             
             function updateOrderStatus(id, status) {
@@ -1599,20 +1667,23 @@
                     users = users.filter(u => u.name.toLowerCase().includes(search) || (u.email || '').toLowerCase().includes(search));
                 }
                 
-                document.querySelector('#usersTable tbody').innerHTML = users.map(u => `
-                    <tr>
-                        <td><strong>${u.name}</strong></span></td>
-                        <td>${u.email || u.phone || '-'}</span></td>
-                        <td><span class="badge ${u.role === 'admin' ? 'badge-danger' : (u.role === 'supplier' ? 'badge-warning' : 'badge-info')}">${u.role}</span></span></td>
-                        <td>${u.totalOrders || 0}</span></td>
-                        <td>${(u.totalSpent || 0).toLocaleString()} FCFA</span></td>
-                        <td><span class="badge ${u.status === 'active' ? 'badge-success' : 'badge-danger'}">${u.status === 'active' ? 'Actif' : 'Inactif'}</span></span></td>
-                        <td>
-                            <button class="btn-outline btn-sm" onclick="editUser('${u.id}')"><i class="fa-solid fa-pen"></i></button>
-                            <button class="btn-danger btn-sm" onclick="deleteUser('${u.id}')"><i class="fa-solid fa-trash"></i></button>
-                        </span></td>
-                    </tr>
-                `).join('');
+                const usersTable = document.querySelector('#usersTable tbody');
+                if (usersTable) {
+                    usersTable.innerHTML = users.map(u => `
+                        <tr>
+                            <td><strong>${u.name}</strong></span></td>
+                            <td>${u.email || u.phone || '-'}</span></td>
+                            <td><span class="badge ${u.role === 'admin' ? 'badge-danger' : (u.role === 'supplier' ? 'badge-warning' : 'badge-info')}">${u.role}</span></span></td>
+                            <td>${u.totalOrders || 0}</span></td>
+                            <td>${(u.totalSpent || 0).toLocaleString()} FCFA</span></td>
+                            <td><span class="badge ${u.status === 'active' ? 'badge-success' : 'badge-danger'}">${u.status === 'active' ? 'Actif' : 'Inactif'}</span></span></td>
+                            <td>
+                                <button class="btn-outline btn-sm" onclick="editUser('${u.id}')"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn-danger btn-sm" onclick="deleteUser('${u.id}')"><i class="fa-solid fa-trash"></i></button>
+                            </span></td>
+                        </tr>
+                    `).join('');
+                }
             }
             
             function openUserModal(id = null) {
@@ -1715,19 +1786,22 @@
                     products = products.filter(p => p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search));
                 }
                 
-                document.querySelector('#productsTable tbody').innerHTML = products.map(p => `
-                    <tr>
-                        <td>${p.image || '📦'} ${p.name}</td>
-                        <td>${p.category}</span></td>
-                        <td>${(p.price || 0).toLocaleString()} FCFA</span></td>
-                        <td>${p.stock || 0}</span></td>
-                        <td>${p.supplier || '-'}</span></td>
-                        <td>
-                            <button class="btn-outline btn-sm" onclick="editProduct(${p.id})"><i class="fa-solid fa-pen"></i></button>
-                            <button class="btn-danger btn-sm" onclick="deleteProduct(${p.id})"><i class="fa-solid fa-trash"></i></button>
-                        </span></td>
-                    </tr>
-                `).join('');
+                const productsTable = document.querySelector('#productsTable tbody');
+                if (productsTable) {
+                    productsTable.innerHTML = products.map(p => `
+                        <tr>
+                            <td>${p.image || '📦'} ${p.name}</td>
+                            <td>${p.category}</span></td>
+                            <td>${(p.price || 0).toLocaleString()} FCFA</span></td>
+                            <td>${p.stock || 0}</span></td>
+                            <td>${p.supplier || '-'}</span></td>
+                            <td>
+                                <button class="btn-outline btn-sm" onclick="editProduct(${p.id})"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn-danger btn-sm" onclick="deleteProduct(${p.id})"><i class="fa-solid fa-trash"></i></button>
+                            </span></td>
+                        </tr>
+                    `).join('');
+                }
             }
             
             function openProductModal(id = null) {
@@ -1818,19 +1892,22 @@
             // ========== FOURNISSEURS ==========
             function loadSuppliers() {
                 let suppliers = Storage.get('suppliers', []);
-                document.querySelector('#suppliersTable tbody').innerHTML = suppliers.map(s => `
-                    <tr>
-                        <td><strong>${s.name}</strong></span></td>
-                        <td>${s.category || '-'}</span></td>
-                        <td>${s.phone || '-'}</span></td>
-                        <td>${s.productCount || 0}</span></td>
-                        <td><span class="badge ${s.status === 'actif' ? 'badge-success' : 'badge-danger'}">${s.status === 'actif' ? 'Actif' : 'Inactif'}</span></span></td>
-                        <td>
-                            <button class="btn-outline btn-sm" onclick="editSupplier('${s.id}')"><i class="fa-solid fa-pen"></i></button>
-                            <button class="btn-danger btn-sm" onclick="deleteSupplier('${s.id}')"><i class="fa-solid fa-trash"></i></button>
-                        </span></td>
-                    </tr>
-                `).join('');
+                const suppliersTable = document.querySelector('#suppliersTable tbody');
+                if (suppliersTable) {
+                    suppliersTable.innerHTML = suppliers.map(s => `
+                        <tr>
+                            <td><strong>${s.name}</strong></span></td>
+                            <td>${s.category || '-'}</span></td>
+                            <td>${s.phone || '-'}</span></td>
+                            <td>${s.productCount || 0}</span></td>
+                            <td><span class="badge ${s.status === 'actif' ? 'badge-success' : 'badge-danger'}">${s.status === 'actif' ? 'Actif' : 'Inactif'}</span></span></td>
+                            <td>
+                                <button class="btn-outline btn-sm" onclick="editSupplier('${s.id}')"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn-danger btn-sm" onclick="deleteSupplier('${s.id}')"><i class="fa-solid fa-trash"></i></button>
+                            </span></td>
+                        </tr>
+                    `).join('');
+                }
             }
             
             function openSupplierModal(id = null) {
@@ -1918,17 +1995,20 @@
             // ========== PROMOTIONS ==========
             function loadPromos() {
                 let promos = Storage.get('promos', []);
-                document.querySelector('#promosTable tbody').innerHTML = promos.map(p => `
-                    <tr>
-                        <td><span class="badge badge-warning">${p.code}</span></span></td>
-                        <td>${p.discount}%</span></td>
-                        <td>${(p.minAmount || 0).toLocaleString()} FCFA</span></td>
-                        <td>${p.usedCount || 0}/${p.maxUses || '∞'}</span></td>
-                        <td>
-                            <button class="btn-danger btn-sm" onclick="deletePromo('${p.code}')"><i class="fa-solid fa-trash"></i></button>
-                        </span></td>
-                    </tr>
-                `).join('');
+                const promosTable = document.querySelector('#promosTable tbody');
+                if (promosTable) {
+                    promosTable.innerHTML = promos.map(p => `
+                        <tr>
+                            <td><span class="badge badge-warning">${p.code}</span></span></td>
+                            <td>${p.discount}%</span></td>
+                            <td>${(p.minAmount || 0).toLocaleString()} FCFA</span></td>
+                            <td>${p.usedCount || 0}/${p.maxUses || '∞'}</span></td>
+                            <td>
+                                <button class="btn-danger btn-sm" onclick="deletePromo('${p.code}')"><i class="fa-solid fa-trash"></i></button>
+                            </span></td>
+                        </tr>
+                    `).join('');
+                }
             }
             
             function openPromoModal() {
@@ -1981,9 +2061,7 @@
                 
                 messages.forEach(msg => {
                     if (!conversationsMap.has(msg.conversationId)) {
-                        // Trouver l'autre participant
-                        const isAdminMsg = msg.userId === 'admin';
-                        const otherUserId = isAdminMsg ? null : msg.userId;
+                        const otherUserId = msg.userId === 'admin' ? null : msg.userId;
                         const otherUser = otherUserId ? users.find(u => u.id === otherUserId) : null;
                         
                         conversationsMap.set(msg.conversationId, {
@@ -1993,12 +2071,11 @@
                             userRole: otherUser ? otherUser.role : (msg.userRole || 'client'),
                             lastMessage: msg.message,
                             lastTimestamp: msg.timestamp,
-                            unreadCount: messages.filter(m => m.conversationId === msg.conversationId && !m.read && !m.isFromAdmin).length
+                            unreadCount: 0
                         });
                     }
                 });
                 
-                // Mettre à jour les compteurs
                 conversationsMap.forEach(conv => {
                     const convMessages = messages.filter(m => m.conversationId === conv.id);
                     const lastMsg = convMessages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))[0];
@@ -2012,7 +2089,6 @@
                 const conversations = Array.from(conversationsMap.values())
                     .sort((a, b) => new Date(b.lastTimestamp) - new Date(a.lastTimestamp));
                 
-                // Afficher la liste des conversations
                 const messagesList = document.getElementById('messagesList');
                 if (messagesList) {
                     if (conversations.length === 0) {
@@ -2024,7 +2100,7 @@
                         `;
                     } else {
                         messagesList.innerHTML = conversations.map(conv => `
-                            <div class="message-item ${conv.unreadCount > 0 ? 'unread' : ''}" onclick="openConversation('${conv.id}', '${conv.userId}', '${escapeHtml(conv.userName)}')">
+                            <div class="message-item ${conv.unreadCount > 0 ? 'unread' : ''}" onclick="openConversation('${conv.id}', '${conv.userId || ''}', '${escapeHtml(conv.userName)}')">
                                 <div class="message-avatar">
                                     ${conv.userName ? conv.userName.charAt(0).toUpperCase() : 'U'}
                                 </div>
@@ -2101,7 +2177,6 @@
                     </div>
                 `;
                 
-                // Scroll vers le bas
                 setTimeout(() => {
                     const container = document.getElementById('conversationMessages');
                     if (container) container.scrollTop = container.scrollHeight;
@@ -2111,12 +2186,15 @@
             function closeConversation() {
                 currentConversationId = null;
                 currentUserId = null;
-                document.getElementById('activeConversation').innerHTML = `
-                    <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
-                        <i class="fa-solid fa-message" style="font-size: 3rem; margin-bottom: 16px; opacity: 0.5;"></i>
-                        <p>Sélectionnez une conversation pour commencer</p>
-                    </div>
-                `;
+                const conversationDiv = document.getElementById('activeConversation');
+                if (conversationDiv) {
+                    conversationDiv.innerHTML = `
+                        <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
+                            <i class="fa-solid fa-message" style="font-size: 3rem; margin-bottom: 16px; opacity: 0.5;"></i>
+                            <p>Sélectionnez une conversation pour commencer</p>
+                        </div>
+                    `;
+                }
             }
             
             function sendMessage() {
@@ -2230,38 +2308,6 @@
                 }, 4000);
             }
             
-            function showSection(section) {
-                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-                document.getElementById(`section-${section}`).classList.add('active');
-                
-                const navButtons = document.querySelectorAll('.nav-item');
-                for (let btn of navButtons) {
-                    if (btn.textContent.toLowerCase().includes(section) || 
-                        (section === 'dashboard' && btn.textContent.includes('Tableau')) ||
-                        (section === 'orders' && btn.textContent.includes('Commandes')) ||
-                        (section === 'users' && btn.textContent.includes('Utilisateurs')) ||
-                        (section === 'products' && btn.textContent.includes('Produits')) ||
-                        (section === 'suppliers' && btn.textContent.includes('Fournisseurs')) ||
-                        (section === 'promos' && btn.textContent.includes('Promotions')) ||
-                        (section === 'messages' && btn.textContent.includes('Messagerie')) ||
-                        (section === 'settings' && btn.textContent.includes('Paramètres'))) {
-                        btn.classList.add('active');
-                        break;
-                    }
-                }
-                
-                if (section === 'dashboard') loadDashboard();
-                if (section === 'orders') loadOrders();
-                if (section === 'users') loadUsers();
-                if (section === 'products') loadProducts();
-                if (section === 'suppliers') loadSuppliers();
-                if (section === 'promos') loadPromos();
-                if (section === 'messages') loadMessages();
-                
-                closeSidebar();
-            }
-            
             function refreshAll() {
                 loadDashboard();
                 loadOrders();
@@ -2360,20 +2406,6 @@
                 console.error('Erreur d\'enregistrement du Service Worker:', error);
               });
           });
-        }
-        
-        async function requestNotificationPermission() {
-          if (!('Notification' in window)) {
-            console.log('Ce navigateur ne supporte pas les notifications');
-            return false;
-          }
-          
-          const permission = await Notification.requestPermission();
-          if (permission === 'granted') {
-            console.log('Notifications push autorisées');
-            return true;
-          }
-          return false;
         }
     </script>
 </body>
