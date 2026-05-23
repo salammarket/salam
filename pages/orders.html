@@ -1,0 +1,1090 @@
+<!-- pages/orders.html - Mes commandes avec filtres et export -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0A0A14">
+    <meta name="description" content="Mes commandes — Salam Market PRO">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <title>Salam Market PRO · Mes commandes</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@400..700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        /* ============================================================
+           DESIGN SYSTEM — Version unifiée
+           ============================================================ */
+        
+        :root {
+            --emerald-400: #34D399;
+            --emerald-500: #10B981;
+            --emerald-600: #059669;
+            --violet-400: #A78BFA;
+            --violet-500: #8B5CF6;
+            --amber-400: #FBBF24;
+            --amber-500: #F59E0B;
+            --blue-400: #60A5FA;
+            --blue-500: #3B82F6;
+            --rose-400: #FB7185;
+            --rose-500: #F43F5E;
+            
+            --surface-primary: #0A0A14;
+            --surface-card: rgba(15, 15, 30, 0.85);
+            --surface-card-solid: #0F0F1E;
+            --surface-input: rgba(10, 10, 20, 0.7);
+            --surface-hover: rgba(255, 255, 255, 0.03);
+            
+            --border-subtle: rgba(255, 255, 255, 0.04);
+            --border-default: rgba(255, 255, 255, 0.08);
+            --border-strong: rgba(255, 255, 255, 0.12);
+            --border-accent: rgba(16, 185, 129, 0.25);
+            
+            --text-primary: #F1F5F9;
+            --text-secondary: #CBD5E1;
+            --text-muted: #94A3B8;
+            --text-faint: #64748B;
+            
+            --font-display: 'Space Grotesk', system-ui, sans-serif;
+            --font-body: 'Inter', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --radius-sm: 10px;
+            --radius-md: 14px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+            
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+            
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration-fast: 200ms;
+            --duration-base: 400ms;
+            
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --space-10: 40px;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--surface-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* Background */
+        .bg-decoration {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .bg-gradient-1 {
+            position: absolute;
+            width: 150%;
+            height: 100%;
+            background: radial-gradient(ellipse 80% 60% at 10% -20%, rgba(16, 185, 129, 0.06) 0%, transparent 50%);
+        }
+        
+        /* Layout */
+        .app-layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(10, 10, 20, 0.95);
+            backdrop-filter: blur(40px);
+            border-right: 1px solid var(--border-default);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            padding: var(--space-6) var(--space-4);
+            transition: transform var(--duration-base) var(--ease-out-expo);
+        }
+        
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding-bottom: var(--space-6);
+            margin-bottom: var(--space-4);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        .sidebar-logo {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--emerald-600), var(--emerald-500));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+        
+        .sidebar-brand h2 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; }
+        .sidebar-brand p { font-size: 0.65rem; color: var(--emerald-400); }
+        
+        .sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: var(--space-1); }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-md);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all var(--duration-fast);
+        }
+        
+        .nav-item:hover { background: var(--surface-hover); color: var(--text-secondary); transform: translateX(4px); }
+        .nav-item.active { background: rgba(16, 185, 129, 0.08); color: var(--emerald-400); border-left: 2px solid var(--emerald-500); }
+        .nav-item i { width: 22px; }
+        
+        .sidebar-footer { margin-top: auto; padding-top: var(--space-6); border-top: 1px solid var(--border-subtle); }
+        
+        .btn-logout {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-md);
+            background: transparent;
+            border: 1px solid var(--border-default);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all var(--duration-fast);
+        }
+        
+        .btn-logout:hover { background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.3); color: var(--rose-500); }
+        
+        /* Mobile header */
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(10, 10, 20, 0.95);
+            backdrop-filter: blur(40px);
+            border-bottom: 1px solid var(--border-default);
+            z-index: 99;
+            align-items: center;
+            padding: 0 var(--space-4);
+            gap: var(--space-3);
+        }
+        
+        .menu-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .mobile-logo { font-family: var(--font-display); font-weight: 700; font-size: 1rem; }
+        .mobile-logo span { color: var(--emerald-400); }
+        
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 98;
+        }
+        
+        .overlay.show { display: block; }
+        
+        /* Main content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: var(--space-6);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .orders-container { max-width: 1400px; margin: 0 auto; }
+        
+        /* Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+        
+        .page-header h1 {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+            flex-wrap: wrap;
+        }
+        
+        /* Search and filters */
+        .filters-bar {
+            background: var(--surface-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-xl);
+            padding: var(--space-5) var(--space-6);
+            margin-bottom: var(--space-6);
+        }
+        
+        .search-row {
+            display: flex;
+            gap: var(--space-3);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-4);
+        }
+        
+        .search-wrapper {
+            flex: 1;
+            position: relative;
+        }
+        
+        .search-wrapper i {
+            position: absolute;
+            left: var(--space-4);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: var(--space-3) var(--space-4) var(--space-3) 44px;
+            background: var(--surface-input);
+            border: 1.5px solid var(--border-default);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: inherit;
+            outline: none;
+            transition: all var(--duration-fast);
+        }
+        
+        .search-input:focus {
+            border-color: var(--border-accent);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.08);
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: var(--space-2);
+            flex-wrap: wrap;
+        }
+        
+        .filter-chip {
+            padding: var(--space-2) var(--space-5);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--duration-fast);
+            background: transparent;
+            border: 1px solid var(--border-default);
+            color: var(--text-muted);
+        }
+        
+        .filter-chip:hover {
+            border-color: var(--border-accent);
+            color: var(--text-secondary);
+        }
+        
+        .filter-chip.active {
+            background: rgba(16, 185, 129, 0.12);
+            border-color: var(--emerald-400);
+            color: var(--emerald-400);
+        }
+        
+        .date-range {
+            display: flex;
+            gap: var(--space-2);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .date-input {
+            padding: var(--space-2) var(--space-3);
+            background: var(--surface-input);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 0.8rem;
+        }
+        
+        /* Stats cards */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+        
+        .stat-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            text-align: center;
+            transition: all var(--duration-fast);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--border-accent);
+        }
+        
+        .stat-value {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--emerald-400);
+        }
+        
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: var(--space-1);
+        }
+        
+        /* Orders list */
+        .orders-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+        
+        .order-card {
+            background: var(--surface-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            transition: all var(--duration-base);
+            cursor: pointer;
+        }
+        
+        .order-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--border-accent);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-3);
+            padding: var(--space-4) var(--space-6);
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        .order-id {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--emerald-400);
+        }
+        
+        .order-date {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        .order-status {
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-full);
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+        }
+        
+        .order-status.confirmed { background: rgba(245, 158, 11, 0.12); color: var(--amber-400); }
+        .order-status.preparing { background: rgba(59, 130, 246, 0.12); color: var(--blue-400); }
+        .order-status.delivering { background: rgba(139, 92, 246, 0.12); color: var(--violet-400); }
+        .order-status.delivered { background: rgba(16, 185, 129, 0.12); color: var(--emerald-400); }
+        .order-status.cancelled { background: rgba(244, 63, 94, 0.12); color: var(--rose-400); }
+        
+        .order-body {
+            padding: var(--space-5) var(--space-6);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-4);
+        }
+        
+        .order-items {
+            flex: 1;
+        }
+        
+        .order-items-preview {
+            display: flex;
+            gap: var(--space-2);
+            flex-wrap: wrap;
+        }
+        
+        .item-preview {
+            padding: var(--space-1) var(--space-2);
+            background: var(--surface-hover);
+            border-radius: var(--radius-sm);
+            font-size: 0.7rem;
+        }
+        
+        .order-total {
+            text-align: right;
+        }
+        
+        .total-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        
+        .total-value {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--emerald-400);
+        }
+        
+        .order-actions {
+            display: flex;
+            gap: var(--space-2);
+            margin-top: var(--space-3);
+            justify-content: flex-end;
+        }
+        
+        .btn-sm {
+            padding: var(--space-2) var(--space-4);
+            font-size: 0.7rem;
+            border-radius: var(--radius-md);
+            background: transparent;
+            border: 1px solid var(--border-default);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all var(--duration-fast);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+        }
+        
+        .btn-sm:hover {
+            border-color: var(--emerald-400);
+            color: var(--emerald-400);
+        }
+        
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: var(--space-10);
+            background: var(--surface-card);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-xl);
+        }
+        
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: var(--space-4);
+            color: var(--text-muted);
+        }
+        
+        .empty-state h3 {
+            font-family: var(--font-display);
+            margin-bottom: var(--space-2);
+        }
+        
+        .empty-state p {
+            color: var(--text-muted);
+            margin-bottom: var(--space-6);
+        }
+        
+        /* Loading */
+        .loading-spinner {
+            text-align: center;
+            padding: var(--space-10);
+            color: var(--text-muted);
+        }
+        
+        .fa-spin { animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: var(--space-5);
+            right: var(--space-5);
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+        
+        .toast {
+            background: var(--surface-card-solid);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            padding: var(--space-4) var(--space-5);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            min-width: 280px;
+            transform: translateX(120%);
+            opacity: 0;
+            transition: all 0.5s var(--ease-out-expo);
+        }
+        
+        .toast.show { transform: translateX(0); opacity: 1; }
+        .toast.success { border-left: 3px solid var(--emerald-500); }
+        .toast.error { border-left: 3px solid var(--rose-500); }
+        .toast.success .toast-icon { color: var(--emerald-400); }
+        .toast.error .toast-icon { color: var(--rose-500); }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .mobile-header { display: flex; }
+            .main-content { margin-left: 0; padding-top: 76px; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .order-header { flex-direction: column; align-items: flex-start; }
+            .order-body { flex-direction: column; align-items: flex-start; }
+            .order-total { text-align: left; width: 100%; }
+            .order-actions { justify-content: flex-start; }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-row { grid-template-columns: 1fr; }
+            .filter-group { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-decoration" aria-hidden="true">
+        <div class="bg-gradient-1"></div>
+    </div>
+    
+    <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+    
+    <header class="mobile-header">
+        <button class="menu-btn" onclick="openSidebar()"><i class="fa-solid fa-bars"></i></button>
+        <span class="mobile-logo">Salam <span>Market</span></span>
+    </header>
+    
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo"><i class="fa-solid fa-store"></i></div>
+            <div class="sidebar-brand">
+                <h2>Salam Market</h2>
+                <p>PRO v5.0</p>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-chart-line"></i> Tableau de Bord</a>
+            <a href="products.html" class="nav-item"><i class="fa-solid fa-basket-shopping"></i> Catalogue</a>
+            <a href="cart.html" class="nav-item"><i class="fa-solid fa-cart-shopping"></i> Panier</a>
+            <a href="orders.html" class="nav-item active"><i class="fa-solid fa-box"></i> Commandes</a>
+            <a href="tracking.html" class="nav-item"><i class="fa-solid fa-map-location-dot"></i> Suivi Live</a>
+            <a href="chat.html" class="nav-item"><i class="fa-solid fa-comments"></i> Chat</a>
+            <a href="profile.html" class="nav-item"><i class="fa-solid fa-user"></i> Profil</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</button>
+        </div>
+    </aside>
+    
+    <main class="main-content">
+        <div class="orders-container">
+            <div class="page-header">
+                <h1><i class="fa-solid fa-box"></i> Mes commandes</h1>
+                <div class="header-actions">
+                    <button class="btn-sm" onclick="exportOrders()">
+                        <i class="fa-solid fa-download"></i> Exporter
+                    </button>
+                    <button class="btn-sm" onclick="refreshOrders()">
+                        <i class="fa-solid fa-rotate-right"></i> Actualiser
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Filtres -->
+            <div class="filters-bar">
+                <div class="search-row">
+                    <div class="search-wrapper">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" class="search-input" id="searchInput" placeholder="Rechercher par ID, produit ou adresse...">
+                    </div>
+                </div>
+                
+                <div class="filter-group" id="statusFilters">
+                    <button class="filter-chip active" data-status="all">Toutes</button>
+                    <button class="filter-chip" data-status="confirmée">Confirmées</button>
+                    <button class="filter-chip" data-status="préparation">Préparation</button>
+                    <button class="filter-chip" data-status="livraison">Livraison</button>
+                    <button class="filter-chip" data-status="livrée">Livrées</button>
+                    <button class="filter-chip" data-status="annulée">Annulées</button>
+                </div>
+                
+                <div class="date-range">
+                    <input type="date" class="date-input" id="dateFrom" placeholder="Date début">
+                    <span>→</span>
+                    <input type="date" class="date-input" id="dateTo" placeholder="Date fin">
+                    <button class="btn-sm" onclick="clearDateFilter()">Effacer</button>
+                </div>
+            </div>
+            
+            <!-- Statistiques -->
+            <div class="stats-row" id="statsRow">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalOrders">0</div>
+                    <div class="stat-label">Total commandes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalSpent">0 FCFA</div>
+                    <div class="stat-label">Total dépensé</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="activeOrders">0</div>
+                    <div class="stat-label">En cours</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="completedOrders">0</div>
+                    <div class="stat-label">Commandes livrées</div>
+                </div>
+            </div>
+            
+            <!-- Liste des commandes -->
+            <div id="ordersList" class="orders-list"></div>
+        </div>
+    </main>
+    
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <script>
+        // ============================================================
+        // ORDERS — Liste des commandes avec filtres avancés
+        // ============================================================
+        
+        (() => {
+            'use strict';
+            
+            // Vérification session
+            const session = JSON.parse(localStorage.getItem('salam_session') || 'null');
+            if (!session) {
+                window.location.href = '../index.html';
+                return;
+            }
+            
+            // État
+            let allOrders = [];
+            let filteredOrders = [];
+            let currentStatus = 'all';
+            let currentSearch = '';
+            let dateFrom = '';
+            let dateTo = '';
+            
+            // Storage helper
+            const Storage = {
+                get: (key, defaultVal = null) => {
+                    try { return JSON.parse(localStorage.getItem('salam_' + key) || 'null') || defaultVal; }
+                    catch { return defaultVal; }
+                }
+            };
+            
+            // ========== CHARGEMENT DES DONNÉES ==========
+            function loadOrders() {
+                const orders = Storage.get('orders', []);
+                allOrders = orders.filter(o => o.userId === session.user.id);
+                applyFilters();
+            }
+            
+            function applyFilters() {
+                let filtered = [...allOrders];
+                
+                // Filtre par statut
+                if (currentStatus !== 'all') {
+                    filtered = filtered.filter(o => o.status === currentStatus);
+                }
+                
+                // Filtre par recherche
+                if (currentSearch) {
+                    const search = currentSearch.toLowerCase();
+                    filtered = filtered.filter(o => 
+                        o.id.toLowerCase().includes(search) ||
+                        o.customerName?.toLowerCase().includes(search) ||
+                        o.deliveryAddress?.toLowerCase().includes(search) ||
+                        o.items.some(i => i.name.toLowerCase().includes(search))
+                    );
+                }
+                
+                // Filtre par date
+                if (dateFrom) {
+                    const from = new Date(dateFrom);
+                    from.setHours(0, 0, 0, 0);
+                    filtered = filtered.filter(o => new Date(o.createdAt) >= from);
+                }
+                if (dateTo) {
+                    const to = new Date(dateTo);
+                    to.setHours(23, 59, 59, 999);
+                    filtered = filtered.filter(o => new Date(o.createdAt) <= to);
+                }
+                
+                // Tri par date décroissante
+                filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                
+                filteredOrders = filtered;
+                renderStats();
+                renderOrders();
+            }
+            
+            // ========== STATISTIQUES ==========
+            function renderStats() {
+                const total = allOrders.length;
+                const totalSpent = allOrders
+                    .filter(o => o.paymentStatus === 'paid')
+                    .reduce((sum, o) => sum + (o.total || 0), 0);
+                const active = allOrders.filter(o => !['livrée', 'annulée'].includes(o.status)).length;
+                const completed = allOrders.filter(o => o.status === 'livrée').length;
+                
+                document.getElementById('totalOrders').textContent = total;
+                document.getElementById('totalSpent').textContent = totalSpent.toLocaleString() + ' FCFA';
+                document.getElementById('activeOrders').textContent = active;
+                document.getElementById('completedOrders').textContent = completed;
+            }
+            
+            // ========== RENDU DES COMMANDES ==========
+            function renderOrders() {
+                const container = document.getElementById('ordersList');
+                
+                if (filteredOrders.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📦</div>
+                            <h3>Aucune commande trouvée</h3>
+                            <p>${allOrders.length === 0 ? 'Vous n\'avez pas encore passé de commande' : 'Aucune commande ne correspond à vos critères'}</p>
+                            ${allOrders.length === 0 ? '<a href="products.html" class="btn-sm" style="padding: var(--space-3) var(--space-6);"><i class="fa-solid fa-basket-shopping"></i> Découvrir le catalogue</a>' : '<button class="btn-sm" onclick="resetFilters()">Effacer les filtres</button>'}
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = filteredOrders.map(order => renderOrderCard(order)).join('');
+            }
+            
+            function renderOrderCard(order) {
+                const statusConfig = {
+                    'confirmée': { class: 'confirmed', icon: 'fa-clock', label: 'Confirmée' },
+                    'préparation': { class: 'preparing', icon: 'fa-cogs', label: 'En préparation' },
+                    'livraison': { class: 'delivering', icon: 'fa-truck-fast', label: 'En livraison' },
+                    'livrée': { class: 'delivered', icon: 'fa-check-circle', label: 'Livrée' },
+                    'annulée': { class: 'cancelled', icon: 'fa-ban', label: 'Annulée' }
+                };
+                
+                const config = statusConfig[order.status] || statusConfig['confirmée'];
+                const itemPreview = order.items.slice(0, 3);
+                const remainingItems = order.items.length - 3;
+                
+                return `
+                    <div class="order-card" onclick="viewOrder('${order.id}')">
+                        <div class="order-header">
+                            <div>
+                                <span class="order-id">#${order.id}</span>
+                                <span class="order-date">${new Date(order.createdAt).toLocaleDateString('fr-FR', {
+                                    day: '2-digit',
+                                    month: 'long',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                })}</span>
+                            </div>
+                            <div>
+                                <span class="order-status ${config.class}">
+                                    <i class="fa-solid ${config.icon}"></i> ${config.label}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="order-body">
+                            <div class="order-items">
+                                <div class="order-items-preview">
+                                    ${itemPreview.map(item => `
+                                        <span class="item-preview">
+                                            ${item.image || '📦'} ${item.name} × ${item.quantity}
+                                        </span>
+                                    `).join('')}
+                                    ${remainingItems > 0 ? `<span class="item-preview">+${remainingItems} autre(s)</span>` : ''}
+                                </div>
+                                <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: var(--space-2);">
+                                    <i class="fa-solid fa-location-dot"></i> ${order.deliveryAddress || 'Adresse non précisée'}
+                                </div>
+                            </div>
+                            <div class="order-total">
+                                <div class="total-label">Total</div>
+                                <div class="total-value">${(order.total || 0).toLocaleString()} FCFA</div>
+                                <div class="order-actions">
+                                    <a href="tracking.html?id=${order.id}" class="btn-sm" onclick="event.stopPropagation()">
+                                        <i class="fa-solid fa-map-location-dot"></i> Suivre
+                                    </a>
+                                    <a href="receipt.html?id=${order.id}" class="btn-sm" onclick="event.stopPropagation()">
+                                        <i class="fa-solid fa-receipt"></i> Reçu
+                                    </a>
+                                    ${order.status !== 'livrée' && order.status !== 'annulée' ? `
+                                        <button class="btn-sm" onclick="event.stopPropagation(); cancelOrder('${order.id}')">
+                                            <i class="fa-solid fa-ban"></i> Annuler
+                                        </button>
+                                    ` : ''}
+                                    ${order.status === 'livrée' ? `
+                                        <button class="btn-sm" onclick="event.stopPropagation(); reorder('${order.id}')">
+                                            <i class="fa-solid fa-rotate-right"></i> Commander à nouveau
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // ========== ACTIONS ==========
+            function viewOrder(orderId) {
+                window.location.href = `tracking.html?id=${orderId}`;
+            }
+            
+            function cancelOrder(orderId) {
+                if (!confirm('Voulez-vous vraiment annuler cette commande ?')) return;
+                
+                const orders = Storage.get('orders', []);
+                const index = orders.findIndex(o => o.id === orderId);
+                
+                if (index !== -1 && orders[index].userId === session.user.id) {
+                    orders[index].status = 'annulée';
+                    if (!orders[index].statusHistory) orders[index].statusHistory = [];
+                    orders[index].statusHistory.push({
+                        status: 'annulée',
+                        timestamp: new Date().toISOString(),
+                        note: 'Annulé par le client'
+                    });
+                    localStorage.setItem('salam_orders', JSON.stringify(orders));
+                    loadOrders();
+                    showToast('Commande annulée', `La commande #${orderId} a été annulée`, 'success');
+                }
+            }
+            
+            function reorder(orderId) {
+                const order = allOrders.find(o => o.id === orderId);
+                if (!order) return;
+                
+                let cart = Storage.get('cart', []);
+                
+                order.items.forEach(item => {
+                    const existing = cart.find(c => c.id === item.id);
+                    if (existing) {
+                        existing.quantity += item.quantity;
+                    } else {
+                        cart.push({
+                            id: item.id,
+                            key: `prod_${item.id}_${Date.now()}_${Math.random()}`,
+                            name: item.name,
+                            price: item.price,
+                            quantity: item.quantity,
+                            image: item.image || '📦',
+                            supplier: item.supplier || 'Salam Market'
+                        });
+                    }
+                });
+                
+                Storage.set('cart', cart);
+                showToast('Panier mis à jour', 'Les produits ont été ajoutés à votre panier', 'success');
+                setTimeout(() => window.location.href = 'cart.html', 1000);
+            }
+            
+            function exportOrders() {
+                const data = filteredOrders.map(order => ({
+                    'ID Commande': order.id,
+                    'Date': new Date(order.createdAt).toLocaleString('fr-FR'),
+                    'Statut': order.status,
+                    'Total': order.total + ' FCFA',
+                    'Adresse': order.deliveryAddress,
+                    'Téléphone': order.deliveryPhone,
+                    'Articles': order.items.map(i => `${i.name} × ${i.quantity}`).join(', ')
+                }));
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `commandes_${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                showToast('Export réussi', `${filteredOrders.length} commandes exportées`, 'success');
+            }
+            
+            function refreshOrders() {
+                loadOrders();
+                showToast('Actualisé', 'Liste des commandes mise à jour', 'success');
+            }
+            
+            function resetFilters() {
+                currentStatus = 'all';
+                currentSearch = '';
+                dateFrom = '';
+                dateTo = '';
+                document.getElementById('searchInput').value = '';
+                document.getElementById('dateFrom').value = '';
+                document.getElementById('dateTo').value = '';
+                document.querySelectorAll('.filter-chip').forEach(chip => chip.classList.remove('active'));
+                document.querySelector('.filter-chip[data-status="all"]').classList.add('active');
+                applyFilters();
+            }
+            
+            function clearDateFilter() {
+                dateFrom = '';
+                dateTo = '';
+                document.getElementById('dateFrom').value = '';
+                document.getElementById('dateTo').value = '';
+                applyFilters();
+            }
+            
+            // ========== ÉVÉNEMENTS ==========
+            function attachEvents() {
+                // Recherche
+                const searchInput = document.getElementById('searchInput');
+                searchInput.addEventListener('input', (e) => {
+                    currentSearch = e.target.value;
+                    applyFilters();
+                });
+                
+                // Filtres statut
+                document.querySelectorAll('.filter-chip').forEach(chip => {
+                    chip.addEventListener('click', () => {
+                        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                        chip.classList.add('active');
+                        currentStatus = chip.dataset.status;
+                        applyFilters();
+                    });
+                });
+                
+                // Filtres date
+                const dateFromInput = document.getElementById('dateFrom');
+                const dateToInput = document.getElementById('dateTo');
+                
+                dateFromInput.addEventListener('change', (e) => {
+                    dateFrom = e.target.value;
+                    applyFilters();
+                });
+                
+                dateToInput.addEventListener('change', (e) => {
+                    dateTo = e.target.value;
+                    applyFilters();
+                });
+            }
+            
+            // ========== UTILITAIRES ==========
+            function showToast(title, message, type = 'success') {
+                const container = document.getElementById('toastContainer');
+                if (!container) return;
+                
+                const icons = { success: 'fa-circle-check', error: 'fa-circle-exclamation' };
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.innerHTML = `
+                    <i class="fa-solid ${icons[type] || icons.success} toast-icon"></i>
+                    <div class="toast-content">
+                        <div class="toast-title">${escapeHtml(title)}</div>
+                        <div class="toast-message">${escapeHtml(message)}</div>
+                    </div>
+                    <button class="toast-close" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></button>
+                `;
+                
+                container.appendChild(toast);
+                setTimeout(() => toast.classList.add('show'), 10);
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 500);
+                }, 4000);
+            }
+            
+            function escapeHtml(str) {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+            
+            function openSidebar() {
+                document.getElementById('sidebar').classList.add('open');
+                document.getElementById('overlay').classList.add('show');
+            }
+            
+            function closeSidebar() {
+                document.getElementById('sidebar').classList.remove('open');
+                document.getElementById('overlay').classList.remove('show');
+            }
+            
+            function logout() {
+                localStorage.removeItem('salam_session');
+                localStorage.removeItem('salam_cart');
+                window.location.href = '../index.html';
+            }
+            
+            // Initialisation
+            loadOrders();
+            attachEvents();
+            
+            // Expose globals
+            window.viewOrder = viewOrder;
+            window.cancelOrder = cancelOrder;
+            window.reorder = reorder;
+            window.exportOrders = exportOrders;
+            window.refreshOrders = refreshOrders;
+            window.resetFilters = resetFilters;
+            window.clearDateFilter = clearDateFilter;
+            window.openSidebar = openSidebar;
+            window.closeSidebar = closeSidebar;
+            window.logout = logout;
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hors-ligne — Salam Market PRO</title>
+    <style>
+        :root{--emerald:#00D4AA;--bg:#07070E;--text:#F1F5F9;--muted:#94A3B8;}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;}
+        .offline-container{max-width:400px;}
+        .offline-icon{font-size:5rem;margin-bottom:20px;}
+        h1{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;margin-bottom:10px;}
+        p{color:var(--muted);margin-bottom:20px;font-size:0.9rem;}
+        .btn{display:inline-block;padding:12px 28px;border-radius:12px;background:var(--emerald);color:#07070E;font-weight:700;text-decoration:none;cursor:pointer;border:none;font-family:inherit;font-size:0.9rem;}
+    </style>
+</head>
+<body>
+    <div class="offline-container"><div class="offline-icon">📡</div><h1>Vous êtes hors-ligne</h1><p>Vérifiez votre connexion internet.</p><button class="btn" onclick="location.reload()">🔄 Réessayer</button></div>
+    <script>setInterval(()=>{if(navigator.onLine)window.location.href='/';},5000);</script>
+</body>
+</html>
