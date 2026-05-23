@@ -3,376 +3,587 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#0A0A14">
-    <title>Salam Market · Catalogue complet</title>
+    <meta name="theme-color" content="#020617">
+    <title>Salam Market — Catalogue Smaragdine</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
         :root {
-            --emerald-400: #34D399;
-            --emerald-500: #10B981;
-            --emerald-600: #059669;
-            --violet-500: #8B5CF6;
-            --rose-500: #F43F5E;
-            --surface-primary: #0A0A14;
-            --surface-card: rgba(15, 15, 30, 0.85);
-            --surface-card-solid: #0F0F1E;
-            --surface-input: rgba(10, 10, 20, 0.7);
-            --border-default: rgba(255, 255, 255, 0.08);
-            --border-accent: rgba(16, 185, 129, 0.25);
-            --text-primary: #F1F5F9;
-            --text-secondary: #CBD5E1;
-            --text-muted: #94A3B8;
-            --font-display: 'Space Grotesk', system-ui, sans-serif;
+            --bg-deep: #020617;
+            --bg-surface: rgba(15, 23, 42, 0.65);
+            --bg-card: rgba(30, 41, 59, 0.55);
+            --bg-solid: #0f172a;
+            --border-glow: rgba(16, 185, 129, 0.25);
+            --border-dim: rgba(255, 255, 255, 0.06);
+            --emerald: #10b981;
+            --emerald-bright: #34d399;
+            --violet: #8b5cf6;
+            --rose: #f43f5e;
+            --amber: #f59e0b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --font-display: 'Syne', system-ui, sans-serif;
             --font-body: 'Inter', system-ui, sans-serif;
-            --radius-lg: 18px;
-            --radius-xl: 24px;
-            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            --radius-2xl: 28px;
+            --radius-xl: 20px;
+            --transition-smooth: cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
 
         body {
             font-family: var(--font-body);
-            background: var(--surface-primary);
+            background: var(--bg-deep);
             color: var(--text-primary);
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        .bg-decoration { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-        .bg-gradient-1 { position: absolute; width: 150%; height: 100%; background: radial-gradient(ellipse 80% 60% at 10% -20%, rgba(16, 185, 129, 0.06) 0%, transparent 50%); }
+        /* glassmorphic orbs */
+        .bg-orb {
+            position: fixed;
+            width: 70vw;
+            height: 70vw;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.2;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .orb-1 { background: #10b981; top: -20vh; right: -20vw; }
+        .orb-2 { background: #8b5cf6; bottom: -30vh; left: -10vw; }
+        .orb-3 { background: #f59e0b; top: 60vh; left: 30vw; width: 40vw; height: 40vw; filter: blur(100px); opacity: 0.12; }
 
+        /* Sidebar ultra */
         .sidebar {
-            width: 280px;
-            background: rgba(10, 10, 20, 0.96);
-            backdrop-filter: blur(40px);
-            border-right: 1px solid var(--border-default);
+            width: 290px;
+            background: rgba(2, 6, 23, 0.92);
+            backdrop-filter: blur(32px);
+            border-right: 1px solid var(--border-dim);
             position: fixed;
             top: 0;
             left: 0;
             bottom: 0;
-            z-index: 100;
+            z-index: 110;
             display: flex;
             flex-direction: column;
-            padding: 24px 16px;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 28px 20px;
+            transition: transform 0.4s var(--transition-smooth);
         }
-        .sidebar-header { display: flex; align-items: center; gap: 12px; padding-bottom: 24px; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.04); }
-        .sidebar-logo { width: 44px; height: 44px; background: linear-gradient(135deg, var(--emerald-600), var(--emerald-500)); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
-        .sidebar-brand h2 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; }
-        .sidebar-brand p { font-size: 0.65rem; color: var(--emerald-400); }
-        .sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: 6px; }
-        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 14px; color: var(--text-muted); font-size: 0.85rem; font-weight: 500; text-decoration: none; transition: all 0.2s; cursor: pointer; }
-        .nav-item:hover { background: rgba(255,255,255,0.03); color: var(--text-secondary); transform: translateX(4px); }
-        .nav-item.active { background: rgba(16,185,129,0.08); color: var(--emerald-400); border-left: 2px solid var(--emerald-500); }
-        .btn-logout { width: 100%; padding: 12px 16px; background: transparent; border: 1px solid var(--border-default); border-radius: 14px; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 12px; transition: 0.2s; }
-        .btn-logout:hover { background: rgba(239,68,68,0.1); border-color: var(--rose-500); color: var(--rose-500); }
-        .mobile-header { display: none; position: fixed; top: 0; left: 0; right: 0; height: 60px; background: rgba(10,10,20,0.95); backdrop-filter: blur(40px); border-bottom: 1px solid var(--border-default); z-index: 99; align-items: center; padding: 0 16px; }
-        .menu-btn { width: 40px; height: 40px; background: transparent; border: none; color: white; font-size: 1.2rem; cursor: pointer; }
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 98; }
-        .main-content { flex: 1; margin-left: 280px; padding: 28px; position: relative; z-index: 1; }
-        .catalog-container { max-width: 1400px; margin: 0 auto; }
-        .catalog-header h1 { font-family: var(--font-display); font-size: 2rem; margin-bottom: 6px; }
-        .catalog-header p { color: var(--text-muted); }
-
-        .search-section { background: var(--surface-card); backdrop-filter: blur(20px); border: 1px solid var(--border-default); border-radius: var(--radius-xl); padding: 20px 24px; margin: 24px 0; }
-        .search-row { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
-        .search-input-wrapper { flex: 1; position: relative; }
-        .search-input { width: 100%; padding: 16px 16px 16px 48px; background: var(--surface-input); border: 1.5px solid var(--border-default); border-radius: 20px; color: white; font-size: 0.95rem; outline: none; transition: 0.2s; }
-        .search-input:focus { border-color: var(--border-accent); }
-        .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
-        .voice-btn { width: 54px; height: 54px; border-radius: 20px; background: rgba(16,185,129,0.1); border: 1px solid var(--border-accent); color: var(--emerald-400); cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
-        .voice-btn:hover { background: var(--emerald-500); color: white; }
-        .voice-btn.listening { background: var(--rose-500); border-color: var(--rose-500); color: white; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(244,63,94,0.4); } 50% { box-shadow: 0 0 0 8px rgba(244,63,94,0); } }
-        
-        .filters-section { display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; margin-bottom: 28px; }
-        .category-filters { display: flex; gap: 10px; flex-wrap: wrap; }
-        .filter-chip { padding: 8px 18px; border-radius: 40px; font-size: 0.75rem; font-weight: 600; background: transparent; border: 1px solid var(--border-default); color: var(--text-muted); cursor: pointer; transition: 0.2s; }
-        .filter-chip.active, .filter-chip:hover { background: rgba(16,185,129,0.12); border-color: var(--emerald-400); color: var(--emerald-400); }
-        .sort-select { padding: 8px 16px; background: var(--surface-input); border: 1px solid var(--border-default); border-radius: 30px; color: white; cursor: pointer; }
-        .view-toggle { display: flex; gap: 6px; background: var(--surface-input); padding: 5px; border-radius: 40px; }
-        .view-btn { padding: 8px 14px; border-radius: 30px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
-        .view-btn.active { background: var(--emerald-500); color: white; }
-
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
-        .product-card { background: var(--surface-card); backdrop-filter: blur(20px); border: 1px solid var(--border-default); border-radius: var(--radius-xl); overflow: hidden; transition: all 0.3s ease; }
-        .product-card:hover { transform: translateY(-6px); border-color: var(--border-accent); box-shadow: var(--shadow-md); }
-        .product-img { height: 200px; background: linear-gradient(145deg, #1a1a2a, #0a0a14); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-        .product-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
-        .product-card:hover .product-img img { transform: scale(1.05); }
-        .product-badge { position: absolute; top: 12px; left: 12px; padding: 4px 12px; border-radius: 30px; font-size: 0.65rem; font-weight: 700; background: var(--emerald-500); color: black; z-index: 2; }
-        .product-badge.hot { background: var(--rose-500); color: white; }
-        .product-badge.premium { background: var(--violet-500); color: white; }
-        .product-info { padding: 20px; }
-        .product-info h3 { font-size: 1rem; font-weight: 600; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .product-supplier { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-        .product-price { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--emerald-400); margin-bottom: 16px; }
-        .product-actions { display: flex; gap: 12px; }
-        .btn-add { flex: 1; padding: 12px; background: rgba(16,185,129,0.1); border: 1px solid var(--border-accent); border-radius: 14px; color: var(--emerald-400); font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .btn-add:hover { background: var(--emerald-500); color: white; }
-        .btn-compare { width: 44px; background: transparent; border: 1px solid var(--border-default); border-radius: 14px; cursor: pointer; transition: 0.2s; }
-        .btn-compare:hover { border-color: var(--violet-500); }
-        .btn-compare.active { background: var(--violet-500); border-color: var(--violet-500); color: white; }
-        
-        .products-list { display: flex; flex-direction: column; gap: 14px; }
-        .product-list-item { display: flex; align-items: center; gap: 20px; background: var(--surface-card); border: 1px solid var(--border-default); border-radius: 20px; padding: 16px; transition: 0.2s; }
-        .product-list-item:hover { border-color: var(--border-accent); transform: translateX(4px); }
-        .product-list-img { width: 70px; height: 70px; background: #12121f; border-radius: 16px; overflow: hidden; flex-shrink: 0; }
-        .product-list-img img { width: 100%; height: 100%; object-fit: cover; }
-        .product-list-info { flex: 1; }
-        .product-list-info h3 { font-size: 0.95rem; margin-bottom: 4px; }
-        .product-list-info .price { color: var(--emerald-400); font-weight: 700; }
-
-        .compare-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #0F0F1E; border-top: 1px solid var(--border-default); padding: 16px 28px; transform: translateY(100%); transition: transform 0.4s; z-index: 50; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; align-items: center; }
-        .compare-bar.show { transform: translateY(0); }
-        .compare-items { display: flex; gap: 12px; flex-wrap: wrap; }
-        .compare-item { background: rgba(16,185,129,0.1); padding: 6px 14px; border-radius: 40px; display: flex; gap: 8px; align-items: center; font-size: 0.8rem; }
-        .compare-item img { width: 28px; height: 28px; object-fit: cover; border-radius: 8px; }
-        .compare-item button { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; }
-        .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 200; display: flex; flex-direction: column; gap: 12px; }
-        .toast { background: #1e1e2e; border-left: 3px solid var(--emerald-500); padding: 12px 20px; border-radius: 16px; transform: translateX(120%); transition: 0.3s; display: flex; align-items: center; gap: 12px; }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding-bottom: 32px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--emerald), #059669);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
+            box-shadow: 0 8px 20px rgba(16,185,129,0.2);
+        }
+        .logo-text h2 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+        .logo-text p {
+            font-size: 0.7rem;
+            color: var(--emerald-bright);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 18px;
+            border-radius: 16px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            cursor: pointer;
+            margin-bottom: 6px;
+        }
+        .nav-item i { width: 24px; font-size: 1.1rem; }
+        .nav-item:hover {
+            background: rgba(16,185,129,0.08);
+            color: var(--emerald-bright);
+            transform: translateX(6px);
+        }
+        .nav-item.active {
+            background: rgba(16,185,129,0.12);
+            color: var(--emerald);
+            border-left: 3px solid var(--emerald);
+        }
+        .logout-btn {
+            margin-top: auto;
+            background: transparent;
+            border: 1px solid var(--border-dim);
+            padding: 14px 18px;
+            border-radius: 18px;
+            color: var(--text-muted);
+            font-weight: 500;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .logout-btn:hover {
+            background: rgba(244,63,94,0.12);
+            border-color: var(--rose);
+            color: var(--rose);
+        }
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: rgba(2,6,23,0.85);
+            backdrop-filter: blur(30px);
+            border-bottom: 1px solid var(--border-dim);
+            z-index: 105;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+        .menu-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 30px;
+            background: rgba(255,255,255,0.05);
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 104;
+        }
+        .main-content {
+            margin-left: 290px;
+            padding: 32px 36px;
+            position: relative;
+            z-index: 2;
+        }
+        .catalog-header h1 {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, var(--emerald-bright));
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+        }
+        .search-card {
+            background: var(--bg-surface);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: var(--radius-2xl);
+            padding: 20px 28px;
+            margin: 28px 0 32px;
+        }
+        .search-wrapper {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .input-group {
+            flex: 1;
+            position: relative;
+        }
+        .input-group i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 16px 20px 16px 50px;
+            background: rgba(0,0,0,0.45);
+            border: 1.5px solid var(--border-dim);
+            border-radius: 28px;
+            color: white;
+            font-size: 0.95rem;
+            transition: 0.2s;
+        }
+        .input-group input:focus {
+            border-color: var(--emerald);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(16,185,129,0.2);
+        }
+        .voice-pulse {
+            width: 56px;
+            height: 56px;
+            border-radius: 28px;
+            background: rgba(16,185,129,0.1);
+            border: 1px solid var(--border-glow);
+            color: var(--emerald-bright);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .voice-pulse.listening {
+            background: var(--rose);
+            border-color: var(--rose);
+            color: white;
+            animation: micro-pulse 1.2s infinite;
+        }
+        @keyframes micro-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(244,63,94,0.5); }
+            70% { box-shadow: 0 0 0 12px rgba(244,63,94,0); }
+            100% { box-shadow: 0 0 0 0 rgba(244,63,94,0); }
+        }
+        .filter-strip {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .chip {
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-dim);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .chip.active, .chip:hover {
+            background: rgba(16,185,129,0.2);
+            border-color: var(--emerald);
+            color: var(--emerald-bright);
+            transform: scale(0.97);
+        }
+        .select-sort {
+            background: rgba(0,0,0,0.5);
+            padding: 10px 20px;
+            border-radius: 40px;
+            border: 1px solid var(--border-dim);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .view-group {
+            display: flex;
+            gap: 8px;
+            background: rgba(0,0,0,0.4);
+            padding: 6px;
+            border-radius: 50px;
+        }
+        .view-icon {
+            background: transparent;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .view-icon.active {
+            background: var(--emerald);
+            color: #020617;
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 28px;
+        }
+        .product-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: var(--radius-2xl);
+            overflow: hidden;
+            transition: all 0.35s var(--transition-smooth);
+        }
+        .product-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(16,185,129,0.5);
+            box-shadow: var(--shadow-2xl);
+        }
+        .card-img {
+            height: 230px;
+            background: linear-gradient(145deg, #0f172a, #020617);
+            position: relative;
+            overflow: hidden;
+        }
+        .card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .product-card:hover .card-img img {
+            transform: scale(1.08);
+        }
+        .badge-pro {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            padding: 5px 14px;
+            border-radius: 60px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            background: var(--emerald);
+            color: #020617;
+            z-index: 3;
+        }
+        .badge-pro.hot { background: var(--rose); color: white; }
+        .badge-pro.premium { background: var(--violet); color: white; }
+        .badge-pro.fresh { background: var(--amber); color: black; }
+        .product-info {
+            padding: 20px 18px 22px;
+        }
+        .product-info h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+            margin-bottom: 8px;
+        }
+        .supplier {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .price-em {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--emerald-bright);
+            margin: 12px 0 16px;
+        }
+        .action-row {
+            display: flex;
+            gap: 12px;
+        }
+        .btn-cart {
+            flex: 1;
+            background: rgba(16,185,129,0.1);
+            border: 1px solid rgba(16,185,129,0.4);
+            border-radius: 18px;
+            padding: 12px;
+            font-weight: 700;
+            color: var(--emerald);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-cart:hover {
+            background: var(--emerald);
+            color: #020617;
+            transform: scale(0.98);
+        }
+        .btn-compare {
+            width: 48px;
+            background: transparent;
+            border: 1px solid var(--border-dim);
+            border-radius: 18px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-compare.active {
+            background: var(--violet);
+            border-color: var(--violet);
+            color: white;
+        }
+        .products-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .list-item {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 16px 20px;
+            border: 1px solid var(--border-dim);
+            transition: 0.2s;
+        }
+        .list-item:hover {
+            border-color: var(--border-glow);
+            transform: translateX(8px);
+        }
+        .list-img {
+            width: 85px;
+            height: 85px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #0f172a;
+        }
+        .list-img img { width: 100%; height: 100%; object-fit: cover; }
+        .compare-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(2,6,23,0.96);
+            backdrop-filter: blur(36px);
+            border-top: 1px solid var(--border-glow);
+            padding: 18px 32px;
+            transform: translateY(100%);
+            transition: transform 0.35s;
+            z-index: 90;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 18px;
+        }
+        .compare-bar.show {
+            transform: translateY(0);
+        }
+        .toast-stack {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .toast {
+            background: #1e293b;
+            border-left: 4px solid var(--emerald);
+            padding: 12px 22px;
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            font-size: 0.85rem;
+            transform: translateX(400px);
+            transition: 0.3s;
+        }
         .toast.show { transform: translateX(0); }
-        
-        @media (max-width: 768px) {
+        @media (max-width: 860px) {
+            .main-content { margin-left: 0; padding: 24px 20px; padding-top: 90px; }
             .sidebar { transform: translateX(-100%); }
             .sidebar.open { transform: translateX(0); }
             .mobile-header { display: flex; }
-            .main-content { margin-left: 0; padding-top: 80px; }
-            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
-            .product-info h3 { white-space: normal; font-size: 0.85rem; }
+            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
         }
-        @media (max-width: 500px) { .products-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 560px) {
+            .products-grid { grid-template-columns: 1fr; }
+            .filter-strip { flex-direction: column; align-items: stretch; }
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: var(--emerald); border-radius: 10px; }
     </style>
 </head>
 <body>
-<div class="bg-decoration"><div class="bg-gradient-1"></div></div>
+<div class="bg-orb orb-1"></div><div class="bg-orb orb-2"></div><div class="bg-orb orb-3"></div>
 <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
 <header class="mobile-header">
-    <button class="menu-btn" onclick="openSidebar()"><i class="fa-solid fa-bars"></i></button>
-    <span class="mobile-logo" style="font-weight:700;">Salam <span style="color:#10B981;">Market</span></span>
-    <button class="menu-btn" onclick="location.href='cart.html'"><i class="fa-solid fa-cart-shopping"></i></button>
+    <button class="menu-btn" onclick="openSidebar()"><i class="fa-solid fa-bars-staggered"></i></button>
+    <span style="font-weight:800; font-size:1.3rem;">Salam <span style="color:#10b981;">Market</span></span>
+    <button class="menu-btn" onclick="location.href='cart.html'"><i class="fa-solid fa-bag-shopping"></i></button>
 </header>
 <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header"><div class="sidebar-logo"><i class="fa-solid fa-store"></i></div><div class="sidebar-brand"><h2>Salam Market</h2><p>PRO v6</p></div></div>
-    <nav class="sidebar-nav">
-        <div class="nav-item active"><i class="fa-solid fa-basket-shopping"></i> Catalogue</div>
-        <div class="nav-item"><i class="fa-solid fa-cart-shopping"></i> Panier</div>
-        <div class="nav-item"><i class="fa-solid fa-box"></i> Commandes</div>
-        <div class="nav-item"><i class="fa-solid fa-user"></i> Profil</div>
-    </nav>
-    <div class="sidebar-footer"><button class="btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</button></div>
+    <div class="logo-area"><div class="logo-icon"><i class="fa-solid fa-leaf"></i></div><div class="logo-text"><h2>Salam Market</h2><p>Éclat & Authenticité</p></div></div>
+    <nav style="flex:1;"><div class="nav-item active"><i class="fa-solid fa-compass"></i> Catalogue</div><div class="nav-item"><i class="fa-solid fa-basket-shopping"></i> Panier</div><div class="nav-item"><i class="fa-solid fa-truck-fast"></i> Commandes</div><div class="nav-item"><i class="fa-solid fa-id-card"></i> Profil</div></nav>
+    <button class="logout-btn" onclick="logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Se retirer</button>
 </aside>
 <main class="main-content">
-    <div class="catalog-container">
-        <div class="catalog-header"><h1>🛍️ Catalogue complet</h1><p id="productCount">Tous nos produits authentiques</p></div>
-        <div class="search-section"><div class="search-row"><div class="search-input-wrapper"><i class="fa-solid fa-magnifying-glass search-icon"></i><input type="text" id="searchInput" class="search-input" placeholder="Rechercher un produit... (riz, spaghetti, savon, dentifrice)"></div><button class="voice-btn" id="voiceBtn" onclick="startVoiceSearch()"><i class="fa-solid fa-microphone"></i></button></div></div>
-        <div class="filters-section"><div class="category-filters" id="categoryFilters"></div><select id="sortSelect" class="sort-select"><option value="default">Trier par</option><option value="price-asc">Prix croissant</option><option value="price-desc">Prix décroissant</option><option value="name-asc">Nom A-Z</option></select><div class="view-toggle"><button class="view-btn active" data-view="grid" onclick="setView('grid')"><i class="fa-solid fa-grid-2"></i></button><button class="view-btn" data-view="list" onclick="setView('list')"><i class="fa-solid fa-list"></i></button></div></div>
-        <div id="productsContainer" class="products-grid"></div>
-    </div>
+    <div class="catalog-header"><h1><i class="fa-regular fa-gem"></i> Catalogue Smaragdine</h1><p style="color:var(--text-muted);" id="productCount">Chargement des merveilles...</p></div>
+    <div class="search-card"><div class="search-wrapper"><div class="input-group"><i class="fa-solid fa-search"></i><input type="text" id="searchInput" placeholder="Rechercher riz, spaghetti, savon, dentifrice..."></div><button class="voice-pulse" id="voiceBtn" onclick="startVoiceSearch()"><i class="fa-solid fa-microphone-lines"></i></button></div></div>
+    <div class="filter-strip"><div class="chips" id="categoryFilters"></div><div><select id="sortSelect" class="select-sort"><option value="default">✨ Trier par</option><option value="price-asc">💰 Prix croissant</option><option value="price-desc">💰 Prix décroissant</option><option value="name-asc">📗 Nom A-Z</option></select></div><div class="view-group"><button class="view-icon active" data-view="grid" onclick="setView('grid')"><i class="fa-solid fa-table-cells-large"></i></button><button class="view-icon" data-view="list" onclick="setView('list')"><i class="fa-solid fa-list-ul"></i></button></div></div>
+    <div id="productsContainer" class="products-grid"></div>
 </main>
-<div class="compare-bar" id="compareBar"><div><i class="fa-solid fa-chart-simple"></i> Comparaison (<span id="compareCount">0</span>/4)</div><div class="compare-items" id="compareItems"></div><button class="btn-add" onclick="compareSelected()" style="width:auto; padding:8px 20px;">Comparer</button></div>
-<div class="toast-container" id="toastContainer"></div>
+<div class="compare-bar" id="compareBar"><div><i class="fa-regular fa-copy"></i> Comparer (<span id="compareCount">0</span>/4)</div><div class="compare-items" id="compareItems"></div><button class="btn-cart" onclick="compareSelected()" style="width:auto; padding:8px 24px;">🔍 Comparer</button></div>
+<div class="toast-stack" id="toastContainer"></div>
 
 <script>
-    // ========== CHEMINS DES IMAGES (depuis pages/ vers dossier images/ à la racine) ==========
-    // Le fichier est dans pages/products.html, donc les images sont dans ../images/
     const IMG_BASE = "../images/";
-    
     const imageMapping = {
-        "Spaghetti Barilla n°5": "SpaghettiBarilla500g.jpg",
-        "Spaghetti Pâte d'Or": "SpaghettiPATEDOR.jpg",
-        "Spaghetti Broli": "SpaghettiBROLI.jpg",
-        "Spaghetti Panzani": "SpaghettiPANZANI.jpg",
-        "Macaroni Kayna Petit plomb": "MacaroniKayna500g.jpg",
-        "Macaroni Helper Cheeseburger": "MacaroniHELPER.jpg",
-        "Macaroni Kayna Coquillette": "MacaroniKAYNA.jpg",
-        "Riz Tanti": "RizTanti.jpg",
-        "Riz Parfumé Mama Gold": "RizParfuméMamaGold.jpg",
-        "Riz Long Grain 5kg": "RizParfuméMamaGold.jpg",
-        "Colgate MaxWhite": "Dentifrice.ColgateMaxWhite.jpg",
-        "Colgate MaxFresh": "Dentifrice.ColgateMaxFresh.jpg",
-        "Colgate Herbal": "Dentifrice.Colgate.Herbal.jpg",
-        "Parodontax": "Dentifrice.Parodontax.jpg",
-        "Sensodyne Répare & Protège": "Dentifrice.SensodyneRepare&Protege.jpg",
-        "Sensodyne Soin Complet": "Dentifrice.Sensodyne.jpg",
-        "Colgate Black Fresh": "Dentifrice.Colgat.jpg",
-        "Signal Blancheur": "Dentifrice.Signal.jpg",
-        "Sardines Jolly": "SardineJoly.jpg",
-        "Sardines Famrite": "Sardine.Famrite.jpg",
-        "Savon Maera Herbal": "SAVON.Maera.jpg",
-        "Savon Protex Pharmapur Aloe": "Protex.jpg",
-        "Savon Protex Pharmapur Charbon": "protex_-_pharmapur_-_charbon_2_.jpg",
-        "Savon Pharmapur Classique": "Savon-PHARMAPUR-150g-1.webp",
-        "Dettol Original Antibactérien": "Dettol.Original.jpg",
-        "Dettol Skincare": "Dettol.Skincare.jpg",
-        "Savon Nivea Crème Soft": "SAVON.NIVEA.jpg",
-        "Savon Artisanal": "SAVON.jpg",
-        "Sucre Blanc": "SucreBlanc.jpg",
-        "Détergent Madar": "detergentMadar.jpg",
-        "Détergent Hoka High Foam": "detergeantHoka.jpg",
-        "Détergent Ozil Ultra Power": "detergentOzil.jpg",
-        "Serviettes Siempre Extra": "cotonhygeniquesiempre.jpg",
-        "Huile Mayer": "HuileMajo1r.jpg",
-        "Huile Rouge 500g": "huileRouge.jpg"
+        "Spaghetti Barilla n°5":"SpaghettiBarilla500g.jpg","Spaghetti Pâte d'Or":"SpaghettiPATEDOR.jpg","Spaghetti Broli":"SpaghettiBROLI.jpg","Spaghetti Panzani":"SpaghettiPANZANI.jpg","Macaroni Kayna Petit plomb":"MacaroniKayna500g.jpg","Macaroni Helper Cheeseburger":"MacaroniHELPER.jpg","Macaroni Kayna Coquillette":"MacaroniKAYNA.jpg","Riz Tanti":"RizTanti.jpg","Riz Parfumé Mama Gold":"RizParfuméMamaGold.jpg","Riz Long Grain 5kg":"RizParfuméMamaGold.jpg","Colgate MaxWhite":"Dentifrice.ColgateMaxWhite.jpg","Colgate MaxFresh":"Dentifrice.ColgateMaxFresh.jpg","Colgate Herbal":"Dentifrice.Colgate.Herbal.jpg","Parodontax":"Dentifrice.Parodontax.jpg","Sensodyne Répare & Protège":"Dentifrice.SensodyneRepare&Protege.jpg","Sensodyne Soin Complet":"Dentifrice.Sensodyne.jpg","Colgate Black Fresh":"Dentifrice.Colgat.jpg","Signal Blancheur":"Dentifrice.Signal.jpg","Sardines Jolly":"SardineJoly.jpg","Sardines Famrite":"Sardine.Famrite.jpg","Savon Maera Herbal":"SAVON.Maera.jpg","Savon Protex Pharmapur Aloe":"Protex.jpg","Savon Protex Pharmapur Charbon":"protex_-_pharmapur_-_charbon_2_.jpg","Savon Pharmapur Classique":"Savon-PHARMAPUR-150g-1.webp","Dettol Original Antibactérien":"Dettol.Original.jpg","Dettol Skincare":"Dettol.Skincare.jpg","Savon Nivea Crème Soft":"SAVON.NIVEA.jpg","Savon Artisanal":"SAVON.jpg","Sucre Blanc":"SucreBlanc.jpg","Détergent Madar":"detergentMadar.jpg","Détergent Hoka High Foam":"detergeantHoka.jpg","Détergent Ozil Ultra Power":"detergentOzil.jpg","Serviettes Siempre Extra":"cotonhygeniquesiempre.jpg","Huile Mayer":"HuileMajo1r.jpg","Huile Rouge 500g":"huileRouge.jpg"
     };
+    function getImage(productName) { return IMG_BASE + (imageMapping[productName] || "SpaghettiBarilla500g.jpg"); }
 
-    function getProductImage(productName) {
-        let filename = imageMapping[productName];
-        if (filename) {
-            return IMG_BASE + filename;
-        }
-        // Fallback
-        return IMG_BASE + "SpaghettiBarilla500g.jpg";
-    }
-
-    // TOUS LES PRODUITS
-    const FULL_PRODUCTS = [
-        { id: 1, name: "Spaghetti Barilla n°5", category: "Pâtes", price: 1200, unit: "500g", supplier: "Barilla", sales: 320, badge: "best" },
-        { id: 2, name: "Macaroni Kayna Petit plomb", category: "Pâtes", price: 850, unit: "500g", supplier: "Kayna", sales: 210, badge: "" },
-        { id: 3, name: "Riz Tanti", category: "Riz", price: 800, unit: "kg", supplier: "Tantie Mouna", sales: 1450, badge: "hot" },
-        { id: 4, name: "Riz Parfumé Mama Gold", category: "Riz", price: 950, unit: "kg", supplier: "Mama Gold", sales: 2100, badge: "best" },
-        { id: 5, name: "Riz Long Grain 5kg", category: "Riz", price: 4200, unit: "5kg", supplier: "Mama Gold", sales: 870, badge: "" },
-        { id: 6, name: "Colgate MaxWhite", category: "Dentifrices", price: 1850, unit: "tube", supplier: "Colgate", sales: 540, badge: "" },
-        { id: 7, name: "Colgate MaxFresh", category: "Dentifrices", price: 1800, unit: "tube", supplier: "Colgate", sales: 490, badge: "" },
-        { id: 8, name: "Colgate Herbal", category: "Dentifrices", price: 1950, unit: "tube", supplier: "Colgate", sales: 380, badge: "" },
-        { id: 9, name: "Parodontax", category: "Dentifrices", price: 3200, unit: "tube", supplier: "Parodontax", sales: 275, badge: "premium" },
-        { id: 10, name: "Sensodyne Répare & Protège", category: "Dentifrices", price: 3800, unit: "tube", supplier: "Sensodyne", sales: 410, badge: "" },
-        { id: 11, name: "Sensodyne Soin Complet", category: "Dentifrices", price: 3600, unit: "tube", supplier: "Sensodyne", sales: 395, badge: "premium" },
-        { id: 12, name: "Colgate Black Fresh", category: "Dentifrices", price: 1700, unit: "tube", supplier: "Colgate", sales: 310, badge: "" },
-        { id: 13, name: "Signal Blancheur", category: "Dentifrices", price: 1650, unit: "tube", supplier: "Signal", sales: 520, badge: "" },
-        { id: 14, name: "Sardines Jolly", category: "Conserves", price: 650, unit: "boîte", supplier: "Jolly", sales: 890, badge: "hot" },
-        { id: 15, name: "Sardines Famrite", category: "Conserves", price: 600, unit: "boîte", supplier: "Famrite", sales: 720, badge: "" },
-        { id: 16, name: "Savon Maera Herbal", category: "Savons", price: 400, unit: "unité", supplier: "Maera", sales: 1250, badge: "best" },
-        { id: 17, name: "Savon Protex Pharmapur Aloe", category: "Savons", price: 550, unit: "150g", supplier: "Protex", sales: 980, badge: "" },
-        { id: 18, name: "Savon Protex Pharmapur Charbon", category: "Savons", price: 600, unit: "150g", supplier: "Protex", sales: 760, badge: "" },
-        { id: 19, name: "Savon Pharmapur Classique", category: "Savons", price: 450, unit: "100g", supplier: "Pharmapur", sales: 1100, badge: "" },
-        { id: 20, name: "Dettol Original Antibactérien", category: "Savons", price: 750, unit: "175g", supplier: "Dettol", sales: 880, badge: "" },
-        { id: 21, name: "Dettol Skincare", category: "Savons", price: 800, unit: "175g", supplier: "Dettol", sales: 640, badge: "" },
-        { id: 22, name: "Savon Nivea Crème Soft", category: "Savons", price: 680, unit: "100g", supplier: "Nivea", sales: 530, badge: "" },
-        { id: 23, name: "Savon Artisanal", category: "Savons", price: 900, unit: "pièce", supplier: "Artisan local", sales: 210, badge: "" },
-        { id: 24, name: "Sucre Blanc", category: "Épicerie", price: 4500, unit: "50kg", supplier: "Sucrerie", sales: 320, badge: "" },
-        { id: 25, name: "Spaghetti Pâte d'Or", category: "Pâtes", price: 1100, unit: "500g", supplier: "Pâte d'Or", sales: 450, badge: "" },
-        { id: 26, name: "Spaghetti Broli", category: "Pâtes", price: 1050, unit: "500g", supplier: "Broli", sales: 380, badge: "" },
-        { id: 27, name: "Spaghetti Panzani", category: "Pâtes", price: 1300, unit: "500g", supplier: "Panzani", sales: 590, badge: "" },
-        { id: 28, name: "Macaroni Helper Cheeseburger", category: "Pâtes", price: 1800, unit: "boîte", supplier: "Helper", sales: 260, badge: "" },
-        { id: 29, name: "Macaroni Kayna Coquillette", category: "Pâtes", price: 900, unit: "500g", supplier: "Kayna", sales: 410, badge: "" },
-        { id: 30, name: "Détergent Madar", category: "Ménage", price: 1500, unit: "kg", supplier: "Madar", sales: 730, badge: "" },
-        { id: 31, name: "Détergent Hoka High Foam", category: "Ménage", price: 1750, unit: "kg", supplier: "Hoka", sales: 680, badge: "" },
-        { id: 32, name: "Détergent Ozil Ultra Power", category: "Ménage", price: 2300, unit: "6 pièces", supplier: "Ozil", sales: 890, badge: "hot" },
-        { id: 33, name: "Serviettes Siempre Extra", category: "Hygiène", price: 1200, unit: "12x", supplier: "Siempre", sales: 950, badge: "" },
-        { id: 34, name: "Huile Mayer", category: "Huiles", price: 1350, unit: "1L", supplier: "Mayer", sales: 1430, badge: "best" },
-        { id: 35, name: "Huile Rouge 500g", category: "Huiles", price: 1100, unit: "500g", supplier: "Huilerie", sales: 540, badge: "" },
-        { id: 36, name: "Poulet fermier", category: "Viandes", price: 3200, unit: "kg", supplier: "Ferme Bini", sales: 680, badge: "fresh" },
-        { id: 37, name: "Tomates fraîches", category: "Fruits", price: 450, unit: "kg", supplier: "Maraîcher", sales: 1120, badge: "" },
-        { id: 38, name: "Mangues fraîches", category: "Fruits", price: 600, unit: "kg", supplier: "Ferme Moderne", sales: 890, badge: "" }
+    const PRODUCTS = [
+        {id:1,name:"Spaghetti Barilla n°5",category:"Pâtes",price:1200,unit:"500g",supplier:"Barilla",sales:320,badge:"best"},{id:2,name:"Macaroni Kayna Petit plomb",category:"Pâtes",price:850,unit:"500g",supplier:"Kayna",sales:210,badge:""},{id:3,name:"Riz Tanti",category:"Riz",price:800,unit:"kg",supplier:"Tantie Mouna",sales:1450,badge:"hot"},{id:4,name:"Riz Parfumé Mama Gold",category:"Riz",price:950,unit:"kg",supplier:"Mama Gold",sales:2100,badge:"best"},{id:5,name:"Riz Long Grain 5kg",category:"Riz",price:4200,unit:"5kg",supplier:"Mama Gold",sales:870,badge:""},{id:6,name:"Colgate MaxWhite",category:"Dentifrices",price:1850,unit:"tube",supplier:"Colgate",sales:540,badge:""},{id:7,name:"Colgate MaxFresh",category:"Dentifrices",price:1800,unit:"tube",supplier:"Colgate",sales:490,badge:""},{id:8,name:"Colgate Herbal",category:"Dentifrices",price:1950,unit:"tube",supplier:"Colgate",sales:380,badge:""},{id:9,name:"Parodontax",category:"Dentifrices",price:3200,unit:"tube",supplier:"Parodontax",sales:275,badge:"premium"},{id:10,name:"Sensodyne Répare & Protège",category:"Dentifrices",price:3800,unit:"tube",supplier:"Sensodyne",sales:410,badge:""},{id:11,name:"Sensodyne Soin Complet",category:"Dentifrices",price:3600,unit:"tube",supplier:"Sensodyne",sales:395,badge:"premium"},{id:12,name:"Colgate Black Fresh",category:"Dentifrices",price:1700,unit:"tube",supplier:"Colgate",sales:310,badge:""},{id:13,name:"Signal Blancheur",category:"Dentifrices",price:1650,unit:"tube",supplier:"Signal",sales:520,badge:""},{id:14,name:"Sardines Jolly",category:"Conserves",price:650,unit:"boîte",supplier:"Jolly",sales:890,badge:"hot"},{id:15,name:"Sardines Famrite",category:"Conserves",price:600,unit:"boîte",supplier:"Famrite",sales:720,badge:""},{id:16,name:"Savon Maera Herbal",category:"Savons",price:400,unit:"unité",supplier:"Maera",sales:1250,badge:"best"},{id:17,name:"Savon Protex Pharmapur Aloe",category:"Savons",price:550,unit:"150g",supplier:"Protex",sales:980,badge:""},{id:18,name:"Savon Protex Pharmapur Charbon",category:"Savons",price:600,unit:"150g",supplier:"Protex",sales:760,badge:""},{id:19,name:"Savon Pharmapur Classique",category:"Savons",price:450,unit:"100g",supplier:"Pharmapur",sales:1100,badge:""},{id:20,name:"Dettol Original Antibactérien",category:"Savons",price:750,unit:"175g",supplier:"Dettol",sales:880,badge:""},{id:21,name:"Dettol Skincare",category:"Savons",price:800,unit:"175g",supplier:"Dettol",sales:640,badge:""},{id:22,name:"Savon Nivea Crème Soft",category:"Savons",price:680,unit:"100g",supplier:"Nivea",sales:530,badge:""},{id:23,name:"Savon Artisanal",category:"Savons",price:900,unit:"pièce",supplier:"Artisan local",sales:210,badge:""},{id:24,name:"Sucre Blanc",category:"Épicerie",price:4500,unit:"50kg",supplier:"Sucrerie",sales:320,badge:""},{id:25,name:"Spaghetti Pâte d'Or",category:"Pâtes",price:1100,unit:"500g",supplier:"Pâte d'Or",sales:450,badge:""},{id:26,name:"Spaghetti Broli",category:"Pâtes",price:1050,unit:"500g",supplier:"Broli",sales:380,badge:""},{id:27,name:"Spaghetti Panzani",category:"Pâtes",price:1300,unit:"500g",supplier:"Panzani",sales:590,badge:""},{id:28,name:"Macaroni Helper Cheeseburger",category:"Pâtes",price:1800,unit:"boîte",supplier:"Helper",sales:260,badge:""},{id:29,name:"Macaroni Kayna Coquillette",category:"Pâtes",price:900,unit:"500g",supplier:"Kayna",sales:410,badge:""},{id:30,name:"Détergent Madar",category:"Ménage",price:1500,unit:"kg",supplier:"Madar",sales:730,badge:""},{id:31,name:"Détergent Hoka High Foam",category:"Ménage",price:1750,unit:"kg",supplier:"Hoka",sales:680,badge:""},{id:32,name:"Détergent Ozil Ultra Power",category:"Ménage",price:2300,unit:"6 pièces",supplier:"Ozil",sales:890,badge:"hot"},{id:33,name:"Serviettes Siempre Extra",category:"Hygiène",price:1200,unit:"12x",supplier:"Siempre",sales:950,badge:""},{id:34,name:"Huile Mayer",category:"Huiles",price:1350,unit:"1L",supplier:"Mayer",sales:1430,badge:"best"},{id:35,name:"Huile Rouge 500g",category:"Huiles",price:1100,unit:"500g",supplier:"Huilerie",sales:540,badge:""},{id:36,name:"Poulet fermier",category:"Viandes",price:3200,unit:"kg",supplier:"Ferme Bini",sales:680,badge:"fresh"},{id:37,name:"Tomates fraîches",category:"Fruits",price:450,unit:"kg",supplier:"Maraîcher",sales:1120,badge:""},{id:38,name:"Mangues fraîches",category:"Fruits",price:600,unit:"kg",supplier:"Ferme Moderne",sales:890,badge:""}
     ];
-
-    let currentCategory = "all";
-    let currentSearch = "";
-    let currentSort = "default";
-    let currentView = "grid";
-    let compareList = JSON.parse(localStorage.getItem("salam_compare") || "[]");
-    let categories = ["all", ...new Set(FULL_PRODUCTS.map(p => p.category))];
-
-    function renderCategoryFilters() {
-        const container = document.getElementById("categoryFilters");
-        container.innerHTML = categories.map(cat => `<button class="filter-chip ${currentCategory === cat ? 'active' : ''}" onclick="filterByCategory('${cat}')">${cat === "all" ? "Tous" : cat}</button>`).join("");
+    let currentCategory="all", currentSearch="", currentSort="default", currentView="grid", compareList=JSON.parse(localStorage.getItem("salam_compare")||"[]");
+    let categories=["all",...new Set(PRODUCTS.map(p=>p.category))];
+    function renderChips(){document.getElementById("categoryFilters").innerHTML=categories.map(c=>`<div class="chip ${currentCategory===c?'active':''}" onclick="filterByCategory('${c}')">${c==='all'?'🌿 Tous':c}</div>`).join("");}
+    function filterByCategory(c){currentCategory=c;renderChips();renderProducts();}
+    function setView(v){currentView=v;document.querySelectorAll('.view-icon').forEach(btn=>btn.classList.remove('active'));document.querySelector(`.view-icon[data-view="${v}"]`).classList.add('active');renderProducts();}
+    function getFiltered(){
+        let f=PRODUCTS.filter(p=>(currentCategory==='all'||p.category===currentCategory)&&(currentSearch===''||p.name.toLowerCase().includes(currentSearch)||p.supplier.toLowerCase().includes(currentSearch)));
+        if(currentSort==='price-asc')f.sort((a,b)=>a.price-b.price);
+        else if(currentSort==='price-desc')f.sort((a,b)=>b.price-a.price);
+        else if(currentSort==='name-asc')f.sort((a,b)=>a.name.localeCompare(b.name));
+        return f;
     }
-    function filterByCategory(cat) { currentCategory = cat; renderCategoryFilters(); renderProducts(); }
-    function setView(view) { currentView = view; document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active')); document.querySelector(`.view-btn[data-view="${view}"]`).classList.add('active'); renderProducts(); }
-    
-    function getFilteredSorted() {
-        let filtered = FULL_PRODUCTS.filter(p => (currentCategory === "all" || p.category === currentCategory) && 
-            (currentSearch === "" || p.name.toLowerCase().includes(currentSearch) || p.category.toLowerCase().includes(currentSearch) || p.supplier.toLowerCase().includes(currentSearch)));
-        if (currentSort === "price-asc") filtered.sort((a,b)=>a.price-b.price);
-        else if (currentSort === "price-desc") filtered.sort((a,b)=>b.price-a.price);
-        else if (currentSort === "name-asc") filtered.sort((a,b)=>a.name.localeCompare(b.name));
-        return filtered;
-    }
-
-    function renderProducts() {
-        let products = getFilteredSorted();
-        document.getElementById("productCount").innerHTML = `${products.length} produits disponibles`;
-        const container = document.getElementById("productsContainer");
-        if (currentView === "grid") {
-            container.className = "products-grid";
-            container.innerHTML = products.map(p => {
-                const badgeClass = p.badge === "best" ? "hot" : (p.badge === "premium" ? "premium" : (p.badge === "hot" ? "hot" : ""));
-                const badgeText = p.badge === "best" ? "🔥 Top" : (p.badge === "premium" ? "⭐ Premium" : (p.badge === "hot" ? "📈 Populaire" : (p.badge === "fresh" ? "🌿 Frais" : "")));
-                return `<div class="product-card"><div class="product-img">${badgeText ? `<span class="product-badge ${badgeClass}">${badgeText}</span>` : ''}<img src="${getProductImage(p.name)}" alt="${p.name}" onerror="this.src='../images/SpaghettiBarilla500g.jpg'"></div><div class="product-info"><h3>${escapeHtml(p.name)}</h3><div class="product-supplier"><i class="fa-solid fa-store"></i> ${escapeHtml(p.supplier)}</div><div class="product-price">${p.price.toLocaleString()} FCFA <small>/${p.unit}</small></div><div class="product-actions"><button class="btn-add" onclick="addToCart(${p.id}, '${escapeHtml(p.name)}', ${p.price})"><i class="fa-solid fa-plus"></i> Ajouter</button><button class="btn-compare ${compareList.includes(p.id) ? 'active' : ''}" onclick="toggleCompare(${p.id})"><i class="fa-solid fa-chart-simple"></i></button></div></div></div>`;
-            }).join("");
+    function badgeType(b){if(b==='best')return 'hot';if(b==='premium')return 'premium';if(b==='hot')return 'hot';if(b==='fresh')return 'fresh';return '';}
+    function badgeLabel(b){if(b==='best')return '🔥 BEST';if(b==='premium')return '✨ PREMIUM';if(b==='hot')return '📈 POPULAR';if(b==='fresh')return '🌿 FRAIS';return '';}
+    function renderProducts(){
+        let items=getFiltered();
+        document.getElementById("productCount").innerHTML=`${items.length} trésors disponibles ✨`;
+        const container=document.getElementById("productsContainer");
+        if(currentView==='grid'){
+            container.className="products-grid";
+            container.innerHTML=items.map(p=>{let bClass=badgeType(p.badge),bText=badgeLabel(p.badge);return `<div class="product-card"><div class="card-img">${bText?`<span class="badge-pro ${bClass}">${bText}</span>`:''}<img src="${getImage(p.name)}" alt="${p.name}" onerror="this.src='../images/SpaghettiBarilla500g.jpg'"></div><div class="product-info"><h3>${escapeHtml(p.name)}</h3><div class="supplier"><i class="fa-regular fa-building"></i> ${escapeHtml(p.supplier)}</div><div class="price-em">${p.price.toLocaleString()} FCFA <span style="font-size:0.8rem;">/${p.unit}</span></div><div class="action-row"><button class="btn-cart" onclick="addToCart(${p.id},'${escapeHtml(p.name)}',${p.price})"><i class="fa-solid fa-cart-plus"></i> Ajouter</button><button class="btn-compare ${compareList.includes(p.id)?'active':''}" onclick="toggleCompare(${p.id})"><i class="fa-solid fa-chart-line"></i></button></div></div></div>`}).join("");
         } else {
-            container.className = "products-list";
-            container.innerHTML = products.map(p => `<div class="product-list-item"><div class="product-list-img"><img src="${getProductImage(p.name)}" alt="${p.name}" onerror="this.src='../images/SpaghettiBarilla500g.jpg'"></div><div class="product-list-info"><h3>${escapeHtml(p.name)}</h3><div style="font-size:0.7rem; color:#94A3B8;">${escapeHtml(p.supplier)}</div><div class="price">${p.price.toLocaleString()} FCFA / ${p.unit}</div></div><div style="display:flex; gap:8px;"><button class="btn-add" style="padding:8px 16px;" onclick="addToCart(${p.id}, '${escapeHtml(p.name)}', ${p.price})">Ajouter</button><button class="btn-compare ${compareList.includes(p.id) ? 'active' : ''}" onclick="toggleCompare(${p.id})"><i class="fa-solid fa-chart-simple"></i></button></div></div>`).join("");
+            container.className="products-list";
+            container.innerHTML=items.map(p=>`<div class="list-item"><div class="list-img"><img src="${getImage(p.name)}" onerror="this.src='../images/SpaghettiBarilla500g.jpg'"></div><div style="flex:1;"><h3>${escapeHtml(p.name)}</h3><div style="font-size:0.7rem; color:#94a3b8;">${p.supplier}</div><div style="color:#34d399; font-weight:700;">${p.price.toLocaleString()} FCFA / ${p.unit}</div></div><div style="display:flex;gap:10px;"><button class="btn-cart" style="padding:8px 18px;" onclick="addToCart(${p.id},'${escapeHtml(p.name)}',${p.price})">Ajouter</button><button class="btn-compare ${compareList.includes(p.id)?'active':''}" onclick="toggleCompare(${p.id})"><i class="fa-solid fa-chart-line"></i></button></div></div>`).join("");
         }
     }
-
-    function addToCart(id, name, price) {
-        let cart = JSON.parse(localStorage.getItem("salam_cart") || "[]");
-        let existing = cart.find(i => i.id === id);
-        if(existing) existing.quantity += 1;
-        else cart.push({ id, name, price, quantity: 1, image: getProductImage(name), supplier: FULL_PRODUCTS.find(p=>p.id===id)?.supplier });
-        localStorage.setItem("salam_cart", JSON.stringify(cart));
-        showToast("Ajouté au panier", `${name} ajouté ✅`, "success");
-    }
-
-    function toggleCompare(id) {
-        if(compareList.includes(id)) compareList = compareList.filter(i => i !== id);
-        else { if(compareList.length >= 4) { showToast("Limite atteinte", "Maximum 4 produits", "error"); return; } compareList.push(id); }
-        localStorage.setItem("salam_compare", JSON.stringify(compareList));
-        renderProducts();
-        updateCompareBar();
-    }
-    function updateCompareBar() {
-        const bar = document.getElementById("compareBar");
-        const container = document.getElementById("compareItems");
-        document.getElementById("compareCount").innerText = compareList.length;
-        if(compareList.length === 0) { bar.classList.remove("show"); return; }
-        bar.classList.add("show");
-        let compareProds = FULL_PRODUCTS.filter(p => compareList.includes(p.id));
-        container.innerHTML = compareProds.map(p => `<div class="compare-item"><img src="${getProductImage(p.name)}" onerror="this.src='../images/SpaghettiBarilla500g.jpg'"> ${p.name.length > 20 ? p.name.slice(0,18)+'...' : p.name} <button onclick="toggleCompare(${p.id})"><i class="fa-solid fa-xmark"></i></button></div>`).join("");
-    }
-    function compareSelected() {
-        if(compareList.length < 2) { showToast("Comparaison", "Sélectionnez au moins 2 produits", "warning"); return; }
-        let prods = FULL_PRODUCTS.filter(p => compareList.includes(p.id));
-        let html = `<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px;">` + prods.map(p => `<div style="background:#111; border-radius:24px; padding:20px; text-align:center;"><img src="${getProductImage(p.name)}" style="width:100%; height:140px; object-fit:cover; border-radius:16px; margin-bottom:12px;" onerror="this.src='../images/SpaghettiBarilla500g.jpg'"><h4>${p.name}</h4><div style="color:#34D399; font-weight:bold;">${p.price} FCFA</div><div style="font-size:0.7rem;">${p.supplier}</div><button class="btn-add" style="margin-top:12px;" onclick="addToCart(${p.id},'${p.name}',${p.price})">Ajouter</button></div>`).join("") + `</div>`;
-        let modal = document.createElement("div"); modal.style.position="fixed"; modal.style.inset=0; modal.style.background="rgba(0,0,0,0.85)"; modal.style.backdropFilter="blur(12px)"; modal.style.zIndex=1000; modal.style.display="flex"; modal.style.alignItems="center"; modal.style.justifyContent="center";
-        let content = document.createElement("div"); content.style.background="#0F0F1E"; content.style.borderRadius="28px"; content.style.maxWidth="1000px"; content.style.width="90%"; content.style.padding="24px"; content.style.maxHeight="80vh"; content.style.overflow="auto";
-        content.innerHTML = `<div style="display:flex; justify-content:space-between;"><h3>🔍 Comparaison produits</h3><button onclick="this.closest('div').parentElement.parentElement.remove()" style="background:none; border:none; color:white; font-size:1.8rem;">&times;</button></div>${html}`;
-        modal.appendChild(content); document.body.appendChild(modal); modal.onclick = (e) => { if(e.target === modal) modal.remove(); };
-    }
-
-    let recognition = null;
-    function startVoiceSearch() {
-        const btn = document.getElementById("voiceBtn");
-        if(!('webkitSpeechRecognition' in window)) { showToast("Non supporté", "Recherche vocale indisponible", "error"); return; }
-        const SpeechRecognition = window.webkitSpeechRecognition;
-        recognition = new SpeechRecognition(); recognition.lang = "fr-FR"; recognition.interimResults = false;
-        recognition.onstart = () => { btn.classList.add("listening"); btn.innerHTML = '<i class="fa-solid fa-microphone-slash"></i>'; };
-        recognition.onresult = (event) => { let text = event.results[0][0].transcript; document.getElementById("searchInput").value = text; currentSearch = text.toLowerCase(); renderProducts(); showToast("Recherche vocale", `"${text}"`, "success"); };
-        recognition.onerror = () => showToast("Erreur", "Réessayez", "error");
-        recognition.onend = () => { btn.classList.remove("listening"); btn.innerHTML = '<i class="fa-solid fa-microphone"></i>'; };
-        recognition.start();
-    }
-
-    function showToast(title, msg, type="success") {
-        const container = document.getElementById("toastContainer");
-        const toast = document.createElement("div"); toast.className = `toast ${type}`; toast.innerHTML = `<i class="fa-solid fa-${type === 'success' ? 'circle-check' : 'circle-exclamation'}"></i> <div><strong>${title}</strong><br><small>${msg}</small></div>`;
-        container.appendChild(toast); setTimeout(() => toast.classList.add("show"), 10);
-        setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 300); }, 3000);
-    }
-    function escapeHtml(str) { return String(str).replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
-    function openSidebar() { document.getElementById("sidebar").classList.add("open"); document.getElementById("overlay").classList.add("show"); }
-    function closeSidebar() { document.getElementById("sidebar").classList.remove("open"); document.getElementById("overlay").classList.remove("show"); }
-    function logout() { localStorage.clear(); window.location.href = "../index.html"; }
-
-    document.getElementById("searchInput").addEventListener("input", (e) => { currentSearch = e.target.value.toLowerCase(); renderProducts(); });
-    document.getElementById("sortSelect").addEventListener("change", (e) => { currentSort = e.target.value; renderProducts(); });
-    renderCategoryFilters(); renderProducts(); updateCompareBar();
-    window.filterByCategory = filterByCategory; window.toggleCompare = toggleCompare; window.addToCart = addToCart; window.compareSelected = compareSelected; window.startVoiceSearch = startVoiceSearch; window.setView = setView; window.openSidebar = openSidebar; window.closeSidebar = closeSidebar; window.logout = logout;
+    function addToCart(id,name,price){let cart=JSON.parse(localStorage.getItem("salam_cart")||"[]");let ex=cart.find(i=>i.id===id);if(ex)ex.quantity+=1;else cart.push({id,name,price,quantity:1,image:getImage(name),supplier:PRODUCTS.find(p=>p.id===id)?.supplier});localStorage.setItem("salam_cart",JSON.stringify(cart));showToast("Panier","✅ "+name+" ajouté");}
+    function toggleCompare(id){if(compareList.includes(id))compareList=compareList.filter(i=>i!==id);else{if(compareList.length>=4){showToast("Limite","Maximum 4 produits","error");return}compareList.push(id)}localStorage.setItem("salam_compare",JSON.stringify(compareList));renderProducts();updateCompareBar();}
+    function updateCompareBar(){let bar=document.getElementById("compareBar");let container=document.getElementById("compareItems");let count=compareList.length;document.getElementById("compareCount").innerText=count;if(count===0){bar.classList.remove("show");return}bar.classList.add("show");let comps=PRODUCTS.filter(p=>compareList.includes(p.id));container.innerHTML=comps.map(p=>`<div style="background:#1e293b; border-radius:40px; padding:5px 12px; display:flex; gap:10px; align-items:center;"><img src="${getImage(p.name)}" style="width:28px;height:28px;border-radius:12px;"> <span style="font-size:0.75rem;">${p.name.slice(0,18)}</span><button onclick="toggleCompare(${p.id})" style="background:none; border:none; color:#f43f5e; cursor:pointer;"><i class="fa-regular fa-circle-xmark"></i></button></div>`).join("");}
+    function compareSelected(){if(compareList.length<2){showToast("Comparaison","Sélectionne au moins 2 produits","warning");return}let prods=PRODUCTS.filter(p=>compareList.includes(p.id));let modalDiv=document.createElement("div");modalDiv.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(20px);z-index:1000;display:flex;align-items:center;justify-content:center;";let inner=document.createElement("div");inner.style.cssText="background:#0f172a;border-radius:36px;max-width:1100px;width:90%;padding:24px;max-height:80vh;overflow:auto;";inner.innerHTML=`<div style="display:flex;justify-content:space-between;"><h2 style="font-family:Syne;"><i class="fa-regular fa-clipboard"></i> Comparaison</h2><button onclick="this.closest('div').parentElement.parentElement.remove()" style="background:none;border:none;color:white;font-size:2rem;">&times;</button></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-top:20px;">${prods.map(p=>`<div style="background:#1e293b;border-radius:28px;padding:20px;text-align:center;"><img src="${getImage(p.name)}" style="width:100%;height:150px;object-fit:cover;border-radius:24px;"><h3 style="margin:12px 0;">${p.name}</h3><div style="color:#34d399;font-weight:800;">${p.price.toLocaleString()} FCFA</div><div>${p.supplier}</div><button class="btn-cart" style="margin-top:16px;" onclick="addToCart(${p.id},'${p.name}',${p.price})">Ajouter au panier</button></div>`).join("")}</div>`;modalDiv.appendChild(inner);document.body.appendChild(modalDiv);modalDiv.onclick=(e)=>e.target===modalDiv&&modalDiv.remove();}
+    function showToast(title,msg,type="success"){let cont=document.getElementById("toastContainer");let toast=document.createElement("div");toast.className=`toast`;toast.innerHTML=`<i class="fa-solid ${type==='success'?'fa-circle-check':'fa-triangle-exclamation'}"></i> <div><strong>${title}</strong><br><small>${msg}</small></div>`;cont.appendChild(toast);setTimeout(()=>toast.classList.add("show"),10);setTimeout(()=>{toast.classList.remove("show");setTimeout(()=>toast.remove(),300);},3200);}
+    function escapeHtml(s){return String(s).replace(/[&<>]/g,function(m){if(m==='&')return '&amp;';if(m==='<')return '&lt;';if(m==='>')return '&gt;';return m;});}
+    let recognition=null;function startVoiceSearch(){const btn=document.getElementById("voiceBtn");if(!('webkitSpeechRecognition' in window)){showToast("Voice","Non supporté","error");return}const SpeechRecognition=window.webkitSpeechRecognition;recognition=new SpeechRecognition();recognition.lang="fr-FR";recognition.onstart=()=>{btn.classList.add("listening");btn.innerHTML='<i class="fa-solid fa-microphone-slash"></i>';};recognition.onresult=(e)=>{let txt=e.results[0][0].transcript;document.getElementById("searchInput").value=txt;currentSearch=txt.toLowerCase();renderProducts();showToast("🔊 Recherche",`"${txt}"`);};recognition.onend=()=>{btn.classList.remove("listening");btn.innerHTML='<i class="fa-solid fa-microphone-lines"></i>';};recognition.start();}
+    function openSidebar(){document.getElementById("sidebar").classList.add("open");document.getElementById("overlay").style.display="block";}
+    function closeSidebar(){document.getElementById("sidebar").classList.remove("open");document.getElementById("overlay").style.display="none";}
+    function logout(){localStorage.clear();window.location.href="../index.html";}
+    document.getElementById("searchInput").addEventListener("input",(e)=>{currentSearch=e.target.value.toLowerCase();renderProducts();});
+    document.getElementById("sortSelect").addEventListener("change",(e)=>{currentSort=e.target.value;renderProducts();});
+    renderChips();renderProducts();updateCompareBar();
+    window.filterByCategory=filterByCategory;window.toggleCompare=toggleCompare;window.addToCart=addToCart;window.compareSelected=compareSelected;window.startVoiceSearch=startVoiceSearch;window.setView=setView;window.openSidebar=openSidebar;window.closeSidebar=closeSidebar;window.logout=logout;
 </script>
 </body>
 </html>
