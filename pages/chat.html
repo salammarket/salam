@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         :root {
             --emerald-400: #34D399; --emerald-500: #10B981; --emerald-600: #059669;
             --violet-400: #A78BFA; --violet-500: #8B5CF6;
@@ -38,12 +39,29 @@
             --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
             --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px;
         }
+        
         body { font-family: var(--font-body); background: var(--surface-primary); color: var(--text-primary); min-height: 100vh; -webkit-font-smoothing: antialiased; }
         .bg-decoration { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
         .bg-gradient-1 { position: absolute; width: 150%; height: 100%; background: radial-gradient(ellipse 80% 60% at 10% -20%, rgba(16,185,129,0.06) 0%, transparent 50%); animation: floatBg 20s ease-in-out infinite; }
         @keyframes floatBg { 0%,100% { transform: translate(0,0) rotate(0deg); } 33% { transform: translate(1%,-1%) rotate(0.5deg); } 66% { transform: translate(-1%,1%) rotate(-0.5deg); } }
         
-        .sidebar { width: 280px; background: rgba(10,10,20,0.95); backdrop-filter: blur(40px); border-right: 1px solid var(--border-default); position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; display: flex; flex-direction: column; padding: var(--space-6) var(--space-4); transition: transform var(--duration-base) var(--ease-out-expo); }
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(10,10,20,0.95);
+            backdrop-filter: blur(40px);
+            border-right: 1px solid var(--border-default);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            padding: var(--space-6) var(--space-4);
+            transition: transform var(--duration-base) var(--ease-out-expo);
+        }
+        
         .sidebar-header { display: flex; align-items: center; gap: var(--space-3); padding-bottom: var(--space-6); margin-bottom: var(--space-4); border-bottom: 1px solid var(--border-subtle); }
         .sidebar-logo { width: 44px; height: 44px; background: linear-gradient(135deg, var(--emerald-600), var(--emerald-500)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
         .sidebar-brand h2 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; }
@@ -53,23 +71,50 @@
         .nav-item:hover { background: var(--surface-hover); color: var(--text-secondary); transform: translateX(4px); }
         .nav-item.active { background: rgba(16,185,129,0.08); color: var(--emerald-400); border-left: 2px solid var(--emerald-500); }
         .nav-item i { width: 22px; }
-        .nav-badge { margin-left: auto; background: var(--rose-500); color: white; padding: 2px 8px; border-radius: 20px; font-size: 0.6rem; font-weight: 700; }
         .sidebar-footer { margin-top: auto; padding-top: var(--space-6); border-top: 1px solid var(--border-subtle); }
         .btn-logout { display: flex; align-items: center; gap: var(--space-3); width: 100%; padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); background: transparent; border: 1px solid var(--border-default); color: var(--text-muted); cursor: pointer; transition: all var(--duration-fast); }
         .btn-logout:hover { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.3); color: var(--rose-500); }
         
-        .mobile-header { display: none; position: fixed; top: 0; left: 0; right: 0; height: 60px; background: rgba(10,10,20,0.95); backdrop-filter: blur(40px); border-bottom: 1px solid var(--border-default); z-index: 99; align-items: center; padding: 0 var(--space-4); gap: var(--space-3); }
+        /* Mobile header */
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(10,10,20,0.95);
+            backdrop-filter: blur(40px);
+            border-bottom: 1px solid var(--border-default);
+            z-index: 99;
+            align-items: center;
+            padding: 0 var(--space-4);
+            gap: var(--space-3);
+        }
         .menu-btn { width: 40px; height: 40px; border-radius: var(--radius-sm); background: transparent; border: none; color: var(--text-primary); font-size: 1.2rem; cursor: pointer; }
         .mobile-logo { font-family: var(--font-display); font-weight: 700; font-size: 1rem; }
         .mobile-logo span { color: var(--emerald-400); }
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 98; }
         .overlay.show { display: block; }
         
+        /* Main content */
         .main-content { flex: 1; margin-left: 280px; padding: var(--space-6); position: relative; z-index: 1; }
         .chat-container { max-width: 1400px; margin: 0 auto; }
         
-        .chat-layout { display: grid; grid-template-columns: 320px 1fr; background: var(--surface-card); backdrop-filter: blur(20px); border: 1px solid var(--border-default); border-radius: var(--radius-xl); overflow: hidden; height: calc(100vh - 80px); min-height: 500px; }
+        /* Chat layout */
+        .chat-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            background: var(--surface-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            height: calc(100vh - 80px);
+            min-height: 500px;
+        }
         
+        /* Sidebar contacts */
         .chat-sidebar { border-right: 1px solid var(--border-subtle); display: flex; flex-direction: column; overflow: hidden; }
         .chat-sidebar-header { padding: var(--space-5); border-bottom: 1px solid var(--border-subtle); }
         .chat-sidebar-header h3 { font-family: var(--font-display); font-size: 1.1rem; margin-bottom: var(--space-4); display: flex; align-items: center; gap: var(--space-2); }
@@ -92,6 +137,7 @@
         .unread-badge { background: var(--emerald-500); color: white; font-size: 0.6rem; font-weight: 700; padding: 2px 6px; border-radius: 10px; min-width: 18px; text-align: center; }
         .ai-badge { background: var(--violet-500); color: white; font-size: 0.55rem; padding: 2px 6px; border-radius: var(--radius-full); margin-left: var(--space-2); }
         
+        /* Chat main area */
         .chat-main { display: flex; flex-direction: column; overflow: hidden; }
         .chat-header { padding: var(--space-4) var(--space-6); border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-3); }
         .chat-header-info { display: flex; align-items: center; gap: var(--space-3); }
@@ -102,11 +148,13 @@
         .chat-action-btn { width: 36px; height: 36px; border-radius: 50%; background: transparent; border: 1px solid var(--border-default); color: var(--text-muted); cursor: pointer; transition: all var(--duration-fast); }
         .chat-action-btn:hover { background: var(--surface-hover); color: var(--emerald-400); transform: scale(1.05); }
         
+        /* Messages */
         .messages-area { flex: 1; overflow-y: auto; padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-3); }
         .message { display: flex; max-width: 70%; animation: messageIn 0.3s var(--ease-out-expo); }
         @keyframes messageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .message.sent { align-self: flex-end; }
         .message.received { align-self: flex-start; }
+        .message-ai { align-self: flex-start; }
         .message-bubble { padding: var(--space-3) var(--space-4); border-radius: var(--radius-lg); font-size: 0.85rem; line-height: 1.4; position: relative; }
         .message.sent .message-bubble { background: linear-gradient(135deg, var(--emerald-600), var(--emerald-500)); color: white; border-bottom-right-radius: var(--radius-sm); }
         .message.received .message-bubble { background: var(--surface-input); border: 1px solid var(--border-default); border-bottom-left-radius: var(--radius-sm); }
@@ -121,6 +169,7 @@
         .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
         @keyframes typing { 0%,60%,100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-4px); opacity: 1; } }
         
+        /* Input */
         .chat-input-area { padding: var(--space-4) var(--space-6); border-top: 1px solid var(--border-subtle); display: flex; gap: var(--space-3); align-items: flex-end; }
         .input-wrapper { flex: 1; position: relative; }
         .chat-input { width: 100%; padding: var(--space-3) var(--space-4); background: var(--surface-input); border: 1.5px solid var(--border-default); border-radius: var(--radius-lg); color: var(--text-primary); font-size: 0.9rem; font-family: inherit; resize: none; outline: none; transition: all var(--duration-fast); }
@@ -134,6 +183,7 @@
         .empty-chat { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--text-muted); gap: var(--space-4); padding: var(--space-6); }
         .empty-chat-icon { font-size: 4rem; opacity: 0.5; }
         
+        /* Toast */
         .toast-container { position: fixed; bottom: var(--space-5); right: var(--space-5); z-index: 200; display: flex; flex-direction: column; gap: var(--space-3); }
         .toast { background: var(--surface-card-solid); border: 1px solid var(--border-default); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); display: flex; align-items: center; gap: var(--space-3); min-width: 280px; transform: translateX(120%); opacity: 0; transition: all 0.5s var(--ease-out-expo); }
         .toast.show { transform: translateX(0); opacity: 1; }
@@ -144,6 +194,25 @@
         .toast.error .toast-icon { color: var(--rose-500); }
         .toast.info .toast-icon { color: var(--violet-400); }
         
+        /* Emoji picker */
+        #emojiPicker {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: var(--surface-card-solid);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: var(--space-3);
+            z-index: 150;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: var(--space-2);
+        }
+        #emojiPicker button { background: none; border: none; font-size: 1.5rem; cursor: pointer; padding: var(--space-1); transition: transform 0.1s; }
+        #emojiPicker button:hover { transform: scale(1.2); background: var(--surface-hover); border-radius: var(--radius-sm); }
+        
+        /* Responsive */
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.open { transform: translateX(0); }
@@ -153,6 +222,13 @@
             .chat-sidebar { display: none; }
             .chat-sidebar.mobile-visible { display: flex; position: absolute; inset: 0; z-index: 10; background: var(--surface-card-solid); }
             .message { max-width: 85%; }
+        }
+        
+        @media (max-width: 480px) {
+            .chat-header { flex-direction: column; align-items: flex-start; }
+            .chat-actions { align-self: flex-end; }
+            .chat-input-area { padding: var(--space-3); }
+            .input-btn { width: 38px; height: 38px; }
         }
     </style>
 </head>
@@ -223,13 +299,14 @@
         </div>
     </main>
     
-    <div id="emojiPicker" style="display: none; position: fixed; bottom: 80px; right: 20px; background: var(--surface-card-solid); border: 1px solid var(--border-default); border-radius: var(--radius-lg); padding: var(--space-3); z-index: 150; display: grid; grid-template-columns: repeat(8, 1fr); gap: var(--space-2);"></div>
+    <div id="emojiPicker"></div>
     <div class="toast-container" id="toastContainer"></div>
     
     <script>
         (() => {
             'use strict';
             
+            // Vérification session
             const session = JSON.parse(localStorage.getItem('salam_session') || 'null');
             if (!session) { window.location.href = '../index.html'; return; }
             
@@ -248,32 +325,32 @@
             let typingTimeout = null;
             let messageInterval = null;
             
-            // IA Responses intelligentes
+            // ========== RÉPONSES IA INTELLIGENTES ==========
             const AI_RESPONSES = {
                 greeting: [
-                    "Bonjour ! Je suis l'assistant Salam Market. Comment puis-je vous aider aujourd'hui ?",
-                    "Bienvenue sur Salam Market ! Un conseiller vous répondra dans les plus brefs délais. En attendant, je suis là pour vous aider !",
+                    "Bonjour ! Je suis l'assistant Salam Market. Comment puis-je vous aider aujourd'hui ? 🌟",
+                    "Bienvenue sur Salam Market ! Un conseiller vous répondra dans les plus brefs délais. En attendant, je suis là pour vous aider ! 🤝",
                     "Salut ! 👋 Je suis l'assistant virtuel de Salam Market. Que puis-je faire pour vous ?"
                 ],
                 product: [
-                    "Pour les informations sur nos produits, je vous invite à consulter notre catalogue. Un fournisseur vous répondra bientôt !",
-                    "Nos produits sont de qualité premium. Vous pouvez les découvrir dans l'onglet Catalogue.",
-                    "Je vous recommande de parcourir notre catalogue pour trouver ce que vous cherchez !"
+                    "Pour les informations sur nos produits, je vous invite à consulter notre catalogue. Un fournisseur vous répondra bientôt ! 📦",
+                    "Nos produits sont de qualité premium. Vous pouvez les découvrir dans l'onglet Catalogue. 🛍️",
+                    "Je vous recommande de parcourir notre catalogue pour trouver ce que vous cherchez ! 🔍"
                 ],
                 delivery: [
-                    "La livraison est généralement effectuée dans l'heure suivant la confirmation de commande. Vous pouvez suivre votre commande en temps réel.",
-                    "Notre service de livraison est rapide et fiable. Suivez votre colis en direct dans l'onglet Suivi Live !",
-                    "Un livreur sera assigné à votre commande sous peu. Merci de votre patience !"
+                    "La livraison est généralement effectuée dans l'heure suivant la confirmation de commande. Vous pouvez suivre votre commande en temps réel. 🚚",
+                    "Notre service de livraison est rapide et fiable. Suivez votre colis en direct dans l'onglet Suivi Live ! 📍",
+                    "Un livreur sera assigné à votre commande sous peu. Merci de votre patience ! ⏱️"
                 ],
                 payment: [
-                    "Nous acceptons Orange Money, MTN Mobile Money et les cartes bancaires. Tout est sécurisé !",
-                    "Le paiement est 100% sécurisé. Vous pouvez payer par Mobile Money ou carte bancaire.",
-                    "Pour toute question sur le paiement, notre service client est à votre disposition."
+                    "Nous acceptons Orange Money, MTN Mobile Money et les cartes bancaires. Tout est sécurisé ! 🔒",
+                    "Le paiement est 100% sécurisé. Vous pouvez payer par Mobile Money ou carte bancaire. 💳",
+                    "Pour toute question sur le paiement, notre service client est à votre disposition. 💰"
                 ],
                 default: [
-                    "Merci pour votre message ! Un conseiller Salam Market vous répondra très bientôt. En attendant, puis-je faire autre chose pour vous ?",
-                    "Je prends note de votre demande. Notre équipe vous contactera dans les plus brefs délais. Merci de votre patience ! 🙏",
-                    "Votre message a bien été transmis à notre équipe. Nous vous répondons dans la journée. Bonne journée sur Salam Market ! 🌟"
+                    "Merci pour votre message ! Un conseiller Salam Market vous répondra très bientôt. En attendant, puis-je faire autre chose pour vous ? 🙏",
+                    "Je prends note de votre demande. Notre équipe vous contactera dans les plus brefs délais. Merci de votre patience ! 🌟",
+                    "Votre message a bien été transmis à notre équipe. Nous vous répondons dans la journée. Bonne journée sur Salam Market ! ✨"
                 ]
             };
             
@@ -292,86 +369,57 @@
                 }
             }
             
-            // Envoi de notification WhatsApp (simulation - API réelle à configurer)
+            // ========== NOTIFICATIONS AUTOMATIQUES ==========
             function sendWhatsAppNotification(phoneNumber, message, recipientName) {
-                // Simulation d'envoi WhatsApp (dans la vraie vie, utiliser Twilio ou WhatsApp Business API)
                 console.log(`📱 [WHATSAPP] À ${phoneNumber} : ${message}`);
-                
-                // Stocker dans l'historique des notifications
                 const notifications = JSON.parse(localStorage.getItem('salam_notifications') || '[]');
                 notifications.push({
-                    id: Date.now(),
-                    type: 'whatsapp',
-                    to: phoneNumber,
-                    toName: recipientName,
-                    message: message,
-                    date: new Date().toISOString(),
-                    sent: true
+                    id: Date.now(), type: 'whatsapp', to: phoneNumber, toName: recipientName,
+                    message: message, date: new Date().toISOString(), sent: true
                 });
                 localStorage.setItem('salam_notifications', JSON.stringify(notifications));
                 return true;
             }
             
-            // Envoi de notification SMS (simulation)
             function sendSMSNotification(phoneNumber, message, recipientName) {
                 console.log(`💬 [SMS] À ${phoneNumber} : ${message}`);
                 const notifications = JSON.parse(localStorage.getItem('salam_notifications') || '[]');
                 notifications.push({
-                    id: Date.now(),
-                    type: 'sms',
-                    to: phoneNumber,
-                    toName: recipientName,
-                    message: message,
-                    date: new Date().toISOString(),
-                    sent: true
+                    id: Date.now(), type: 'sms', to: phoneNumber, toName: recipientName,
+                    message: message, date: new Date().toISOString(), sent: true
                 });
                 localStorage.setItem('salam_notifications', JSON.stringify(notifications));
                 return true;
             }
             
-            // Envoi de notification Email (simulation)
             function sendEmailNotification(email, message, recipientName) {
                 console.log(`📧 [EMAIL] À ${email} : ${message}`);
                 const notifications = JSON.parse(localStorage.getItem('salam_notifications') || '[]');
                 notifications.push({
-                    id: Date.now(),
-                    type: 'email',
-                    to: email,
-                    toName: recipientName,
-                    message: message,
-                    date: new Date().toISOString(),
-                    sent: true
+                    id: Date.now(), type: 'email', to: email, toName: recipientName,
+                    message: message, date: new Date().toISOString(), sent: true
                 });
                 localStorage.setItem('salam_notifications', JSON.stringify(notifications));
                 return true;
             }
             
-            // Notifier un fournisseur via tous les canaux
             function notifySupplier(supplier, customerName, message) {
                 const notificationText = `🛒 Nouveau message de ${customerName} (client Salam Market) :\n\n"${message.substring(0, 200)}"\n\nPour répondre, connectez-vous à votre espace fournisseur sur Salam Market PRO.`;
                 
-                // WhatsApp
                 sendWhatsAppNotification(REAL_PHONE_NUMBER, notificationText, supplier.name);
-                // SMS
                 sendSMSNotification(REAL_PHONE_NUMBER, notificationText.substring(0, 160), supplier.name);
-                // Email (si email disponible)
-                if (supplier.email) {
-                    sendEmailNotification(supplier.email, notificationText, supplier.name);
-                }
-                // Email de secours
+                if (supplier.email) sendEmailNotification(supplier.email, notificationText, supplier.name);
                 sendEmailNotification(REAL_EMAIL, notificationText, supplier.name);
             }
             
-            // Vérifier si un fournisseur est disponible (online)
+            // ========== GESTION STATUT EN LIGNE ==========
             function isSupplierOnline(supplierId) {
                 const onlineStatus = JSON.parse(localStorage.getItem('salam_online_status') || '{}');
                 const lastSeen = onlineStatus[supplierId];
                 if (!lastSeen) return false;
-                // Considéré en ligne si actif dans les 5 dernières minutes
                 return (Date.now() - lastSeen) < 5 * 60 * 1000;
             }
             
-            // Mettre à jour le statut en ligne
             function updateOnlineStatus() {
                 if (currentUserRole === 'supplier') {
                     const onlineStatus = JSON.parse(localStorage.getItem('salam_online_status') || '{}');
@@ -379,12 +427,11 @@
                     localStorage.setItem('salam_online_status', JSON.stringify(onlineStatus));
                 }
             }
-            
-            // Ping toutes les 30 secondes pour maintenir le statut
             setInterval(updateOnlineStatus, 30000);
             updateOnlineStatus();
             
-            const getAvailableContacts = () => {
+            // ========== CONTACTS ==========
+            function getAvailableContacts() {
                 const users = JSON.parse(localStorage.getItem('salam_users') || '[]');
                 const suppliers = JSON.parse(localStorage.getItem('salam_suppliers') || '[]');
                 const onlineStatus = JSON.parse(localStorage.getItem('salam_online_status') || '{}');
@@ -424,9 +471,10 @@
                     if (!seen.has(contact.id)) { seen.add(contact.id); uniqueContacts.push(contact); }
                 }
                 return uniqueContacts;
-            };
+            }
             
-            const loadConversations = () => {
+            // ========== CHARGEMENT CONVERSATIONS ==========
+            function loadConversations() {
                 const saved = localStorage.getItem('salam_messages');
                 const allMessages = saved ? JSON.parse(saved) : [];
                 const contacts = getAvailableContacts();
@@ -464,9 +512,9 @@
                     const conv = conversations.find(c => c.contact.id === currentChatId);
                     if (conv) { currentChatUser = conv.contact; renderChatHeader(); renderMessages(conv.messages); markMessagesAsRead(currentChatId); }
                 }
-            };
+            }
             
-            const renderContactsList = () => {
+            function renderContactsList() {
                 const container = document.getElementById('contactsList');
                 const searchTerm = document.getElementById('searchContact')?.value.toLowerCase() || '';
                 let filtered = [...conversations];
@@ -489,38 +537,45 @@
                     </div>`;
                 }).join('');
                 if (filtered.length === 0) container.innerHTML = '<div style="text-align:center;padding:var(--space-8);color:var(--text-muted);">Aucun contact trouvé</div>';
-            };
+            }
             
-            const renderChatHeader = () => {
+            function renderChatHeader() {
                 if (!currentChatUser) return;
                 const isOnline = currentChatUser.online === true;
                 const header = document.getElementById('chatHeader');
                 header.innerHTML = `<div class="chat-header-info"><div class="chat-header-avatar">${currentChatUser.avatar}</div><div><div class="chat-header-name">${escapeHtml(currentChatUser.name)}</div><div class="chat-header-status">${isOnline ? '🟢 En ligne' : '⚫ Hors ligne'} ${currentChatUser.role === 'supplier' && currentChatUser.category ? ` · ${currentChatUser.category}` : ''}</div></div></div>
                     <div class="chat-actions"><button class="chat-action-btn" onclick="viewContactInfo()" title="Informations"><i class="fa-solid fa-circle-info"></i></button><button class="chat-action-btn" onclick="clearChat()" title="Effacer la conversation"><i class="fa-solid fa-trash"></i></button></div>`;
-            };
+            }
             
-            const renderMessages = (messages) => {
+            function renderMessages(messages) {
                 const container = document.getElementById('messagesArea');
                 if (!container) return;
                 const sortedMessages = [...messages].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
                 container.innerHTML = sortedMessages.map(msg => {
                     const isSent = msg.from === currentUserId;
                     const isAI = msg.isAI === true;
-                    let messageClass = isSent ? 'sent' : (isAI ? 'message-ai' : 'received');
-                    if (!isSent && isAI) messageClass = 'message-ai';
-                    else if (!isSent) messageClass = 'received';
-                    else messageClass = 'sent';
+                    let messageClass = 'received';
+                    if (isSent) messageClass = 'sent';
+                    else if (isAI) messageClass = 'message-ai';
+                    else messageClass = 'received';
+                    
                     return `<div class="message ${messageClass}"><div><div class="message-bubble">${escapeHtml(msg.text)}${msg.isAI ? '<span class="ai-badge"><i class="fa-solid fa-robot"></i> IA</span>' : ''}</div><div class="message-time">${formatTime(msg.timestamp)}</div></div></div>`;
                 }).join('');
                 container.scrollTop = container.scrollHeight;
-            };
+            }
             
-            const sendMessage = async () => {
+            // ========== ENVOI DE MESSAGE AVEC IA ET NOTIFICATIONS ==========
+            function sendMessage() {
                 const input = document.getElementById('chatInput');
                 const text = input.value.trim();
                 if (!text || !currentChatId) return;
                 
-                const message = { id: Date.now().toString() + '_' + Math.random().toString(36).substr(2, 6), from: currentUserId, fromName: currentUserName, to: currentChatId, text: text, timestamp: new Date().toISOString(), read: false };
+                const message = {
+                    id: Date.now().toString() + '_' + Math.random().toString(36).substr(2, 6),
+                    from: currentUserId, fromName: currentUserName, to: currentChatId,
+                    text: text, timestamp: new Date().toISOString(), read: false
+                };
+                
                 const saved = localStorage.getItem('salam_messages');
                 const allMessages = saved ? JSON.parse(saved) : [];
                 allMessages.push(message);
@@ -530,62 +585,74 @@
                 showToast('Message envoyé', text.substring(0, 50), 'success');
                 stopTyping();
                 
-                // Gestion des réponses intelligentes
+                // Vérifier le destinataire
                 const receiver = getReceiverInfo(currentChatId);
                 const isSupplierOrAdmin = receiver && (receiver.role === 'supplier' || receiver.role === 'admin');
                 const isOnline = receiver ? receiver.online === true : false;
                 
                 if (isSupplierOrAdmin && !isOnline) {
-                    // Fournisseur hors ligne → réponse IA + notifications
-                    setTimeout(async () => {
+                    // Fournisseur hors ligne → réponse IA + notifications WhatsApp/SMS/Email
+                    setTimeout(() => {
                         const aiResponse = getAIResponse(text);
-                        const aiMessage = { id: Date.now().toString() + '_ai', from: currentChatId, fromName: receiver.name, to: currentUserId, text: aiResponse, timestamp: new Date().toISOString(), read: false, isAI: true };
+                        const aiMessage = {
+                            id: Date.now().toString() + '_ai',
+                            from: currentChatId, fromName: receiver.name, to: currentUserId,
+                            text: aiResponse, timestamp: new Date().toISOString(), read: false, isAI: true
+                        };
                         const msgs = JSON.parse(localStorage.getItem('salam_messages') || '[]');
                         msgs.push(aiMessage);
                         localStorage.setItem('salam_messages', JSON.stringify(msgs));
                         loadConversations();
                         showToast('Réponse automatique', 'Un assistant IA vous a répondu', 'info');
                         
-                        // Notifier le fournisseur par WhatsApp/SMS/Email
+                        // Notifier le fournisseur
                         if (receiver.phone || receiver.email) {
                             notifySupplier(receiver, currentUserName, text);
                             showToast('Notification envoyée', `Le fournisseur a été notifié sur WhatsApp/SMS/Email`, 'success');
                         }
                     }, 1000);
                 } else if (isSupplierOrAdmin && isOnline) {
-                    // Fournisseur en ligne → pas d'IA, message normal
                     showToast('Message envoyé', 'Le fournisseur est en ligne, il vous répondra bientôt', 'info');
                 } else if (receiver && receiver.role === 'support') {
-                    // Support → réponse IA si besoin
                     setTimeout(() => {
                         const aiResponse = "Merci pour votre message ! L'équipe Salam Market vous répond dans les minutes à venir. En attendant, je reste à votre disposition. 🙏";
-                        const aiMessage = { id: Date.now().toString() + '_ai_support', from: 'support', fromName: 'Service Client Salam', to: currentUserId, text: aiResponse, timestamp: new Date().toISOString(), read: false, isAI: true };
+                        const aiMessage = {
+                            id: Date.now().toString() + '_ai_support',
+                            from: 'support', fromName: 'Service Client Salam', to: currentUserId,
+                            text: aiResponse, timestamp: new Date().toISOString(), read: false, isAI: true
+                        };
                         const msgs = JSON.parse(localStorage.getItem('salam_messages') || '[]');
                         msgs.push(aiMessage);
                         localStorage.setItem('salam_messages', JSON.stringify(msgs));
                         loadConversations();
                     }, 1500);
                 }
-            };
+            }
             
-            const getReceiverInfo = (contactId) => {
+            function getReceiverInfo(contactId) {
                 const contacts = getAvailableContacts();
                 return contacts.find(c => c.id === contactId);
-            };
+            }
             
-            const markMessagesAsRead = (contactId) => {
+            function markMessagesAsRead(contactId) {
                 const saved = localStorage.getItem('salam_messages');
                 if (!saved) return;
                 let allMessages = JSON.parse(saved);
                 let updated = false;
                 allMessages = allMessages.map(msg => {
-                    if (msg.from === contactId && msg.to === currentUserId && !msg.read) { updated = true; return { ...msg, read: true }; }
+                    if (msg.from === contactId && msg.to === currentUserId && !msg.read) {
+                        updated = true;
+                        return { ...msg, read: true };
+                    }
                     return msg;
                 });
-                if (updated) { localStorage.setItem('salam_messages', JSON.stringify(allMessages)); loadConversations(); }
-            };
+                if (updated) {
+                    localStorage.setItem('salam_messages', JSON.stringify(allMessages));
+                    loadConversations();
+                }
+            }
             
-            const selectChat = (contactId) => {
+            function selectChat(contactId) {
                 currentChatId = contactId;
                 const conv = conversations.find(c => c.contact.id === contactId);
                 if (conv) currentChatUser = conv.contact;
@@ -596,46 +663,80 @@
                 markMessagesAsRead(contactId);
                 if (window.innerWidth <= 768) document.getElementById('chatSidebar').classList.remove('mobile-visible');
                 document.getElementById('chatInput').focus();
-            };
+            }
             
-            const handleKeyPress = (event) => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); } else if (event.key !== 'Enter') startTyping(); };
-            const startTyping = () => { if (typingTimeout) clearTimeout(typingTimeout); typingTimeout = setTimeout(() => stopTyping(), 1500); };
-            const stopTyping = () => { if (typingTimeout) clearTimeout(typingTimeout); };
+            // ========== UTILITAIRES ==========
+            function handleKeyPress(event) {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault();
+                    sendMessage();
+                } else if (event.key !== 'Enter') {
+                    startTyping();
+                }
+            }
             
-            const formatTime = (isoString) => {
+            function startTyping() {
+                if (typingTimeout) clearTimeout(typingTimeout);
+                typingTimeout = setTimeout(() => stopTyping(), 1500);
+            }
+            
+            function stopTyping() {
+                if (typingTimeout) clearTimeout(typingTimeout);
+            }
+            
+            function formatTime(isoString) {
                 const date = new Date(isoString), now = new Date(), diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
                 if (diffDays === 0) return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
                 else if (diffDays === 1) return 'Hier';
                 else if (diffDays < 7) return date.toLocaleDateString('fr-FR', { weekday: 'short' });
                 else return date.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
-            };
+            }
             
-            const getRoleLabel = (role) => { const roles = { admin: 'Admin', supplier: 'Fournisseur', client: 'Client', support: 'Support' }; return roles[role] || role; };
+            function getRoleLabel(role) {
+                const roles = { admin: 'Admin', supplier: 'Fournisseur', client: 'Client', support: 'Support' };
+                return roles[role] || role;
+            }
             
-            const updateUnreadBadge = () => {
+            function updateUnreadBadge() {
                 const totalUnread = conversations.reduce((sum, c) => sum + c.unreadCount, 0);
                 const badge = document.getElementById('mobileUnreadBadge');
-                if (totalUnread > 0) { if (badge) { badge.textContent = totalUnread > 9 ? '9+' : totalUnread; badge.style.display = ''; } }
-                else { if (badge) badge.style.display = 'none'; }
-            };
-            
-            const filterContacts = () => renderContactsList();
-            const attachFile = () => showToast('Fichier', 'Fonctionnalité disponible prochainement', 'info');
-            
-            const openEmojiPicker = () => {
-                const picker = document.getElementById('emojiPicker');
-                const emojis = ['😀', '😊', '😂', '🥰', '😍', '👍', '🙏', '❤️', '🎉', '🔥', '⭐', '✅', '👋', '🤝', '🍕', '🛒', '🚚', '📦'];
-                if (picker.style.display === 'grid') picker.style.display = 'none';
-                else {
-                    picker.innerHTML = emojis.map(emoji => `<button style="background:none;border:none;font-size:1.5rem;cursor:pointer;padding:var(--space-1);" onclick="insertEmoji('${emoji}')">${emoji}</button>`).join('');
-                    picker.style.display = 'grid';
-                    setTimeout(() => { document.addEventListener('click', function closePicker(e) { if (!picker.contains(e.target) && !e.target.closest('.input-btn')) { picker.style.display = 'none'; document.removeEventListener('click', closePicker); } }); }, 100);
+                if (totalUnread > 0) {
+                    if (badge) { badge.textContent = totalUnread > 9 ? '9+' : totalUnread; badge.style.display = ''; }
+                } else {
+                    if (badge) badge.style.display = 'none';
                 }
-            };
+            }
             
-            const insertEmoji = (emoji) => { const input = document.getElementById('chatInput'); input.value += emoji; input.focus(); document.getElementById('emojiPicker').style.display = 'none'; };
+            function filterContacts() { renderContactsList(); }
+            function attachFile() { showToast('Fichier', 'Fonctionnalité disponible prochainement', 'info'); }
             
-            const clearChat = () => {
+            function openEmojiPicker() {
+                const picker = document.getElementById('emojiPicker');
+                const emojis = ['😀', '😊', '😂', '🥰', '😍', '👍', '🙏', '❤️', '🎉', '🔥', '⭐', '✅', '👋', '🤝', '🍕', '🛒', '🚚', '📦', '💰', '🌟', '💎', '🎁'];
+                if (picker.style.display === 'grid') {
+                    picker.style.display = 'none';
+                } else {
+                    picker.innerHTML = emojis.map(emoji => `<button onclick="insertEmoji('${emoji}')">${emoji}</button>`).join('');
+                    picker.style.display = 'grid';
+                    setTimeout(() => {
+                        document.addEventListener('click', function closePicker(e) {
+                            if (!picker.contains(e.target) && !e.target.closest('.input-btn')) {
+                                picker.style.display = 'none';
+                                document.removeEventListener('click', closePicker);
+                            }
+                        });
+                    }, 100);
+                }
+            }
+            
+            function insertEmoji(emoji) {
+                const input = document.getElementById('chatInput');
+                input.value += emoji;
+                input.focus();
+                document.getElementById('emojiPicker').style.display = 'none';
+            }
+            
+            function clearChat() {
                 if (!confirm('Voulez-vous vraiment effacer toute cette conversation ?')) return;
                 const saved = localStorage.getItem('salam_messages');
                 if (!saved) return;
@@ -645,27 +746,48 @@
                 loadConversations();
                 selectChat(currentChatId);
                 showToast('Conversation effacée', '', 'success');
-            };
+            }
             
-            const viewContactInfo = () => { if (currentChatUser) showToast('Contact', `${currentChatUser.name} - ${getRoleLabel(currentChatUser.role)}`, 'info'); };
-            const toggleMobileChatSidebar = () => document.getElementById('chatSidebar').classList.toggle('mobile-visible');
+            function viewContactInfo() {
+                if (currentChatUser) showToast('Contact', `${currentChatUser.name} - ${getRoleLabel(currentChatUser.role)}`, 'info');
+            }
             
-            const startAutoRefresh = () => { if (messageInterval) clearInterval(messageInterval); messageInterval = setInterval(() => loadConversations(), 5000); };
-            const stopAutoRefresh = () => { if (messageInterval) clearInterval(messageInterval); };
+            function toggleMobileChatSidebar() {
+                document.getElementById('chatSidebar').classList.toggle('mobile-visible');
+            }
             
-            const init = () => {
+            function startAutoRefresh() {
+                if (messageInterval) clearInterval(messageInterval);
+                messageInterval = setInterval(() => loadConversations(), 5000);
+            }
+            
+            function stopAutoRefresh() {
+                if (messageInterval) clearInterval(messageInterval);
+            }
+            
+            // ========== INITIALISATION ==========
+            function init() {
                 const saved = localStorage.getItem('salam_messages');
                 if (!saved) {
-                    const welcomeMessages = [{ id: 'welcome_1', from: 'support', fromName: 'Service Client Salam', to: currentUserId, text: '👋 Bonjour ! Bienvenue sur Salam Market PRO. Je suis votre assistant IA. Comment puis-je vous aider aujourd\'hui ?', timestamp: new Date().toISOString(), read: false, isAI: true }];
+                    const welcomeMessages = [{
+                        id: 'welcome_1', from: 'support', fromName: 'Service Client Salam', to: currentUserId,
+                        text: '👋 Bonjour ! Bienvenue sur Salam Market PRO. Je suis votre assistant IA. Comment puis-je vous aider aujourd\'hui ?',
+                        timestamp: new Date().toISOString(), read: false, isAI: true
+                    }];
                     localStorage.setItem('salam_messages', JSON.stringify(welcomeMessages));
                 }
                 loadConversations();
                 startAutoRefresh();
                 const textarea = document.getElementById('chatInput');
-                if (textarea) textarea.addEventListener('input', function() { this.style.height = 'auto'; this.style.height = Math.min(this.scrollHeight, 100) + 'px'; });
-            };
+                if (textarea) {
+                    textarea.addEventListener('input', function() {
+                        this.style.height = 'auto';
+                        this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+                    });
+                }
+            }
             
-            const showToast = (title, message, type = 'success', duration = 3000) => {
+            function showToast(title, message, type = 'success', duration = 3000) {
                 const container = document.getElementById('toastContainer');
                 if (!container) return;
                 const icons = { success: 'fa-circle-check', error: 'fa-circle-exclamation', info: 'fa-circle-info' };
@@ -673,17 +795,46 @@
                 toast.innerHTML = `<i class="fa-solid ${icons[type] || icons.success} toast-icon"></i><div class="toast-content"><div class="toast-title">${escapeHtml(title)}</div><div class="toast-message">${escapeHtml(message)}</div></div><button class="toast-close" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></button>`;
                 container.appendChild(toast); setTimeout(() => toast.classList.add('show'), 10);
                 setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 500); }, duration);
-            };
+            }
             
-            const escapeHtml = (str) => { if (!str) return ''; const div = document.createElement('div'); div.textContent = str; return div.innerHTML; };
-            const openSidebar = () => { document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('show'); };
-            const closeSidebar = () => { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); };
-            const logout = () => { stopAutoRefresh(); localStorage.removeItem('salam_session'); localStorage.removeItem('salam_cart'); window.location.href = '../index.html'; };
+            function escapeHtml(str) {
+                if (!str) return '';
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
             
-            window.selectChat = selectChat; window.sendMessage = sendMessage; window.handleKeyPress = handleKeyPress; window.attachFile = attachFile;
-            window.openEmojiPicker = openEmojiPicker; window.insertEmoji = insertEmoji; window.clearChat = clearChat; window.viewContactInfo = viewContactInfo;
-            window.filterContacts = filterContacts; window.toggleMobileChatSidebar = toggleMobileChatSidebar; window.openSidebar = openSidebar;
-            window.closeSidebar = closeSidebar; window.logout = logout;
+            function openSidebar() {
+                document.getElementById('sidebar').classList.add('open');
+                document.getElementById('overlay').classList.add('show');
+            }
+            
+            function closeSidebar() {
+                document.getElementById('sidebar').classList.remove('open');
+                document.getElementById('overlay').classList.remove('show');
+            }
+            
+            function logout() {
+                stopAutoRefresh();
+                localStorage.removeItem('salam_session');
+                localStorage.removeItem('salam_cart');
+                window.location.href = '../index.html';
+            }
+            
+            // Expose globals
+            window.selectChat = selectChat;
+            window.sendMessage = sendMessage;
+            window.handleKeyPress = handleKeyPress;
+            window.attachFile = attachFile;
+            window.openEmojiPicker = openEmojiPicker;
+            window.insertEmoji = insertEmoji;
+            window.clearChat = clearChat;
+            window.viewContactInfo = viewContactInfo;
+            window.filterContacts = filterContacts;
+            window.toggleMobileChatSidebar = toggleMobileChatSidebar;
+            window.openSidebar = openSidebar;
+            window.closeSidebar = closeSidebar;
+            window.logout = logout;
             
             init();
         })();
