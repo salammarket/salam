@@ -16,6 +16,7 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     
     <style>
@@ -49,6 +50,7 @@
             
             --font-display: 'Space Grotesk', system-ui, sans-serif;
             --font-body: 'Inter', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
             
             --radius-sm: 10px;
             --radius-md: 14px;
@@ -62,6 +64,7 @@
             --space-4: 16px;
             --space-5: 20px;
             --space-6: 24px;
+            --space-8: 32px;
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -237,7 +240,6 @@
             border-radius: var(--radius-lg);
             padding: var(--space-5);
             cursor: pointer;
-            transition: all 0.2s;
         }
         
         .stat-card:hover { transform: translateY(-2px); border-color: var(--border-accent); }
@@ -473,31 +475,13 @@
         .toast.success { border-left: 3px solid var(--emerald-500); }
         .toast.error { border-left: 3px solid var(--rose-500); }
         
-        .toast-close {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            margin-left: auto;
-        }
-        
-        /* Messages styles */
-        .messaging-container {
-            display: flex;
-            height: 500px;
-        }
-        
-        .conversations-list {
-            width: 300px;
-            border-right: 1px solid var(--border-subtle);
-            overflow-y: auto;
-        }
-        
         .messages-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-4);
             display: flex;
             flex-direction: column;
             gap: var(--space-3);
-            padding: var(--space-4);
         }
         
         .message-item {
@@ -508,7 +492,6 @@
             background: var(--surface-hover);
             border-radius: var(--radius-md);
             cursor: pointer;
-            transition: all 0.2s;
         }
         
         .message-item:hover { background: rgba(16, 185, 129, 0.1); }
@@ -531,7 +514,6 @@
         .message-date { font-size: 0.7rem; color: var(--text-faint); }
         
         .conversation-view {
-            flex: 1;
             display: flex;
             flex-direction: column;
             height: 500px;
@@ -560,14 +542,14 @@
             border-radius: var(--radius-md);
         }
         
-        .conv-message.sent {
+        .conv-message.admin {
             background: linear-gradient(135deg, var(--emerald-600), var(--emerald-500));
             color: white;
             align-self: flex-end;
             border-bottom-right-radius: 4px;
         }
         
-        .conv-message.received {
+        .conv-message.user {
             background: var(--surface-card);
             border: 1px solid var(--border-default);
             align-self: flex-start;
@@ -575,7 +557,7 @@
         }
         
         .conv-message-time { font-size: 0.65rem; color: var(--text-faint); margin-top: var(--space-1); }
-        .conv-message.sent .conv-message-time { color: rgba(255, 255, 255, 0.7); }
+        .conv-message.admin .conv-message-time { color: rgba(255, 255, 255, 0.7); }
         
         .conversation-input {
             padding: var(--space-4);
@@ -605,7 +587,6 @@
             .main-content { margin-left: 0; padding-top: 76px; }
             .stats-grid { grid-template-columns: 1fr; }
             .data-table { min-width: 600px; }
-            .conversations-list { width: 100%; }
             .conv-message { max-width: 85%; }
         }
     </style>
@@ -638,7 +619,6 @@
     
     <main class="main-content">
         <div class="admin-container">
-            <!-- Dashboard -->
             <div class="section" id="section-dashboard">
                 <div class="page-header">
                     <h1><i class="fa-solid fa-gauge-high"></i> Tableau de Bord</h1>
@@ -670,7 +650,6 @@
                 </div>
             </div>
             
-            <!-- Commandes -->
             <div class="section" id="section-orders">
                 <div class="page-header">
                     <h1><i class="fa-solid fa-box"></i> Gestion des commandes</h1>
@@ -689,7 +668,6 @@
                 <div class="chart-card"><div class="table-wrapper"><table class="data-table" id="ordersTable"><thead><tr><th>ID</th><th>Client</th><th>Articles</th><th>Total</th><th>Paiement</th><th>Statut</th><th>Date</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
             </div>
             
-            <!-- Utilisateurs -->
             <div class="section" id="section-users">
                 <div class="page-header">
                     <h1><i class="fa-solid fa-users"></i> Gestion des utilisateurs</h1>
@@ -701,7 +679,6 @@
                 <div class="chart-card"><div class="table-wrapper"><table class="data-table" id="usersTable"><thead><tr><th>Utilisateur</th><th>Contact</th><th>Rôle</th><th>Commandes</th><th>Dépensé</th><th>Statut</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
             </div>
             
-            <!-- Produits -->
             <div class="section" id="section-products">
                 <div class="page-header">
                     <h1><i class="fa-solid fa-basket-shopping"></i> Gestion des produits</h1>
@@ -713,7 +690,6 @@
                 <div class="chart-card"><div class="table-wrapper"><table class="data-table" id="productsTable"><thead><tr><th>Produit</th><th>Catégorie</th><th>Prix</th><th>Stock</th><th>Fournisseur</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
             </div>
             
-            <!-- Fournisseurs -->
             <div class="section" id="section-suppliers">
                 <div class="page-header">
                     <h1><i class="fa-solid fa-shop"></i> Gestion des fournisseurs</h1>
@@ -724,7 +700,6 @@
                 <div class="chart-card"><div class="table-wrapper"><table class="data-table" id="suppliersTable"><thead><tr><th>Nom</th><th>Catégorie</th><th>Téléphone</th><th>Produits</th><th>Statut</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
             </div>
             
-            <!-- Promotions -->
             <div class="section" id="section-promos">
                 <div class="page-header">
                     <h1><i class="fa-solid fa-tags"></i> Codes promotionnels</h1>
@@ -732,10 +707,9 @@
                         <button class="btn-primary btn" onclick="openPromoModal()"><i class="fa-solid fa-plus"></i> Nouveau code</button>
                     </div>
                 </div>
-                <div class="chart-card"><div class="table-wrapper"><table class="data-table" id="promosTable"><thead><tr><th>Code</th><th>Réduction</th><th>Min. achat</th><th>Utilisations</th><th>Actions</th></tr></thead><tbody></tbody></td></div></div>
+                <div class="chart-card"><div class="table-wrapper"><table class="data-table" id="promosTable"><thead><tr><th>Code</th><th>Réduction</th><th>Min. achat</th><th>Utilisations</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
             </div>
             
-            <!-- Messagerie -->
             <div class="section" id="section-messages">
                 <div class="page-header">
                     <h1><i class="fa-solid fa-envelope"></i> Messagerie</h1>
@@ -744,21 +718,22 @@
                     </div>
                 </div>
                 <div class="chart-card">
-                    <div class="messaging-container">
-                        <div class="conversations-list">
+                    <div style="display: flex; min-height: 500px;">
+                        <div style="width: 300px; border-right: 1px solid var(--border-subtle); overflow-y: auto;">
                             <div class="messages-list" id="messagesList"></div>
                         </div>
-                        <div class="conversation-view" id="activeConversation">
-                            <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
-                                <i class="fa-solid fa-message" style="font-size: 3rem; margin-bottom: 16px; opacity: 0.5;"></i>
-                                <p>Sélectionnez une conversation</p>
+                        <div style="flex: 1; display: flex; flex-direction: column;">
+                            <div class="conversation-view" id="activeConversation">
+                                <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
+                                    <i class="fa-solid fa-message" style="font-size: 3rem; margin-bottom: 16px; opacity: 0.5;"></i>
+                                    <p>Sélectionnez une conversation pour commencer</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Paramètres -->
             <div class="section" id="section-settings">
                 <div class="page-header">
                     <h1><i class="fa-solid fa-gear"></i> Paramètres généraux</h1>
@@ -788,7 +763,7 @@
         </div>
     </main>
     
-    <!-- Modals -->
+    <!-- MODALS -->
     <div class="modal-overlay" id="userModal"><div class="modal"><div class="modal-header"><h3 id="userModalTitle">Ajouter un utilisateur</h3><button class="modal-close" onclick="closeUserModal()">&times;</button></div><div class="modal-body"><form id="userForm"><input type="hidden" id="userId"><div class="form-group"><label class="form-label">Nom complet</label><input type="text" class="form-input" id="userName" required></div><div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="userEmail"></div><div class="form-group"><label class="form-label">Téléphone</label><input type="tel" class="form-input" id="userPhone"></div><div class="form-group"><label class="form-label">Rôle</label><select class="form-select" id="userRole"><option value="client">Client</option><option value="supplier">Fournisseur</option><option value="admin">Administrateur</option></select></div><div class="form-group" id="passwordGroup"><label class="form-label">Mot de passe</label><input type="password" class="form-input" id="userPassword" placeholder="Laisser vide"></div></form></div><div class="modal-footer"><button class="btn-outline btn" onclick="closeUserModal()">Annuler</button><button class="btn-primary btn" onclick="saveUser()">Enregistrer</button></div></div></div>
     
     <div class="modal-overlay" id="productModal"><div class="modal"><div class="modal-header"><h3 id="productModalTitle">Ajouter un produit</h3><button class="modal-close" onclick="closeProductModal()">&times;</button></div><div class="modal-body"><form id="productForm"><input type="hidden" id="productId"><div class="form-group"><label class="form-label">Nom</label><input type="text" class="form-input" id="productName" required></div><div class="form-group"><label class="form-label">Catégorie</label><input type="text" class="form-input" id="productCategory" required></div><div class="form-group"><label class="form-label">Prix (FCFA)</label><input type="number" class="form-input" id="productPrice" required></div><div class="form-group"><label class="form-label">Stock</label><input type="number" class="form-input" id="productStock" required></div><div class="form-group"><label class="form-label">Fournisseur</label><input type="text" class="form-input" id="productSupplier" required></div><div class="form-group"><label class="form-label">Emoji</label><input type="text" class="form-input" id="productImage" value="📦"></div></form></div><div class="modal-footer"><button class="btn-outline btn" onclick="closeProductModal()">Annuler</button><button class="btn-primary btn" onclick="saveProduct()">Enregistrer</button></div></div></div>
@@ -809,13 +784,12 @@
             
             const currentUser = session.user;
             const isAdmin = currentUser.role === 'admin';
-            const isSupplier = currentUser.role === 'supplier';
             
-            if (!isAdmin && !isSupplier) { window.location.href = '../index.html'; return; }
+            if (!isAdmin && currentUser.role !== 'supplier') { window.location.href = '../index.html'; return; }
             
             // ==================== VARIABLES ====================
             let salesChart = null, categoryChart = null;
-            let currentConversationId = null, currentRecipientId = null, currentRecipientName = null, currentRecipientRole = null;
+            let currentConversationId = null, currentRecipientId = null, currentRecipientName = null;
             let messagePollingInterval = null;
             
             // ==================== STORAGE ====================
@@ -834,7 +808,6 @@
                     users = [
                         { id: 'admin1', name: 'Administrateur', email: 'admin@salam.com', phone: '+237 600000001', role: 'admin', status: 'active', createdAt: new Date().toISOString(), totalOrders: 0, totalSpent: 0 },
                         { id: 'supplier1', name: 'Mega Distribution', email: 'contact@megadist.com', phone: '+237 633445566', role: 'supplier', status: 'active', createdAt: new Date().toISOString(), totalOrders: 0, totalSpent: 0 },
-                        { id: 'supplier2', name: 'Tech Import', email: 'tech@import.com', phone: '+237 677889900', role: 'supplier', status: 'active', createdAt: new Date().toISOString(), totalOrders: 0, totalSpent: 0 },
                         { id: 'client1', name: 'Jean Dupont', email: 'jean@email.com', phone: '+237 612345678', role: 'client', status: 'active', createdAt: new Date().toISOString(), totalOrders: 3, totalSpent: 25500 },
                         { id: 'client2', name: 'Marie Ndiaye', email: 'marie@email.com', phone: '+237 687654321', role: 'client', status: 'active', createdAt: new Date().toISOString(), totalOrders: 1, totalSpent: 8900 }
                     ];
@@ -850,8 +823,7 @@
                 if (products.length === 0) {
                     products = [
                         { id: 1, name: 'Riz Parfumé 5kg', category: 'Alimentation', price: 3500, stock: 50, supplier: 'Mega Distribution', supplierId: 'supplier1', image: '🍚', available: true, createdAt: new Date().toISOString() },
-                        { id: 2, name: 'Huile d\'olive 1L', category: 'Alimentation', price: 2500, stock: 30, supplier: 'Mega Distribution', supplierId: 'supplier1', image: '🫒', available: true, createdAt: new Date().toISOString() },
-                        { id: 3, name: 'Smartphone Samsung', category: 'Électronique', price: 125000, stock: 10, supplier: 'Tech Import', supplierId: 'supplier2', image: '📱', available: true, createdAt: new Date().toISOString() }
+                        { id: 2, name: 'Huile d\'olive 1L', category: 'Alimentation', price: 2500, stock: 30, supplier: 'Mega Distribution', supplierId: 'supplier1', image: '🫒', available: true, createdAt: new Date().toISOString() }
                     ];
                     Storage.set('products', products);
                 }
@@ -860,7 +832,7 @@
                 if (orders.length === 0) {
                     orders = [
                         { id: 'CMD001', customerName: 'Jean Dupont', customerId: 'client1', items: [{ name: 'Riz', price: 3500, quantity: 2 }], total: 7000, status: 'livrée', paymentStatus: 'paid', createdAt: new Date(Date.now() - 5 * 86400000).toISOString() },
-                        { id: 'CMD002', customerName: 'Marie Ndiaye', customerId: 'client2', items: [{ name: 'Smartphone Samsung', price: 125000, quantity: 1 }], total: 125000, status: 'confirmée', paymentStatus: 'pending', createdAt: new Date(Date.now() - 2 * 86400000).toISOString() }
+                        { id: 'CMD002', customerName: 'Marie Ndiaye', customerId: 'client2', items: [{ name: 'Huile', price: 2500, quantity: 1 }], total: 2500, status: 'livrée', paymentStatus: 'paid', createdAt: new Date(Date.now() - 3 * 86400000).toISOString() }
                     ];
                     Storage.set('orders', orders);
                 }
@@ -868,9 +840,8 @@
                 let messages = Storage.get('messages', []);
                 if (messages.length === 0) {
                     messages = [
-                        { id: 'msg_1', conversationId: 'conv_client1_admin1', userId: 'client1', userName: 'Jean Dupont', userRole: 'client', message: 'Bonjour, ma commande #CMD001 est-elle expédiée ?', timestamp: new Date(Date.now() - 86400000).toISOString(), read: false, isFromAdmin: false, targetUserId: 'admin1', targetUserName: 'Administrateur' },
-                        { id: 'msg_2', conversationId: 'conv_client1_admin1', userId: 'admin1', userName: 'Administrateur', userRole: 'admin', message: 'Oui, votre commande est en cours de livraison.', timestamp: new Date(Date.now() - 72000000).toISOString(), read: true, isFromAdmin: true, targetUserId: 'client1', targetUserName: 'Jean Dupont' },
-                        { id: 'msg_3', conversationId: 'conv_supplier1_admin1', userId: 'supplier1', userName: 'Mega Distribution', userRole: 'supplier', message: 'Bonjour, j\'aimerais ajouter de nouveaux produits.', timestamp: new Date(Date.now() - 172800000).toISOString(), read: false, isFromAdmin: false, targetUserId: 'admin1', targetUserName: 'Administrateur' }
+                        { id: 'msg_1', conversationId: 'conv_admin_client1', userId: 'client1', userName: 'Jean Dupont', userRole: 'client', message: 'Bonjour, ma commande #CMD001 est-elle expédiée ?', timestamp: new Date(Date.now() - 86400000).toISOString(), read: false, isFromAdmin: false, targetUserId: 'admin1' },
+                        { id: 'msg_2', conversationId: 'conv_admin_client1', userId: 'admin1', userName: 'Administrateur', userRole: 'admin', message: 'Oui, votre commande est en cours de livraison.', timestamp: new Date(Date.now() - 72000000).toISOString(), read: true, isFromAdmin: true, targetUserId: 'client1' }
                     ];
                     Storage.set('messages', messages);
                 }
@@ -880,29 +851,24 @@
             // ==================== MENU DYNAMIQUE ====================
             function generateSidebarMenu() {
                 const sidebarNav = document.getElementById('sidebarNav');
-                document.getElementById('brandTitle').textContent = isAdmin ? 'Salam Admin' : (isSupplier ? 'Espace Fournisseur' : 'Mon Espace');
+                document.getElementById('brandTitle').textContent = isAdmin ? 'Salam Admin' : 'Espace Fournisseur';
                 document.getElementById('brandRole').textContent = isAdmin ? 'Super Admin' : currentUser.name;
                 
-                let menuItems = [];
-                if (isAdmin) {
-                    menuItems = [
-                        { section: 'dashboard', icon: 'fa-gauge-high', label: 'Tableau de Bord', badge: null },
-                        { section: 'orders', icon: 'fa-box', label: 'Commandes', badge: 'pendingOrdersBadge' },
-                        { section: 'users', icon: 'fa-users', label: 'Utilisateurs', badge: null },
-                        { section: 'products', icon: 'fa-basket-shopping', label: 'Produits', badge: null },
-                        { section: 'suppliers', icon: 'fa-shop', label: 'Fournisseurs', badge: null },
-                        { section: 'promos', icon: 'fa-tags', label: 'Promotions', badge: null },
-                        { section: 'messages', icon: 'fa-envelope', label: 'Messagerie', badge: 'unreadMessagesBadge' },
-                        { section: 'settings', icon: 'fa-gear', label: 'Paramètres', badge: null }
-                    ];
-                } else if (isSupplier) {
-                    menuItems = [
-                        { section: 'dashboard', icon: 'fa-gauge-high', label: 'Tableau de Bord', badge: null },
-                        { section: 'products', icon: 'fa-basket-shopping', label: 'Mes Produits', badge: null },
-                        { section: 'messages', icon: 'fa-envelope', label: 'Messagerie', badge: 'unreadMessagesBadge' },
-                        { section: 'settings', icon: 'fa-gear', label: 'Paramètres', badge: null }
-                    ];
-                }
+                let menuItems = isAdmin ? [
+                    { section: 'dashboard', icon: 'fa-gauge-high', label: 'Tableau de Bord', badge: null },
+                    { section: 'orders', icon: 'fa-box', label: 'Commandes', badge: 'pendingOrdersBadge' },
+                    { section: 'users', icon: 'fa-users', label: 'Utilisateurs', badge: null },
+                    { section: 'products', icon: 'fa-basket-shopping', label: 'Produits', badge: null },
+                    { section: 'suppliers', icon: 'fa-shop', label: 'Fournisseurs', badge: null },
+                    { section: 'promos', icon: 'fa-tags', label: 'Promotions', badge: null },
+                    { section: 'messages', icon: 'fa-envelope', label: 'Messagerie', badge: 'unreadMessagesBadge' },
+                    { section: 'settings', icon: 'fa-gear', label: 'Paramètres', badge: null }
+                ] : [
+                    { section: 'dashboard', icon: 'fa-gauge-high', label: 'Tableau de Bord', badge: null },
+                    { section: 'products', icon: 'fa-basket-shopping', label: 'Mes Produits', badge: null },
+                    { section: 'messages', icon: 'fa-envelope', label: 'Messagerie', badge: 'unreadMessagesBadge' },
+                    { section: 'settings', icon: 'fa-gear', label: 'Paramètres', badge: null }
+                ];
                 
                 sidebarNav.innerHTML = menuItems.map(item => `
                     <button class="nav-item" data-section="${item.section}">
@@ -942,39 +908,19 @@
                 closeSidebar();
             }
             
-            // ==================== MESSAGERIE - CŒUR DU SYSTÈME ====================
+            // ==================== MESSAGERIE INSTANTANEE ====================
             function startMessagePolling() {
                 if (messagePollingInterval) clearInterval(messagePollingInterval);
                 messagePollingInterval = setInterval(() => {
                     if (document.getElementById('section-messages').classList.contains('active')) {
                         const wasOpen = currentConversationId !== null;
-                        const oldRecipientId = currentRecipientId;
-                        const oldRecipientName = currentRecipientName;
-                        loadMessages(false); // ne pas recharger l'ouverture automatiquement
-                        if (wasOpen && oldRecipientId) {
-                            // Chercher la conversation mise à jour
-                            const messages = Storage.get('messages', []);
-                            const conv = findConversationWithUser(oldRecipientId);
-                            if (conv) {
-                                currentConversationId = conv.id;
-                                openConversation(currentConversationId, oldRecipientId, oldRecipientName);
-                            }
+                        loadMessages();
+                        if (wasOpen && currentConversationId && currentRecipientId) {
+                            reopenCurrentConversation();
                         }
                         updateUnreadBadge();
                     }
                 }, 2000);
-            }
-            
-            function findConversationWithUser(userId) {
-                const messages = Storage.get('messages', []);
-                const convMessages = messages.filter(m => 
-                    (m.userId === currentUser.id && m.targetUserId === userId) ||
-                    (m.userId === userId && m.targetUserId === currentUser.id)
-                );
-                if (convMessages.length > 0) {
-                    return { id: convMessages[0].conversationId };
-                }
-                return null;
             }
             
             function stopMessagePolling() {
@@ -984,19 +930,23 @@
                 }
             }
             
-            function loadMessages(silent = false) {
+            function reopenCurrentConversation() {
+                if (currentConversationId && currentRecipientId) {
+                    openConversation(currentConversationId, currentRecipientId, currentRecipientName);
+                }
+            }
+            
+            function loadMessages() {
                 const messages = Storage.get('messages', []);
                 const users = Storage.get('users', []);
                 
-                // Filtrer les messages concernant l'utilisateur courant
-                const userMessages = messages.filter(m => 
-                    m.userId === currentUser.id || m.targetUserId === currentUser.id
-                );
+                let filteredMessages = messages;
+                if (!isAdmin) {
+                    filteredMessages = messages.filter(m => m.userId === currentUser.id || m.targetUserId === currentUser.id);
+                }
                 
-                // Grouper par conversation
                 const conversationsMap = new Map();
-                
-                userMessages.forEach(msg => {
+                filteredMessages.forEach(msg => {
                     const otherId = msg.userId === currentUser.id ? msg.targetUserId : msg.userId;
                     const otherUser = users.find(u => u.id === otherId);
                     const convId = msg.conversationId;
@@ -1014,29 +964,25 @@
                     }
                 });
                 
-                // Calculer les messages non lus et dernière mise à jour
                 conversationsMap.forEach(conv => {
-                    const convMessages = userMessages.filter(m => m.conversationId === conv.id);
+                    const convMessages = filteredMessages.filter(m => m.conversationId === conv.id);
                     const lastMsg = convMessages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))[0];
                     if (lastMsg) {
                         conv.lastMessage = lastMsg.message;
                         conv.lastTimestamp = lastMsg.timestamp;
                     }
-                    conv.unreadCount = convMessages.filter(m => 
-                        !m.read && m.targetUserId === currentUser.id && m.userId !== currentUser.id
-                    ).length;
+                    conv.unreadCount = convMessages.filter(m => !m.read && m.targetUserId === currentUser.id && !m.isFromAdmin && m.userId !== currentUser.id).length;
                 });
                 
-                const conversations = Array.from(conversationsMap.values())
-                    .sort((a, b) => new Date(b.lastTimestamp) - new Date(a.lastTimestamp));
+                const conversations = Array.from(conversationsMap.values()).sort((a, b) => new Date(b.lastTimestamp) - new Date(a.lastTimestamp));
                 
                 const container = document.getElementById('messagesList');
-                if (container && !silent) {
+                if (container) {
                     if (conversations.length === 0) {
                         container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);"><i class="fa-solid fa-inbox" style="font-size:2rem;margin-bottom:12px;"></i><p>Aucune conversation</p></div>';
                     } else {
                         container.innerHTML = conversations.map(conv => `
-                            <div class="message-item ${conv.unreadCount > 0 ? 'unread' : ''}" onclick="openConversation('${conv.id}', '${conv.userId || ''}', '${escapeHtml(conv.userName)}', '${conv.userRole || ''}')">
+                            <div class="message-item ${conv.unreadCount > 0 ? 'unread' : ''}" onclick="openConversation('${conv.id}', '${conv.userId || ''}', '${escapeHtml(conv.userName)}')">
                                 <div class="message-avatar">${conv.userName ? conv.userName.charAt(0).toUpperCase() : 'U'}</div>
                                 <div class="message-content">
                                     <div class="message-sender">${escapeHtml(conv.userName || 'Utilisateur')}</div>
@@ -1050,18 +996,14 @@
                         `).join('');
                     }
                 }
-                
                 updateUnreadBadge();
-                return conversations;
             }
             
-            function openConversation(conversationId, recipientId, recipientName, recipientRole) {
+            function openConversation(conversationId, recipientId, recipientName) {
                 currentConversationId = conversationId;
                 currentRecipientId = recipientId;
                 currentRecipientName = recipientName;
-                currentRecipientRole = recipientRole;
                 
-                // Marquer les messages comme lus
                 let messages = Storage.get('messages', []);
                 let updated = false;
                 messages = messages.map(msg => {
@@ -1073,24 +1015,18 @@
                 });
                 if (updated) Storage.set('messages', messages);
                 
-                // Récupérer tous les messages de la conversation
-                const convMessages = messages
-                    .filter(m => m.conversationId === conversationId)
-                    .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                const convMessages = messages.filter(m => m.conversationId === conversationId).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
                 
                 const container = document.getElementById('activeConversation');
                 container.innerHTML = `
                     <div class="conversation-header">
                         <div class="message-avatar" style="width:36px;height:36px;font-size:0.9rem;">${recipientName ? recipientName.charAt(0).toUpperCase() : 'U'}</div>
-                        <div>
-                            <strong>${escapeHtml(recipientName || 'Utilisateur')}</strong>
-                            ${recipientRole ? `<span class="badge ${recipientRole === 'admin' ? 'badge-danger' : (recipientRole === 'supplier' ? 'badge-warning' : 'badge-info')}" style="margin-left: 8px;">${recipientRole === 'admin' ? 'Admin' : (recipientRole === 'supplier' ? 'Fournisseur' : 'Client')}</span>` : ''}
-                        </div>
+                        <div><strong>${escapeHtml(recipientName || 'Utilisateur')}</strong></div>
                         <button class="btn-outline btn-sm" onclick="closeConversation()" style="margin-left:auto;"><i class="fa-solid fa-times"></i></button>
                     </div>
                     <div class="conversation-messages" id="conversationMessages">
                         ${convMessages.map(msg => `
-                            <div class="conv-message ${msg.userId === currentUser.id ? 'sent' : 'received'}">
+                            <div class="conv-message ${msg.userId === currentUser.id ? 'admin' : 'user'}">
                                 <div>${escapeHtml(msg.message)}</div>
                                 <div class="conv-message-time">${new Date(msg.timestamp).toLocaleString('fr-FR')}</div>
                             </div>
@@ -1115,9 +1051,8 @@
                 currentConversationId = null;
                 currentRecipientId = null;
                 currentRecipientName = null;
-                currentRecipientRole = null;
                 document.getElementById('activeConversation').innerHTML = `
-                    <div style="text-align:center;padding:60px 20px;color:var(--text-muted);">
+                    <div style="text-align:center;padding:60px20px;color:var(--text-muted);">
                         <i class="fa-solid fa-message" style="font-size:3rem;margin-bottom:16px;opacity:0.5;"></i>
                         <p>Sélectionnez une conversation</p>
                     </div>
@@ -1127,21 +1062,11 @@
             function sendMessage() {
                 const input = document.getElementById('messageInput');
                 const message = input?.value.trim();
-                if (!message || !currentRecipientId) {
-                    showToast('Erreur', 'Message vide ou destinataire non spécifié', 'error');
-                    return;
-                }
-                
-                // Créer ou récupérer l'ID de conversation
-                let conversationId = currentConversationId;
-                if (!conversationId) {
-                    // Créer un nouvel ID de conversation
-                    conversationId = `conv_${currentUser.id}_${currentRecipientId}`;
-                }
+                if (!message || !currentConversationId || !currentRecipientId) return;
                 
                 const newMessage = {
-                    id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8),
-                    conversationId: conversationId,
+                    id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+                    conversationId: currentConversationId,
                     userId: currentUser.id,
                     userName: currentUser.name,
                     userRole: currentUser.role,
@@ -1157,21 +1082,15 @@
                 messages.push(newMessage);
                 Storage.set('messages', messages);
                 
-                // Mettre à jour l'ID de conversation courant
-                currentConversationId = conversationId;
-                
                 input.value = '';
-                openConversation(conversationId, currentRecipientId, currentRecipientName, currentRecipientRole);
+                openConversation(currentConversationId, currentRecipientId, currentRecipientName);
                 showToast('Message envoyé', `À ${currentRecipientName}`, 'success');
-                
-                // Déclencher un événement storage pour les autres onglets
-                localStorage.setItem('salam_messages_trigger', Date.now().toString());
             }
             
             function refreshMessages() {
-                loadMessages(false);
+                loadMessages();
                 if (currentConversationId && currentRecipientId) {
-                    openConversation(currentConversationId, currentRecipientId, currentRecipientName, currentRecipientRole);
+                    openConversation(currentConversationId, currentRecipientId, currentRecipientName);
                 }
                 showToast('Messagerie actualisée', '', 'success');
             }
@@ -1182,7 +1101,7 @@
                 let users = Storage.get('users', []);
                 let products = Storage.get('products', []);
                 
-                if (isSupplier) {
+                if (!isAdmin) {
                     const myProducts = products.filter(p => p.supplierId === currentUser.id);
                     const myProductNames = myProducts.map(p => p.name);
                     orders = orders.filter(o => o.items && o.items.some(item => myProductNames.includes(item.name)));
@@ -1206,7 +1125,7 @@
                 document.querySelector('#recentUsersTable tbody').innerHTML = recentUsers.map(u => `<tr><td>${u.name}</td><td><span class="badge ${u.role === 'admin' ? 'badge-danger' : (u.role === 'supplier' ? 'badge-warning' : 'badge-info')}">${u.role}</span></td><td>${u.createdAt ? new Date(u.createdAt).toLocaleDateString('fr-FR') : '-'}</td></tr>`).join('');
                 
                 const recentOrders = [...orders].sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0,5);
-                document.querySelector('#recentOrdersTable tbody').innerHTML = recentOrders.map(o => `<tr><td><span class="badge badge-info">#${o.id}</span></td><td>${o.customerName || 'N/A'}</td><td>${(o.total || 0).toLocaleString()} FCFA</span></td><td><span class="badge ${o.status === 'livrée' ? 'badge-success' : 'badge-warning'}">${o.status}</span></td></tr>`).join('');
+                document.querySelector('#recentOrdersTable tbody').innerHTML = recentOrders.map(o => `<tr><td><span class="badge badge-info">#${o.id}</span></td><td>${o.customerName || 'N/A'}</td><td>${(o.total || 0).toLocaleString()} FCFA</td><td><span class="badge ${o.status === 'livrée' ? 'badge-success' : 'badge-warning'}">${o.status}</span></td></tr>`).join('');
                 
                 initCharts(orders);
             }
@@ -1220,21 +1139,12 @@
                     if (salesChart) salesChart.destroy();
                     salesChart = new Chart(ctx, { type: 'line', data: { labels: ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc'], datasets: [{ label: 'Ventes (FCFA)', data: monthlySales, borderColor: '#10B981', backgroundColor: 'rgba(16,185,129,0.05)', borderWidth: 2, fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
                 }
-                
-                const ctx2 = document.getElementById('categoryChart')?.getContext('2d');
-                if (ctx2) {
-                    if (categoryChart) categoryChart.destroy();
-                    const products = Storage.get('products', []);
-                    const cats = {};
-                    products.forEach(p => cats[p.category] = (cats[p.category] || 0) + 1);
-                    categoryChart = new Chart(ctx2, { type: 'doughnut', data: { labels: Object.keys(cats), datasets: [{ data: Object.values(cats), backgroundColor: ['#10B981', '#8B5CF6', '#F59E0B', '#3B82F6', '#F43F5E'] }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94A3B8' } } } } });
-                }
             }
             
             // ==================== COMMANDES ====================
             function loadOrders() {
                 let orders = Storage.get('orders', []);
-                if (isSupplier) {
+                if (!isAdmin) {
                     const products = Storage.get('products', []);
                     const myProductNames = products.filter(p => p.supplierId === currentUser.id).map(p => p.name);
                     orders = orders.filter(o => o.items && o.items.some(item => myProductNames.includes(item.name)));
@@ -1258,7 +1168,7 @@
             }
             
             function deleteOrder(id) {
-                if (!confirm('Supprimer cette commande ?')) return;
+                if (!confirm('Supprimer ?')) return;
                 let orders = Storage.get('orders', []).filter(o => o.id !== id);
                 Storage.set('orders', orders); loadDashboard(); loadOrders(); updatePendingBadge(); showToast('Commande supprimée', `#${id}`, 'success');
             }
@@ -1266,7 +1176,7 @@
             // ==================== PRODUITS ====================
             function loadProducts() {
                 let products = Storage.get('products', []);
-                if (isSupplier) products = products.filter(p => p.supplierId === currentUser.id);
+                if (!isAdmin) products = products.filter(p => p.supplierId === currentUser.id);
                 const search = document.getElementById('productSearch')?.value.toLowerCase() || '';
                 if (search) products = products.filter(p => p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search));
                 document.querySelector('#productsTable tbody').innerHTML = products.map(p => `<tr><td>${p.image || '📦'} ${p.name}</td><td>${p.category}</td><td>${(p.price || 0).toLocaleString()} FCFA</td><td>${p.stock || 0}</td><td>${p.supplier || '-'}</td><td><button class="btn-outline btn-sm" onclick="editProduct(${p.id})"><i class="fa-solid fa-pen"></i></button><button class="btn-danger btn-sm" onclick="deleteProduct(${p.id})"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('');
@@ -1303,16 +1213,16 @@
             }
             
             function editProduct(id) { openProductModal(id); }
-            function deleteProduct(id) { if (!confirm('Supprimer ce produit ?')) return; let products = Storage.get('products', []).filter(p => p.id !== id); Storage.set('products', products); loadProducts(); loadDashboard(); showToast('Produit supprimé', '', 'success'); }
+            function deleteProduct(id) { if (!confirm('Supprimer ?')) return; let products = Storage.get('products', []).filter(p => p.id !== id); Storage.set('products', products); loadProducts(); loadDashboard(); showToast('Produit supprimé', '', 'success'); }
             
             // ==================== UTILISATEURS (admin only) ====================
-            function loadUsers() { if (!isAdmin) return; let users = Storage.get('users', []); const search = document.getElementById('userSearch')?.value.toLowerCase() || ''; if (search) users = users.filter(u => u.name.toLowerCase().includes(search)); document.querySelector('#usersTable tbody').innerHTML = users.map(u => `<tr><td><strong>${u.name}</strong></td><td>${u.email || u.phone || '-'}</td><td><span class="badge ${u.role === 'admin' ? 'badge-danger' : (u.role === 'supplier' ? 'badge-warning' : 'badge-info')}">${u.role}</span></td><td>${u.totalOrders || 0}</td><td>${(u.totalSpent || 0).toLocaleString()} FCFA</span></td><td><span class="badge ${u.status === 'active' ? 'badge-success' : 'badge-danger'}">${u.status === 'active' ? 'Actif' : 'Inactif'}</span></td><td><button class="btn-outline btn-sm" onclick="editUser('${u.id}')"><i class="fa-solid fa-pen"></i></button><button class="btn-danger btn-sm" onclick="deleteUser('${u.id}')"><i class="fa-solid fa-trash"></i></button></td></tr>`).join(''); }
+            function loadUsers() { if (!isAdmin) return; let users = Storage.get('users', []); const search = document.getElementById('userSearch')?.value.toLowerCase() || ''; if (search) users = users.filter(u => u.name.toLowerCase().includes(search)); document.querySelector('#usersTable tbody').innerHTML = users.map(u => `<tr><td><strong>${u.name}</strong></td><td>${u.email || u.phone || '-'}</td><td><span class="badge ${u.role === 'admin' ? 'badge-danger' : (u.role === 'supplier' ? 'badge-warning' : 'badge-info')}">${u.role}</span></td><td>${u.totalOrders || 0}</td><td>${(u.totalSpent || 0).toLocaleString()} FCFA</td><td><span class="badge ${u.status === 'active' ? 'badge-success' : 'badge-danger'}">${u.status === 'active' ? 'Actif' : 'Inactif'}</span></td><td><button class="btn-outline btn-sm" onclick="editUser('${u.id}')"><i class="fa-solid fa-pen"></i></button><button class="btn-danger btn-sm" onclick="deleteUser('${u.id}')"><i class="fa-solid fa-trash"></i></button></td></tr>`).join(''); }
             
             function openUserModal(id = null) { if (!isAdmin) return; if (id) { const u = Storage.get('users', []).find(u => u.id === id); if (u) { document.getElementById('userId').value = u.id; document.getElementById('userName').value = u.name; document.getElementById('userEmail').value = u.email || ''; document.getElementById('userPhone').value = u.phone || ''; document.getElementById('userRole').value = u.role; document.getElementById('userModalTitle').textContent = 'Modifier l\'utilisateur'; } } else { document.getElementById('userId').value = ''; document.getElementById('userName').value = ''; document.getElementById('userEmail').value = ''; document.getElementById('userPhone').value = ''; document.getElementById('userRole').value = 'client'; document.getElementById('userModalTitle').textContent = 'Ajouter un utilisateur'; } document.getElementById('userModal').classList.add('show'); }
             function closeUserModal() { document.getElementById('userModal').classList.remove('show'); }
             function saveUser() { if (!isAdmin) return; const id = document.getElementById('userId').value; const name = document.getElementById('userName').value.trim(); const email = document.getElementById('userEmail').value.trim(); const phone = document.getElementById('userPhone').value.trim(); const role = document.getElementById('userRole').value; if (!name) { showToast('Erreur', 'Nom requis', 'error'); return; } let users = Storage.get('users', []); if (id) { const idx = users.findIndex(u => u.id === id); if (idx !== -1) { users[idx] = { ...users[idx], name, email, phone, role }; Storage.set('users', users); showToast('Utilisateur modifié', name, 'success'); } } else { users.push({ id: 'USR_' + Date.now().toString(36).toUpperCase(), name, email, phone, role, status: 'active', createdAt: new Date().toISOString(), totalOrders: 0, totalSpent: 0 }); Storage.set('users', users); showToast('Utilisateur ajouté', name, 'success'); } closeUserModal(); loadUsers(); loadDashboard(); }
             function editUser(id) { openUserModal(id); }
-            function deleteUser(id) { if (!isAdmin) return; if (!confirm('Supprimer cet utilisateur ?')) return; let users = Storage.get('users', []).filter(u => u.id !== id); Storage.set('users', users); loadUsers(); loadDashboard(); showToast('Utilisateur supprimé', '', 'success'); }
+            function deleteUser(id) { if (!isAdmin) return; if (!confirm('Supprimer ?')) return; let users = Storage.get('users', []).filter(u => u.id !== id); Storage.set('users', users); loadUsers(); loadDashboard(); showToast('Utilisateur supprimé', '', 'success'); }
             
             // ==================== FOURNISSEURS (admin only) ====================
             function loadSuppliers() { if (!isAdmin) return; let suppliers = Storage.get('suppliers', []); document.querySelector('#suppliersTable tbody').innerHTML = suppliers.map(s => `<tr><td><strong>${s.name}</strong></td><td>${s.category || '-'}</td><td>${s.phone || '-'}</td><td>${s.productCount || 0}</td><td><span class="badge ${s.status === 'actif' ? 'badge-success' : 'badge-danger'}">${s.status === 'actif' ? 'Actif' : 'Inactif'}</span></td><td><button class="btn-outline btn-sm" onclick="editSupplier('${s.id}')"><i class="fa-solid fa-pen"></i></button><button class="btn-danger btn-sm" onclick="deleteSupplier('${s.id}')"><i class="fa-solid fa-trash"></i></button></td></tr>`).join(''); }
@@ -1320,10 +1230,10 @@
             function closeSupplierModal() { document.getElementById('supplierModal').classList.remove('show'); }
             function saveSupplier() { if (!isAdmin) return; const id = document.getElementById('supplierId').value; const name = document.getElementById('supplierName').value.trim(); const category = document.getElementById('supplierCategory').value.trim(); const phone = document.getElementById('supplierPhone').value.trim(); const email = document.getElementById('supplierEmail').value.trim(); const status = document.getElementById('supplierStatus').value; if (!name) { showToast('Erreur', 'Nom requis', 'error'); return; } let suppliers = Storage.get('suppliers', []); if (id) { const idx = suppliers.findIndex(s => s.id === id); if (idx !== -1) { suppliers[idx] = { ...suppliers[idx], name, category, phone, email, status }; Storage.set('suppliers', suppliers); showToast('Fournisseur modifié', name, 'success'); } } else { suppliers.push({ id: 'SUP_' + Date.now().toString(36).toUpperCase(), name, category, phone, email, status, productCount: 0, createdAt: new Date().toISOString() }); Storage.set('suppliers', suppliers); showToast('Fournisseur ajouté', name, 'success'); } closeSupplierModal(); loadSuppliers(); }
             function editSupplier(id) { openSupplierModal(id); }
-            function deleteSupplier(id) { if (!isAdmin) return; if (!confirm('Supprimer ce fournisseur ?')) return; let suppliers = Storage.get('suppliers', []).filter(s => s.id !== id); Storage.set('suppliers', suppliers); loadSuppliers(); showToast('Fournisseur supprimé', '', 'success'); }
+            function deleteSupplier(id) { if (!isAdmin) return; if (!confirm('Supprimer ?')) return; let suppliers = Storage.get('suppliers', []).filter(s => s.id !== id); Storage.set('suppliers', suppliers); loadSuppliers(); showToast('Fournisseur supprimé', '', 'success'); }
             
             // ==================== PROMOTIONS (admin only) ====================
-            function loadPromos() { if (!isAdmin) return; let promos = Storage.get('promos', []); document.querySelector('#promosTable tbody').innerHTML = promos.map(p => `<tr><td><span class="badge badge-warning">${p.code}</span></td><td>${p.discount}%</span></td><td>${(p.minAmount || 0).toLocaleString()} FCFA</span></td><td>${p.usedCount || 0}/${p.maxUses || '∞'}</span></td><td><button class="btn-danger btn-sm" onclick="deletePromo('${p.code}')"><i class="fa-solid fa-trash"></i></button></td></tr>`).join(''); }
+            function loadPromos() { if (!isAdmin) return; let promos = Storage.get('promos', []); document.querySelector('#promosTable tbody').innerHTML = promos.map(p => `<tr><td><span class="badge badge-warning">${p.code}</span></td><td>${p.discount}%</span></td><td>${(p.minAmount || 0).toLocaleString()} FCFA</span></td><td>${p.usedCount || 0}/${p.maxUses || '∞'}</span><tr><td><button class="btn-danger btn-sm" onclick="deletePromo('${p.code}')"><i class="fa-solid fa-trash"></i></button></td></tr>`).join(''); }
             function openPromoModal() { if (!isAdmin) return; document.getElementById('promoModal').classList.add('show'); }
             function closePromoModal() { document.getElementById('promoModal').classList.remove('show'); }
             function savePromo() { if (!isAdmin) return; const code = document.getElementById('promoCode').value.trim().toUpperCase(); const discount = parseInt(document.getElementById('promoDiscount').value); const minAmount = parseInt(document.getElementById('promoMinAmount').value) || 0; if (!code || isNaN(discount)) { showToast('Erreur', 'Code et réduction requis', 'error'); return; } let promos = Storage.get('promos', []); if (promos.find(p => p.code === code)) { showToast('Erreur', 'Code existe', 'error'); return; } promos.push({ code, discount, minAmount, usedCount: 0, maxUses: 100 }); Storage.set('promos', promos); closePromoModal(); loadPromos(); showToast('Code promo ajouté', code, 'success'); }
@@ -1341,24 +1251,17 @@
             // ==================== UTILITAIRES ====================
             function updatePendingBadge() {
                 let orders = Storage.get('orders', []);
-                if (isSupplier) {
-                    const products = Storage.get('products', []);
-                    const myProductNames = products.filter(p => p.supplierId === currentUser.id).map(p => p.name);
-                    orders = orders.filter(o => o.items && o.items.some(item => myProductNames.includes(item.name)));
-                }
-                const badge = document.getElementById('pendingOrdersBadge');
-                if (badge) badge.textContent = orders.filter(o => !['livrée', 'annulée'].includes(o.status)).length;
+                if (!isAdmin) { const products = Storage.get('products', []); const myProductNames = products.filter(p => p.supplierId === currentUser.id).map(p => p.name); orders = orders.filter(o => o.items && o.items.some(item => myProductNames.includes(item.name))); }
+                document.getElementById('pendingOrdersBadge') && (document.getElementById('pendingOrdersBadge').textContent = orders.filter(o => !['livrée', 'annulée'].includes(o.status)).length);
             }
             
             function updateUnreadBadge() {
-                const messages = Storage.get('messages', []);
-                const unread = messages.filter(m => m.targetUserId === currentUser.id && !m.read && m.userId !== currentUser.id).length;
-                const badge = document.getElementById('unreadMessagesBadge');
-                if (badge) badge.textContent = unread;
+                let messages = Storage.get('messages', []);
+                let unread = messages.filter(m => m.targetUserId === currentUser.id && !m.read && m.userId !== currentUser.id).length;
+                document.getElementById('unreadMessagesBadge') && (document.getElementById('unreadMessagesBadge').textContent = unread);
             }
             
             function formatDate(dateString) { if (!dateString) return ''; const d = new Date(dateString); const diff = Date.now() - d; if (diff < 86400000) return d.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' }); return d.toLocaleDateString('fr-FR', { day:'2-digit', month:'2-digit' }); }
-            
             function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, function(m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); }
             
             function showToast(title, message, type = 'success') {
@@ -1370,66 +1273,26 @@
             }
             
             function refreshAll() { loadDashboard(); loadOrders(); if (isAdmin) loadUsers(); loadProducts(); if (isAdmin) loadSuppliers(); if (isAdmin) loadPromos(); loadMessages(); showToast('Actualisé', 'Données mises à jour', 'success'); }
-            
             function exportReport() { const data = { date: new Date().toISOString(), user: currentUser, orders: Storage.get('orders', []), products: Storage.get('products', []), messages: Storage.get('messages', []) }; const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `salam_export_${currentUser.role}_${new Date().toISOString().split('T')[0]}.json`; a.click(); URL.revokeObjectURL(blob); showToast('Export réussi', 'Rapport téléchargé', 'success'); }
-            
             function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('show'); }
             function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
             function logout() { localStorage.removeItem('salam_session'); localStorage.removeItem('salam_cart'); window.location.href = '../index.html'; }
             
             // ==================== EXPOSITION GLOBALE ====================
-            window.showSection = showSection;
-            window.refreshAll = refreshAll;
-            window.exportReport = exportReport;
-            window.updateOrderStatus = updateOrderStatus;
-            window.deleteOrder = deleteOrder;
-            window.openUserModal = openUserModal;
-            window.closeUserModal = closeUserModal;
-            window.saveUser = saveUser;
-            window.editUser = editUser;
-            window.deleteUser = deleteUser;
-            window.openProductModal = openProductModal;
-            window.closeProductModal = closeProductModal;
-            window.saveProduct = saveProduct;
-            window.editProduct = editProduct;
-            window.deleteProduct = deleteProduct;
-            window.openSupplierModal = openSupplierModal;
-            window.closeSupplierModal = closeSupplierModal;
-            window.saveSupplier = saveSupplier;
-            window.editSupplier = editSupplier;
-            window.deleteSupplier = deleteSupplier;
-            window.openPromoModal = openPromoModal;
-            window.closePromoModal = closePromoModal;
-            window.savePromo = savePromo;
-            window.deletePromo = deletePromo;
-            window.saveSettings = saveSettings;
-            window.openSidebar = openSidebar;
-            window.closeSidebar = closeSidebar;
-            window.logout = logout;
-            window.loadMessages = loadMessages;
-            window.openConversation = openConversation;
-            window.closeConversation = closeConversation;
-            window.sendMessage = sendMessage;
-            window.refreshMessages = refreshMessages;
+            window.showSection = showSection; window.refreshAll = refreshAll; window.exportReport = exportReport;
+            window.updateOrderStatus = updateOrderStatus; window.deleteOrder = deleteOrder;
+            window.openUserModal = openUserModal; window.closeUserModal = closeUserModal; window.saveUser = saveUser; window.editUser = editUser; window.deleteUser = deleteUser;
+            window.openProductModal = openProductModal; window.closeProductModal = closeProductModal; window.saveProduct = saveProduct; window.editProduct = editProduct; window.deleteProduct = deleteProduct;
+            window.openSupplierModal = openSupplierModal; window.closeSupplierModal = closeSupplierModal; window.saveSupplier = saveSupplier; window.editSupplier = editSupplier; window.deleteSupplier = deleteSupplier;
+            window.openPromoModal = openPromoModal; window.closePromoModal = closePromoModal; window.savePromo = savePromo; window.deletePromo = deletePromo;
+            window.saveSettings = saveSettings; window.openSidebar = openSidebar; window.closeSidebar = closeSidebar; window.logout = logout;
+            window.loadMessages = loadMessages; window.openConversation = openConversation; window.closeConversation = closeConversation; window.sendMessage = sendMessage; window.refreshMessages = refreshMessages;
             
             // ==================== INIT ====================
             generateSidebarMenu();
             updatePendingBadge();
             updateUnreadBadge();
             showSection('dashboard');
-            
-            // Écouter les changements storage pour synchronisation entre onglets
-            window.addEventListener('storage', (e) => {
-                if (e.key === 'salam_messages_trigger' || e.key === 'salam_messages') {
-                    if (document.getElementById('section-messages').classList.contains('active')) {
-                        loadMessages(false);
-                        if (currentConversationId && currentRecipientId) {
-                            openConversation(currentConversationId, currentRecipientId, currentRecipientName, currentRecipientRole);
-                        }
-                        updateUnreadBadge();
-                    }
-                }
-            });
         })();
     </script>
 </body>
