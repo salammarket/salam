@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#0A0A14">
-    <title>Salam Market · Catalogue complet avec images</title>
+    <title>Salam Market · Catalogue complet</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
@@ -31,7 +31,6 @@
             --font-body: 'Inter', system-ui, sans-serif;
             --radius-lg: 18px;
             --radius-xl: 24px;
-            --radius-full: 9999px;
             --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
@@ -45,8 +44,6 @@
         .bg-decoration { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
         .bg-gradient-1 { position: absolute; width: 150%; height: 100%; background: radial-gradient(ellipse 80% 60% at 10% -20%, rgba(16, 185, 129, 0.06) 0%, transparent 50%); }
 
-        .app-layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
-        
         .sidebar {
             width: 280px;
             background: rgba(10, 10, 20, 0.96);
@@ -86,7 +83,7 @@
         .search-input { width: 100%; padding: 16px 16px 16px 48px; background: var(--surface-input); border: 1.5px solid var(--border-default); border-radius: 20px; color: white; font-size: 0.95rem; outline: none; transition: 0.2s; }
         .search-input:focus { border-color: var(--border-accent); }
         .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
-        .voice-btn { width: 54px; height: 54px; border-radius: 20px; background: rgba(16,185,129,0.1); border: 1px solid var(--border-accent); color: var(--emerald-400); cursor: pointer; transition: 0.2s; }
+        .voice-btn { width: 54px; height: 54px; border-radius: 20px; background: rgba(16,185,129,0.1); border: 1px solid var(--border-accent); color: var(--emerald-400); cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
         .voice-btn:hover { background: var(--emerald-500); color: white; }
         .voice-btn.listening { background: var(--rose-500); border-color: var(--rose-500); color: white; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(244,63,94,0.4); } 50% { box-shadow: 0 0 0 8px rgba(244,63,94,0); } }
@@ -101,7 +98,7 @@
         .view-btn.active { background: var(--emerald-500); color: white; }
 
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
-        .product-card { background: var(--surface-card); backdrop-filter: blur(20px); border: 1px solid var(--border-default); border-radius: var(--radius-xl); overflow: hidden; transition: all 0.3s ease; cursor: pointer; }
+        .product-card { background: var(--surface-card); backdrop-filter: blur(20px); border: 1px solid var(--border-default); border-radius: var(--radius-xl); overflow: hidden; transition: all 0.3s ease; }
         .product-card:hover { transform: translateY(-6px); border-color: var(--border-accent); box-shadow: var(--shadow-md); }
         .product-img { height: 200px; background: linear-gradient(145deg, #1a1a2a, #0a0a14); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
         .product-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
@@ -138,8 +135,6 @@
         .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 200; display: flex; flex-direction: column; gap: 12px; }
         .toast { background: #1e1e2e; border-left: 3px solid var(--emerald-500); padding: 12px 20px; border-radius: 16px; transform: translateX(120%); transition: 0.3s; display: flex; align-items: center; gap: 12px; }
         .toast.show { transform: translateX(0); }
-        .toast.success { border-left-color: var(--emerald-500); }
-        .toast.error { border-left-color: var(--rose-500); }
         
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); }
@@ -182,10 +177,11 @@
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
-    // ========== MAPPING DES IMAGES DEPUIS LE DOSSIER "images/" ==========
-    // Tous les noms de fichiers exacts fournis
+    // ========== CHEMINS DES IMAGES (depuis pages/ vers dossier images/ à la racine) ==========
+    // Le fichier est dans pages/products.html, donc les images sont dans ../images/
+    const IMG_BASE = "../images/";
+    
     const imageMapping = {
-        // Pâtes
         "Spaghetti Barilla n°5": "SpaghettiBarilla500g.jpg",
         "Spaghetti Pâte d'Or": "SpaghettiPATEDOR.jpg",
         "Spaghetti Broli": "SpaghettiBROLI.jpg",
@@ -193,11 +189,9 @@
         "Macaroni Kayna Petit plomb": "MacaroniKayna500g.jpg",
         "Macaroni Helper Cheeseburger": "MacaroniHELPER.jpg",
         "Macaroni Kayna Coquillette": "MacaroniKAYNA.jpg",
-        // Riz
         "Riz Tanti": "RizTanti.jpg",
         "Riz Parfumé Mama Gold": "RizParfuméMamaGold.jpg",
         "Riz Long Grain 5kg": "RizParfuméMamaGold.jpg",
-        // Dentifrices
         "Colgate MaxWhite": "Dentifrice.ColgateMaxWhite.jpg",
         "Colgate MaxFresh": "Dentifrice.ColgateMaxFresh.jpg",
         "Colgate Herbal": "Dentifrice.Colgate.Herbal.jpg",
@@ -206,10 +200,8 @@
         "Sensodyne Soin Complet": "Dentifrice.Sensodyne.jpg",
         "Colgate Black Fresh": "Dentifrice.Colgat.jpg",
         "Signal Blancheur": "Dentifrice.Signal.jpg",
-        // Conserves
         "Sardines Jolly": "SardineJoly.jpg",
         "Sardines Famrite": "Sardine.Famrite.jpg",
-        // Savons
         "Savon Maera Herbal": "SAVON.Maera.jpg",
         "Savon Protex Pharmapur Aloe": "Protex.jpg",
         "Savon Protex Pharmapur Charbon": "protex_-_pharmapur_-_charbon_2_.jpg",
@@ -218,38 +210,25 @@
         "Dettol Skincare": "Dettol.Skincare.jpg",
         "Savon Nivea Crème Soft": "SAVON.NIVEA.jpg",
         "Savon Artisanal": "SAVON.jpg",
-        // Épicerie
         "Sucre Blanc": "SucreBlanc.jpg",
-        // Ménage
         "Détergent Madar": "detergentMadar.jpg",
         "Détergent Hoka High Foam": "detergeantHoka.jpg",
         "Détergent Ozil Ultra Power": "detergentOzil.jpg",
         "Serviettes Siempre Extra": "cotonhygeniquesiempre.jpg",
-        // Huiles
         "Huile Mayer": "HuileMajo1r.jpg",
-        "Huile Rouge 500g": "huileRouge.jpg",
-        // Frais
-        "Poulet fermier": "poulet.jpg",
-        "Tomates fraîches": "tomates.jpg",
-        "Mangues fraîches": "mangues.jpg"
+        "Huile Rouge 500g": "huileRouge.jpg"
     };
 
     function getProductImage(productName) {
         let filename = imageMapping[productName];
         if (filename) {
-            return `images/${filename}`;
+            return IMG_BASE + filename;
         }
-        // Fallback générique selon catégorie
-        if (productName.toLowerCase().includes("spaghetti")) return "images/SpaghettiBarilla500g.jpg";
-        if (productName.toLowerCase().includes("riz")) return "images/RizTanti.jpg";
-        if (productName.toLowerCase().includes("dentifrice") || productName.toLowerCase().includes("colgate") || productName.toLowerCase().includes("sensodyne")) return "images/Dentifrice.ColgateMaxWhite.jpg";
-        if (productName.toLowerCase().includes("savon") || productName.toLowerCase().includes("protex") || productName.toLowerCase().includes("dettol")) return "images/SAVON.Maera.jpg";
-        if (productName.toLowerCase().includes("sardine")) return "images/SardineJoly.jpg";
-        if (productName.toLowerCase().includes("huile")) return "images/HuileMajo1r.jpg";
-        return "images/SpaghettiBarilla500g.jpg";
+        // Fallback
+        return IMG_BASE + "SpaghettiBarilla500g.jpg";
     }
 
-    // TOUS LES PRODUITS (basés sur les fichiers fournis)
+    // TOUS LES PRODUITS
     const FULL_PRODUCTS = [
         { id: 1, name: "Spaghetti Barilla n°5", category: "Pâtes", price: 1200, unit: "500g", supplier: "Barilla", sales: 320, badge: "best" },
         { id: 2, name: "Macaroni Kayna Petit plomb", category: "Pâtes", price: 850, unit: "500g", supplier: "Kayna", sales: 210, badge: "" },
@@ -323,11 +302,11 @@
             container.innerHTML = products.map(p => {
                 const badgeClass = p.badge === "best" ? "hot" : (p.badge === "premium" ? "premium" : (p.badge === "hot" ? "hot" : ""));
                 const badgeText = p.badge === "best" ? "🔥 Top" : (p.badge === "premium" ? "⭐ Premium" : (p.badge === "hot" ? "📈 Populaire" : (p.badge === "fresh" ? "🌿 Frais" : "")));
-                return `<div class="product-card"><div class="product-img">${badgeText ? `<span class="product-badge ${badgeClass}">${badgeText}</span>` : ''}<img src="${getProductImage(p.name)}" alt="${p.name}" onerror="this.src='images/SpaghettiBarilla500g.jpg'"></div><div class="product-info"><h3>${escapeHtml(p.name)}</h3><div class="product-supplier"><i class="fa-solid fa-store"></i> ${escapeHtml(p.supplier)}</div><div class="product-price">${p.price.toLocaleString()} FCFA <small>/${p.unit}</small></div><div class="product-actions"><button class="btn-add" onclick="addToCart(${p.id}, '${escapeHtml(p.name)}', ${p.price})"><i class="fa-solid fa-plus"></i> Ajouter</button><button class="btn-compare ${compareList.includes(p.id) ? 'active' : ''}" onclick="toggleCompare(${p.id})"><i class="fa-solid fa-chart-simple"></i></button></div></div></div>`;
+                return `<div class="product-card"><div class="product-img">${badgeText ? `<span class="product-badge ${badgeClass}">${badgeText}</span>` : ''}<img src="${getProductImage(p.name)}" alt="${p.name}" onerror="this.src='../images/SpaghettiBarilla500g.jpg'"></div><div class="product-info"><h3>${escapeHtml(p.name)}</h3><div class="product-supplier"><i class="fa-solid fa-store"></i> ${escapeHtml(p.supplier)}</div><div class="product-price">${p.price.toLocaleString()} FCFA <small>/${p.unit}</small></div><div class="product-actions"><button class="btn-add" onclick="addToCart(${p.id}, '${escapeHtml(p.name)}', ${p.price})"><i class="fa-solid fa-plus"></i> Ajouter</button><button class="btn-compare ${compareList.includes(p.id) ? 'active' : ''}" onclick="toggleCompare(${p.id})"><i class="fa-solid fa-chart-simple"></i></button></div></div></div>`;
             }).join("");
         } else {
             container.className = "products-list";
-            container.innerHTML = products.map(p => `<div class="product-list-item"><div class="product-list-img"><img src="${getProductImage(p.name)}" alt="${p.name}" onerror="this.src='images/SpaghettiBarilla500g.jpg'"></div><div class="product-list-info"><h3>${escapeHtml(p.name)}</h3><div style="font-size:0.7rem; color:#94A3B8;">${escapeHtml(p.supplier)}</div><div class="price">${p.price.toLocaleString()} FCFA / ${p.unit}</div></div><div style="display:flex; gap:8px;"><button class="btn-add" style="padding:8px 16px;" onclick="addToCart(${p.id}, '${escapeHtml(p.name)}', ${p.price})">Ajouter</button><button class="btn-compare ${compareList.includes(p.id) ? 'active' : ''}" onclick="toggleCompare(${p.id})"><i class="fa-solid fa-chart-simple"></i></button></div></div>`).join("");
+            container.innerHTML = products.map(p => `<div class="product-list-item"><div class="product-list-img"><img src="${getProductImage(p.name)}" alt="${p.name}" onerror="this.src='../images/SpaghettiBarilla500g.jpg'"></div><div class="product-list-info"><h3>${escapeHtml(p.name)}</h3><div style="font-size:0.7rem; color:#94A3B8;">${escapeHtml(p.supplier)}</div><div class="price">${p.price.toLocaleString()} FCFA / ${p.unit}</div></div><div style="display:flex; gap:8px;"><button class="btn-add" style="padding:8px 16px;" onclick="addToCart(${p.id}, '${escapeHtml(p.name)}', ${p.price})">Ajouter</button><button class="btn-compare ${compareList.includes(p.id) ? 'active' : ''}" onclick="toggleCompare(${p.id})"><i class="fa-solid fa-chart-simple"></i></button></div></div>`).join("");
         }
     }
 
@@ -354,12 +333,12 @@
         if(compareList.length === 0) { bar.classList.remove("show"); return; }
         bar.classList.add("show");
         let compareProds = FULL_PRODUCTS.filter(p => compareList.includes(p.id));
-        container.innerHTML = compareProds.map(p => `<div class="compare-item"><img src="${getProductImage(p.name)}" onerror="this.src='images/SpaghettiBarilla500g.jpg'"> ${p.name.length > 20 ? p.name.slice(0,18)+'...' : p.name} <button onclick="toggleCompare(${p.id})"><i class="fa-solid fa-xmark"></i></button></div>`).join("");
+        container.innerHTML = compareProds.map(p => `<div class="compare-item"><img src="${getProductImage(p.name)}" onerror="this.src='../images/SpaghettiBarilla500g.jpg'"> ${p.name.length > 20 ? p.name.slice(0,18)+'...' : p.name} <button onclick="toggleCompare(${p.id})"><i class="fa-solid fa-xmark"></i></button></div>`).join("");
     }
     function compareSelected() {
         if(compareList.length < 2) { showToast("Comparaison", "Sélectionnez au moins 2 produits", "warning"); return; }
         let prods = FULL_PRODUCTS.filter(p => compareList.includes(p.id));
-        let html = `<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px;">` + prods.map(p => `<div style="background:#111; border-radius:24px; padding:20px; text-align:center;"><img src="${getProductImage(p.name)}" style="width:100%; height:140px; object-fit:cover; border-radius:16px; margin-bottom:12px;" onerror="this.src='images/SpaghettiBarilla500g.jpg'"><h4>${p.name}</h4><div style="color:#34D399; font-weight:bold;">${p.price} FCFA</div><div style="font-size:0.7rem;">${p.supplier}</div><button class="btn-add" style="margin-top:12px;" onclick="addToCart(${p.id},'${p.name}',${p.price})">Ajouter</button></div>`).join("") + `</div>`;
+        let html = `<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px;">` + prods.map(p => `<div style="background:#111; border-radius:24px; padding:20px; text-align:center;"><img src="${getProductImage(p.name)}" style="width:100%; height:140px; object-fit:cover; border-radius:16px; margin-bottom:12px;" onerror="this.src='../images/SpaghettiBarilla500g.jpg'"><h4>${p.name}</h4><div style="color:#34D399; font-weight:bold;">${p.price} FCFA</div><div style="font-size:0.7rem;">${p.supplier}</div><button class="btn-add" style="margin-top:12px;" onclick="addToCart(${p.id},'${p.name}',${p.price})">Ajouter</button></div>`).join("") + `</div>`;
         let modal = document.createElement("div"); modal.style.position="fixed"; modal.style.inset=0; modal.style.background="rgba(0,0,0,0.85)"; modal.style.backdropFilter="blur(12px)"; modal.style.zIndex=1000; modal.style.display="flex"; modal.style.alignItems="center"; modal.style.justifyContent="center";
         let content = document.createElement("div"); content.style.background="#0F0F1E"; content.style.borderRadius="28px"; content.style.maxWidth="1000px"; content.style.width="90%"; content.style.padding="24px"; content.style.maxHeight="80vh"; content.style.overflow="auto";
         content.innerHTML = `<div style="display:flex; justify-content:space-between;"><h3>🔍 Comparaison produits</h3><button onclick="this.closest('div').parentElement.parentElement.remove()" style="background:none; border:none; color:white; font-size:1.8rem;">&times;</button></div>${html}`;
@@ -388,7 +367,7 @@
     function escapeHtml(str) { return String(str).replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
     function openSidebar() { document.getElementById("sidebar").classList.add("open"); document.getElementById("overlay").classList.add("show"); }
     function closeSidebar() { document.getElementById("sidebar").classList.remove("open"); document.getElementById("overlay").classList.remove("show"); }
-    function logout() { localStorage.clear(); window.location.href = "index.html"; }
+    function logout() { localStorage.clear(); window.location.href = "../index.html"; }
 
     document.getElementById("searchInput").addEventListener("input", (e) => { currentSearch = e.target.value.toLowerCase(); renderProducts(); });
     document.getElementById("sortSelect").addEventListener("change", (e) => { currentSort = e.target.value; renderProducts(); });
