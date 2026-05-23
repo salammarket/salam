@@ -1,116 +1,55 @@
-<!-- pages/products.html - Catalogue amélioré avec recherche vocale et comparaison -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#0A0A14">
-    <meta name="description" content="Catalogue — Salam Market PRO">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    
-    <title>Salam Market PRO · Catalogue</title>
-    
+    <title>Salam Market · Catalogue complet avec images</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
     <style>
-        /* ============================================================
-           DESIGN SYSTEM — Version unifiée
-           ============================================================ */
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         :root {
             --emerald-400: #34D399;
             --emerald-500: #10B981;
             --emerald-600: #059669;
-            --violet-400: #A78BFA;
             --violet-500: #8B5CF6;
-            --amber-400: #FBBF24;
-            --amber-500: #F59E0B;
-            --rose-400: #FB7185;
             --rose-500: #F43F5E;
-            --blue-400: #60A5FA;
-            --blue-500: #3B82F6;
-            
             --surface-primary: #0A0A14;
             --surface-card: rgba(15, 15, 30, 0.85);
             --surface-card-solid: #0F0F1E;
             --surface-input: rgba(10, 10, 20, 0.7);
-            --surface-hover: rgba(255, 255, 255, 0.03);
-            
-            --border-subtle: rgba(255, 255, 255, 0.04);
             --border-default: rgba(255, 255, 255, 0.08);
-            --border-strong: rgba(255, 255, 255, 0.12);
             --border-accent: rgba(16, 185, 129, 0.25);
-            
             --text-primary: #F1F5F9;
             --text-secondary: #CBD5E1;
             --text-muted: #94A3B8;
-            --text-faint: #64748B;
-            
             --font-display: 'Space Grotesk', system-ui, sans-serif;
             --font-body: 'Inter', system-ui, sans-serif;
-            
-            --radius-sm: 10px;
-            --radius-md: 14px;
             --radius-lg: 18px;
             --radius-xl: 24px;
             --radius-full: 9999px;
-            
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
             --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
-            --shadow-glow: 0 0 60px rgba(16, 185, 129, 0.12);
-            
-            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-            --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
-            
-            --duration-fast: 200ms;
-            --duration-base: 400ms;
-            
-            --space-1: 4px;
-            --space-2: 8px;
-            --space-3: 12px;
-            --space-4: 16px;
-            --space-5: 20px;
-            --space-6: 24px;
-            --space-8: 32px;
         }
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+
         body {
             font-family: var(--font-body);
             background: var(--surface-primary);
             color: var(--text-primary);
             min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
         }
-        
-        /* Background */
-        .bg-decoration {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-        }
-        
-        .bg-gradient-1 {
-            position: absolute;
-            width: 150%;
-            height: 100%;
-            background: radial-gradient(ellipse 80% 60% at 10% -20%, rgba(16, 185, 129, 0.06) 0%, transparent 50%);
-        }
-        
-        /* Layout */
+
+        .bg-decoration { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+        .bg-gradient-1 { position: absolute; width: 150%; height: 100%; background: radial-gradient(ellipse 80% 60% at 10% -20%, rgba(16, 185, 129, 0.06) 0%, transparent 50%); }
+
         .app-layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
         
-        /* Sidebar (identique à dashboard) */
         .sidebar {
             width: 280px;
-            background: rgba(10, 10, 20, 0.95);
+            background: rgba(10, 10, 20, 0.96);
             backdrop-filter: blur(40px);
             border-right: 1px solid var(--border-default);
             position: fixed;
@@ -120,1076 +59,341 @@
             z-index: 100;
             display: flex;
             flex-direction: column;
-            padding: var(--space-6) var(--space-4);
-            transition: transform var(--duration-base) var(--ease-out-expo);
+            padding: 24px 16px;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        
-        .sidebar-header {
-            display: flex;
-            align-items: center;
-            gap: var(--space-3);
-            padding-bottom: var(--space-6);
-            margin-bottom: var(--space-4);
-            border-bottom: 1px solid var(--border-subtle);
-        }
-        
-        .sidebar-logo {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, var(--emerald-600), var(--emerald-500));
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-        }
-        
+        .sidebar-header { display: flex; align-items: center; gap: 12px; padding-bottom: 24px; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .sidebar-logo { width: 44px; height: 44px; background: linear-gradient(135deg, var(--emerald-600), var(--emerald-500)); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
         .sidebar-brand h2 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; }
         .sidebar-brand p { font-size: 0.65rem; color: var(--emerald-400); }
-        
-        .sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: var(--space-1); }
-        
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: var(--space-3);
-            padding: var(--space-3) var(--space-4);
-            border-radius: var(--radius-md);
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            font-weight: 500;
-            text-decoration: none;
-            transition: all var(--duration-fast);
-        }
-        
-        .nav-item:hover { background: var(--surface-hover); color: var(--text-secondary); transform: translateX(4px); }
-        .nav-item.active { background: rgba(16, 185, 129, 0.08); color: var(--emerald-400); border-left: 2px solid var(--emerald-500); }
-        .nav-item i { width: 22px; }
-        
-        .nav-badge {
-            margin-left: auto;
-            background: var(--rose-500);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 20px;
-            font-size: 0.6rem;
-            font-weight: 700;
-        }
-        
-        .sidebar-footer { margin-top: auto; padding-top: var(--space-6); border-top: 1px solid var(--border-subtle); }
-        
-        .btn-logout {
-            display: flex;
-            align-items: center;
-            gap: var(--space-3);
-            width: 100%;
-            padding: var(--space-3) var(--space-4);
-            border-radius: var(--radius-md);
-            background: transparent;
-            border: 1px solid var(--border-default);
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all var(--duration-fast);
-        }
-        
-        .btn-logout:hover { background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.3); color: var(--rose-400); }
-        
-        /* Mobile header */
-        .mobile-header {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
-            background: rgba(10, 10, 20, 0.95);
-            backdrop-filter: blur(40px);
-            border-bottom: 1px solid var(--border-default);
-            z-index: 99;
-            align-items: center;
-            padding: 0 var(--space-4);
-            gap: var(--space-3);
-        }
-        
-        .menu-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: var(--radius-sm);
-            background: transparent;
-            border: none;
-            color: var(--text-primary);
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-        
-        .mobile-logo { font-family: var(--font-display); font-weight: 700; font-size: 1rem; }
-        .mobile-logo span { color: var(--emerald-400); }
-        
-        .overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(4px);
-            z-index: 98;
-        }
-        
-        .overlay.show { display: block; }
-        
-        /* Main content */
-        .main-content {
-            flex: 1;
-            margin-left: 280px;
-            padding: var(--space-6);
-            position: relative;
-            z-index: 1;
-        }
-        
+        .sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 14px; color: var(--text-muted); font-size: 0.85rem; font-weight: 500; text-decoration: none; transition: all 0.2s; cursor: pointer; }
+        .nav-item:hover { background: rgba(255,255,255,0.03); color: var(--text-secondary); transform: translateX(4px); }
+        .nav-item.active { background: rgba(16,185,129,0.08); color: var(--emerald-400); border-left: 2px solid var(--emerald-500); }
+        .btn-logout { width: 100%; padding: 12px 16px; background: transparent; border: 1px solid var(--border-default); border-radius: 14px; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 12px; transition: 0.2s; }
+        .btn-logout:hover { background: rgba(239,68,68,0.1); border-color: var(--rose-500); color: var(--rose-500); }
+        .mobile-header { display: none; position: fixed; top: 0; left: 0; right: 0; height: 60px; background: rgba(10,10,20,0.95); backdrop-filter: blur(40px); border-bottom: 1px solid var(--border-default); z-index: 99; align-items: center; padding: 0 16px; }
+        .menu-btn { width: 40px; height: 40px; background: transparent; border: none; color: white; font-size: 1.2rem; cursor: pointer; }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 98; }
+        .main-content { flex: 1; margin-left: 280px; padding: 28px; position: relative; z-index: 1; }
         .catalog-container { max-width: 1400px; margin: 0 auto; }
+        .catalog-header h1 { font-family: var(--font-display); font-size: 2rem; margin-bottom: 6px; }
+        .catalog-header p { color: var(--text-muted); }
+
+        .search-section { background: var(--surface-card); backdrop-filter: blur(20px); border: 1px solid var(--border-default); border-radius: var(--radius-xl); padding: 20px 24px; margin: 24px 0; }
+        .search-row { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+        .search-input-wrapper { flex: 1; position: relative; }
+        .search-input { width: 100%; padding: 16px 16px 16px 48px; background: var(--surface-input); border: 1.5px solid var(--border-default); border-radius: 20px; color: white; font-size: 0.95rem; outline: none; transition: 0.2s; }
+        .search-input:focus { border-color: var(--border-accent); }
+        .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+        .voice-btn { width: 54px; height: 54px; border-radius: 20px; background: rgba(16,185,129,0.1); border: 1px solid var(--border-accent); color: var(--emerald-400); cursor: pointer; transition: 0.2s; }
+        .voice-btn:hover { background: var(--emerald-500); color: white; }
+        .voice-btn.listening { background: var(--rose-500); border-color: var(--rose-500); color: white; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(244,63,94,0.4); } 50% { box-shadow: 0 0 0 8px rgba(244,63,94,0); } }
         
-        /* Header */
-        .catalog-header { margin-bottom: var(--space-6); }
-        .catalog-header h1 { font-family: var(--font-display); font-size: 2rem; font-weight: 700; }
-        .catalog-header p { color: var(--text-muted); font-size: 0.85rem; }
+        .filters-section { display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; margin-bottom: 28px; }
+        .category-filters { display: flex; gap: 10px; flex-wrap: wrap; }
+        .filter-chip { padding: 8px 18px; border-radius: 40px; font-size: 0.75rem; font-weight: 600; background: transparent; border: 1px solid var(--border-default); color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+        .filter-chip.active, .filter-chip:hover { background: rgba(16,185,129,0.12); border-color: var(--emerald-400); color: var(--emerald-400); }
+        .sort-select { padding: 8px 16px; background: var(--surface-input); border: 1px solid var(--border-default); border-radius: 30px; color: white; cursor: pointer; }
+        .view-toggle { display: flex; gap: 6px; background: var(--surface-input); padding: 5px; border-radius: 40px; }
+        .view-btn { padding: 8px 14px; border-radius: 30px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+        .view-btn.active { background: var(--emerald-500); color: white; }
+
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+        .product-card { background: var(--surface-card); backdrop-filter: blur(20px); border: 1px solid var(--border-default); border-radius: var(--radius-xl); overflow: hidden; transition: all 0.3s ease; cursor: pointer; }
+        .product-card:hover { transform: translateY(-6px); border-color: var(--border-accent); box-shadow: var(--shadow-md); }
+        .product-img { height: 200px; background: linear-gradient(145deg, #1a1a2a, #0a0a14); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        .product-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+        .product-card:hover .product-img img { transform: scale(1.05); }
+        .product-badge { position: absolute; top: 12px; left: 12px; padding: 4px 12px; border-radius: 30px; font-size: 0.65rem; font-weight: 700; background: var(--emerald-500); color: black; z-index: 2; }
+        .product-badge.hot { background: var(--rose-500); color: white; }
+        .product-badge.premium { background: var(--violet-500); color: white; }
+        .product-info { padding: 20px; }
+        .product-info h3 { font-size: 1rem; font-weight: 600; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .product-supplier { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+        .product-price { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--emerald-400); margin-bottom: 16px; }
+        .product-actions { display: flex; gap: 12px; }
+        .btn-add { flex: 1; padding: 12px; background: rgba(16,185,129,0.1); border: 1px solid var(--border-accent); border-radius: 14px; color: var(--emerald-400); font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-add:hover { background: var(--emerald-500); color: white; }
+        .btn-compare { width: 44px; background: transparent; border: 1px solid var(--border-default); border-radius: 14px; cursor: pointer; transition: 0.2s; }
+        .btn-compare:hover { border-color: var(--violet-500); }
+        .btn-compare.active { background: var(--violet-500); border-color: var(--violet-500); color: white; }
         
-        /* Search bar */
-        .search-section {
-            background: var(--surface-card);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-default);
-            border-radius: var(--radius-xl);
-            padding: var(--space-4) var(--space-6);
-            margin-bottom: var(--space-6);
-        }
-        
-        .search-row {
-            display: flex;
-            gap: var(--space-3);
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .search-input-wrapper {
-            flex: 1;
-            position: relative;
-        }
-        
-        .search-input {
-            width: 100%;
-            padding: var(--space-4) var(--space-4) var(--space-4) 48px;
-            background: var(--surface-input);
-            border: 1.5px solid var(--border-default);
-            border-radius: var(--radius-lg);
-            color: var(--text-primary);
-            font-size: 0.95rem;
-            font-family: inherit;
-            outline: none;
-            transition: all var(--duration-fast);
-        }
-        
-        .search-input:focus {
-            border-color: var(--border-accent);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.08);
-        }
-        
-        .search-icon {
-            position: absolute;
-            left: var(--space-4);
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-        }
-        
-        .voice-btn {
-            width: 52px;
-            height: 52px;
-            border-radius: var(--radius-lg);
-            background: rgba(16, 185, 129, 0.08);
-            border: 1px solid var(--border-accent);
-            color: var(--emerald-400);
-            cursor: pointer;
-            transition: all var(--duration-fast);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-        }
-        
-        .voice-btn:hover {
-            background: var(--emerald-500);
-            color: white;
-            transform: scale(1.02);
-        }
-        
-        .voice-btn.listening {
-            background: var(--rose-500);
-            border-color: var(--rose-500);
-            color: white;
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.4); }
-            50% { box-shadow: 0 0 0 8px rgba(244, 63, 94, 0); }
-        }
-        
-        /* Filters */
-        .filters-section {
-            display: flex;
-            gap: var(--space-4);
-            flex-wrap: wrap;
-            margin-bottom: var(--space-6);
-            align-items: center;
-        }
-        
-        .category-filters {
-            display: flex;
-            gap: var(--space-2);
-            flex-wrap: wrap;
-            flex: 1;
-        }
-        
-        .filter-chip {
-            padding: var(--space-2) var(--space-4);
-            border-radius: var(--radius-full);
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all var(--duration-fast);
-            background: transparent;
-            border: 1px solid var(--border-default);
-            color: var(--text-muted);
-        }
-        
-        .filter-chip:hover {
-            border-color: var(--border-accent);
-            color: var(--text-secondary);
-        }
-        
-        .filter-chip.active {
-            background: rgba(16, 185, 129, 0.12);
-            border-color: var(--emerald-400);
-            color: var(--emerald-400);
-        }
-        
-        .sort-select {
-            padding: var(--space-2) var(--space-4);
-            background: var(--surface-input);
-            border: 1px solid var(--border-default);
-            border-radius: var(--radius-md);
-            color: var(--text-primary);
-            font-size: 0.8rem;
-            cursor: pointer;
-        }
-        
-        .view-toggle {
-            display: flex;
-            gap: var(--space-1);
-            background: var(--surface-input);
-            padding: var(--space-1);
-            border-radius: var(--radius-md);
-        }
-        
-        .view-btn {
-            padding: var(--space-2) var(--space-3);
-            border-radius: var(--radius-sm);
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-        }
-        
-        .view-btn.active {
-            background: var(--emerald-500);
-            color: white;
-        }
-        
-        /* Products grid */
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: var(--space-5);
-        }
-        
-        .product-card {
-            background: var(--surface-card);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-default);
-            border-radius: var(--radius-xl);
-            overflow: hidden;
-            transition: all var(--duration-base) var(--ease-out-expo);
-            cursor: pointer;
-        }
-        
-        .product-card:hover {
-            transform: translateY(-6px);
-            border-color: var(--border-accent);
-            box-shadow: var(--shadow-md);
-        }
-        
-        .product-image {
-            height: 200px;
-            background: linear-gradient(135deg, #1a1a2e, #0f0f1e);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            position: relative;
-        }
-        
-        .product-badge {
-            position: absolute;
-            top: var(--space-3);
-            left: var(--space-3);
-            padding: var(--space-1) var(--space-3);
-            background: var(--emerald-500);
-            color: #000;
-            font-size: 0.65rem;
-            font-weight: 700;
-            border-radius: var(--radius-full);
-        }
-        
-        .product-badge.hot {
-            background: var(--rose-500);
-            color: white;
-        }
-        
-        .product-badge.new {
-            background: var(--violet-500);
-            color: white;
-        }
-        
-        .product-info {
-            padding: var(--space-5);
-        }
-        
-        .product-info h3 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: var(--space-1);
-        }
-        
-        .product-supplier {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            margin-bottom: var(--space-3);
-            display: flex;
-            align-items: center;
-            gap: var(--space-1);
-        }
-        
-        .product-price {
-            font-family: var(--font-display);
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--emerald-400);
-            margin-bottom: var(--space-3);
-        }
-        
-        .product-actions {
-            display: flex;
-            gap: var(--space-3);
-        }
-        
-        .btn-add {
-            flex: 1;
-            padding: var(--space-3);
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid var(--border-accent);
-            border-radius: var(--radius-md);
-            color: var(--emerald-400);
-            font-weight: 600;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all var(--duration-fast);
-        }
-        
-        .btn-add:hover {
-            background: var(--emerald-500);
-            color: white;
-        }
-        
-        .btn-compare {
-            width: 44px;
-            background: transparent;
-            border: 1px solid var(--border-default);
-            border-radius: var(--radius-md);
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all var(--duration-fast);
-        }
-        
-        .btn-compare.active {
-            background: var(--violet-500);
-            border-color: var(--violet-500);
-            color: white;
-        }
-        
-        /* List view */
-        .products-list {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-3);
-        }
-        
-        .product-list-item {
-            display: flex;
-            align-items: center;
-            gap: var(--space-4);
-            background: var(--surface-card);
-            border: 1px solid var(--border-default);
-            border-radius: var(--radius-lg);
-            padding: var(--space-4);
-            transition: all var(--duration-fast);
-        }
-        
-        .product-list-item:hover {
-            border-color: var(--border-accent);
-            transform: translateX(4px);
-        }
-        
-        .product-list-image {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #1a1a2e, #0f0f1e);
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            flex-shrink: 0;
-        }
-        
+        .products-list { display: flex; flex-direction: column; gap: 14px; }
+        .product-list-item { display: flex; align-items: center; gap: 20px; background: var(--surface-card); border: 1px solid var(--border-default); border-radius: 20px; padding: 16px; transition: 0.2s; }
+        .product-list-item:hover { border-color: var(--border-accent); transform: translateX(4px); }
+        .product-list-img { width: 70px; height: 70px; background: #12121f; border-radius: 16px; overflow: hidden; flex-shrink: 0; }
+        .product-list-img img { width: 100%; height: 100%; object-fit: cover; }
         .product-list-info { flex: 1; }
-        .product-list-info h3 { font-size: 1rem; font-weight: 600; margin-bottom: var(--space-1); }
+        .product-list-info h3 { font-size: 0.95rem; margin-bottom: 4px; }
         .product-list-info .price { color: var(--emerald-400); font-weight: 700; }
+
+        .compare-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #0F0F1E; border-top: 1px solid var(--border-default); padding: 16px 28px; transform: translateY(100%); transition: transform 0.4s; z-index: 50; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; align-items: center; }
+        .compare-bar.show { transform: translateY(0); }
+        .compare-items { display: flex; gap: 12px; flex-wrap: wrap; }
+        .compare-item { background: rgba(16,185,129,0.1); padding: 6px 14px; border-radius: 40px; display: flex; gap: 8px; align-items: center; font-size: 0.8rem; }
+        .compare-item img { width: 28px; height: 28px; object-fit: cover; border-radius: 8px; }
+        .compare-item button { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; }
+        .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 200; display: flex; flex-direction: column; gap: 12px; }
+        .toast { background: #1e1e2e; border-left: 3px solid var(--emerald-500); padding: 12px 20px; border-radius: 16px; transform: translateX(120%); transition: 0.3s; display: flex; align-items: center; gap: 12px; }
+        .toast.show { transform: translateX(0); }
+        .toast.success { border-left-color: var(--emerald-500); }
+        .toast.error { border-left-color: var(--rose-500); }
         
-        /* Comparison bar */
-        .compare-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--surface-card-solid);
-            border-top: 1px solid var(--border-default);
-            padding: var(--space-4) var(--space-6);
-            transform: translateY(100%);
-            transition: transform var(--duration-base) var(--ease-out-expo);
-            z-index: 50;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: var(--space-4);
-        }
-        
-        .compare-bar.show {
-            transform: translateY(0);
-        }
-        
-        .compare-items {
-            display: flex;
-            gap: var(--space-3);
-            flex-wrap: wrap;
-        }
-        
-        .compare-item {
-            display: flex;
-            align-items: center;
-            gap: var(--space-2);
-            background: rgba(16, 185, 129, 0.08);
-            padding: var(--space-2) var(--space-3);
-            border-radius: var(--radius-md);
-            font-size: 0.8rem;
-        }
-        
-        .compare-item button {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-        }
-        
-        /* Loading */
-        .loading-spinner {
-            text-align: center;
-            padding: var(--space-8);
-            color: var(--text-muted);
-        }
-        
-        .fa-spin { animation: spin 1s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        
-        /* Toast */
-        .toast-container {
-            position: fixed;
-            bottom: var(--space-5);
-            right: var(--space-5);
-            z-index: 200;
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-3);
-        }
-        
-        .toast {
-            background: var(--surface-card-solid);
-            border: 1px solid var(--border-default);
-            border-radius: var(--radius-md);
-            padding: var(--space-4) var(--space-5);
-            display: flex;
-            align-items: center;
-            gap: var(--space-3);
-            min-width: 280px;
-            transform: translateX(120%);
-            opacity: 0;
-            transition: all 0.5s var(--ease-out-expo);
-        }
-        
-        .toast.show { transform: translateX(0); opacity: 1; }
-        .toast.success { border-left: 3px solid var(--emerald-500); }
-        .toast.success .toast-icon { color: var(--emerald-400); }
-        
-        /* Responsive */
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.open { transform: translateX(0); }
             .mobile-header { display: flex; }
-            .main-content { margin-left: 0; padding-top: 76px; }
-            .products-grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
-            .search-row { flex-direction: column; }
-            .voice-btn { width: 100%; }
+            .main-content { margin-left: 0; padding-top: 80px; }
+            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+            .product-info h3 { white-space: normal; font-size: 0.85rem; }
         }
-        
-        @media (max-width: 480px) {
-            .products-grid { grid-template-columns: 1fr; }
-            .filters-section { flex-direction: column; align-items: stretch; }
-            .view-toggle { align-self: center; }
-        }
+        @media (max-width: 500px) { .products-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-    <div class="bg-decoration" aria-hidden="true">
-        <div class="bg-gradient-1"></div>
+<div class="bg-decoration"><div class="bg-gradient-1"></div></div>
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+<header class="mobile-header">
+    <button class="menu-btn" onclick="openSidebar()"><i class="fa-solid fa-bars"></i></button>
+    <span class="mobile-logo" style="font-weight:700;">Salam <span style="color:#10B981;">Market</span></span>
+    <button class="menu-btn" onclick="location.href='cart.html'"><i class="fa-solid fa-cart-shopping"></i></button>
+</header>
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header"><div class="sidebar-logo"><i class="fa-solid fa-store"></i></div><div class="sidebar-brand"><h2>Salam Market</h2><p>PRO v6</p></div></div>
+    <nav class="sidebar-nav">
+        <div class="nav-item active"><i class="fa-solid fa-basket-shopping"></i> Catalogue</div>
+        <div class="nav-item"><i class="fa-solid fa-cart-shopping"></i> Panier</div>
+        <div class="nav-item"><i class="fa-solid fa-box"></i> Commandes</div>
+        <div class="nav-item"><i class="fa-solid fa-user"></i> Profil</div>
+    </nav>
+    <div class="sidebar-footer"><button class="btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</button></div>
+</aside>
+<main class="main-content">
+    <div class="catalog-container">
+        <div class="catalog-header"><h1>🛍️ Catalogue complet</h1><p id="productCount">Tous nos produits authentiques</p></div>
+        <div class="search-section"><div class="search-row"><div class="search-input-wrapper"><i class="fa-solid fa-magnifying-glass search-icon"></i><input type="text" id="searchInput" class="search-input" placeholder="Rechercher un produit... (riz, spaghetti, savon, dentifrice)"></div><button class="voice-btn" id="voiceBtn" onclick="startVoiceSearch()"><i class="fa-solid fa-microphone"></i></button></div></div>
+        <div class="filters-section"><div class="category-filters" id="categoryFilters"></div><select id="sortSelect" class="sort-select"><option value="default">Trier par</option><option value="price-asc">Prix croissant</option><option value="price-desc">Prix décroissant</option><option value="name-asc">Nom A-Z</option></select><div class="view-toggle"><button class="view-btn active" data-view="grid" onclick="setView('grid')"><i class="fa-solid fa-grid-2"></i></button><button class="view-btn" data-view="list" onclick="setView('list')"><i class="fa-solid fa-list"></i></button></div></div>
+        <div id="productsContainer" class="products-grid"></div>
     </div>
+</main>
+<div class="compare-bar" id="compareBar"><div><i class="fa-solid fa-chart-simple"></i> Comparaison (<span id="compareCount">0</span>/4)</div><div class="compare-items" id="compareItems"></div><button class="btn-add" onclick="compareSelected()" style="width:auto; padding:8px 20px;">Comparer</button></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+    // ========== MAPPING DES IMAGES DEPUIS LE DOSSIER "images/" ==========
+    // Tous les noms de fichiers exacts fournis
+    const imageMapping = {
+        // Pâtes
+        "Spaghetti Barilla n°5": "SpaghettiBarilla500g.jpg",
+        "Spaghetti Pâte d'Or": "SpaghettiPATEDOR.jpg",
+        "Spaghetti Broli": "SpaghettiBROLI.jpg",
+        "Spaghetti Panzani": "SpaghettiPANZANI.jpg",
+        "Macaroni Kayna Petit plomb": "MacaroniKayna500g.jpg",
+        "Macaroni Helper Cheeseburger": "MacaroniHELPER.jpg",
+        "Macaroni Kayna Coquillette": "MacaroniKAYNA.jpg",
+        // Riz
+        "Riz Tanti": "RizTanti.jpg",
+        "Riz Parfumé Mama Gold": "RizParfuméMamaGold.jpg",
+        "Riz Long Grain 5kg": "RizParfuméMamaGold.jpg",
+        // Dentifrices
+        "Colgate MaxWhite": "Dentifrice.ColgateMaxWhite.jpg",
+        "Colgate MaxFresh": "Dentifrice.ColgateMaxFresh.jpg",
+        "Colgate Herbal": "Dentifrice.Colgate.Herbal.jpg",
+        "Parodontax": "Dentifrice.Parodontax.jpg",
+        "Sensodyne Répare & Protège": "Dentifrice.SensodyneRepare&Protege.jpg",
+        "Sensodyne Soin Complet": "Dentifrice.Sensodyne.jpg",
+        "Colgate Black Fresh": "Dentifrice.Colgat.jpg",
+        "Signal Blancheur": "Dentifrice.Signal.jpg",
+        // Conserves
+        "Sardines Jolly": "SardineJoly.jpg",
+        "Sardines Famrite": "Sardine.Famrite.jpg",
+        // Savons
+        "Savon Maera Herbal": "SAVON.Maera.jpg",
+        "Savon Protex Pharmapur Aloe": "Protex.jpg",
+        "Savon Protex Pharmapur Charbon": "protex_-_pharmapur_-_charbon_2_.jpg",
+        "Savon Pharmapur Classique": "Savon-PHARMAPUR-150g-1.webp",
+        "Dettol Original Antibactérien": "Dettol.Original.jpg",
+        "Dettol Skincare": "Dettol.Skincare.jpg",
+        "Savon Nivea Crème Soft": "SAVON.NIVEA.jpg",
+        "Savon Artisanal": "SAVON.jpg",
+        // Épicerie
+        "Sucre Blanc": "SucreBlanc.jpg",
+        // Ménage
+        "Détergent Madar": "detergentMadar.jpg",
+        "Détergent Hoka High Foam": "detergeantHoka.jpg",
+        "Détergent Ozil Ultra Power": "detergentOzil.jpg",
+        "Serviettes Siempre Extra": "cotonhygeniquesiempre.jpg",
+        // Huiles
+        "Huile Mayer": "HuileMajo1r.jpg",
+        "Huile Rouge 500g": "huileRouge.jpg",
+        // Frais
+        "Poulet fermier": "poulet.jpg",
+        "Tomates fraîches": "tomates.jpg",
+        "Mangues fraîches": "mangues.jpg"
+    };
+
+    function getProductImage(productName) {
+        let filename = imageMapping[productName];
+        if (filename) {
+            return `images/${filename}`;
+        }
+        // Fallback générique selon catégorie
+        if (productName.toLowerCase().includes("spaghetti")) return "images/SpaghettiBarilla500g.jpg";
+        if (productName.toLowerCase().includes("riz")) return "images/RizTanti.jpg";
+        if (productName.toLowerCase().includes("dentifrice") || productName.toLowerCase().includes("colgate") || productName.toLowerCase().includes("sensodyne")) return "images/Dentifrice.ColgateMaxWhite.jpg";
+        if (productName.toLowerCase().includes("savon") || productName.toLowerCase().includes("protex") || productName.toLowerCase().includes("dettol")) return "images/SAVON.Maera.jpg";
+        if (productName.toLowerCase().includes("sardine")) return "images/SardineJoly.jpg";
+        if (productName.toLowerCase().includes("huile")) return "images/HuileMajo1r.jpg";
+        return "images/SpaghettiBarilla500g.jpg";
+    }
+
+    // TOUS LES PRODUITS (basés sur les fichiers fournis)
+    const FULL_PRODUCTS = [
+        { id: 1, name: "Spaghetti Barilla n°5", category: "Pâtes", price: 1200, unit: "500g", supplier: "Barilla", sales: 320, badge: "best" },
+        { id: 2, name: "Macaroni Kayna Petit plomb", category: "Pâtes", price: 850, unit: "500g", supplier: "Kayna", sales: 210, badge: "" },
+        { id: 3, name: "Riz Tanti", category: "Riz", price: 800, unit: "kg", supplier: "Tantie Mouna", sales: 1450, badge: "hot" },
+        { id: 4, name: "Riz Parfumé Mama Gold", category: "Riz", price: 950, unit: "kg", supplier: "Mama Gold", sales: 2100, badge: "best" },
+        { id: 5, name: "Riz Long Grain 5kg", category: "Riz", price: 4200, unit: "5kg", supplier: "Mama Gold", sales: 870, badge: "" },
+        { id: 6, name: "Colgate MaxWhite", category: "Dentifrices", price: 1850, unit: "tube", supplier: "Colgate", sales: 540, badge: "" },
+        { id: 7, name: "Colgate MaxFresh", category: "Dentifrices", price: 1800, unit: "tube", supplier: "Colgate", sales: 490, badge: "" },
+        { id: 8, name: "Colgate Herbal", category: "Dentifrices", price: 1950, unit: "tube", supplier: "Colgate", sales: 380, badge: "" },
+        { id: 9, name: "Parodontax", category: "Dentifrices", price: 3200, unit: "tube", supplier: "Parodontax", sales: 275, badge: "premium" },
+        { id: 10, name: "Sensodyne Répare & Protège", category: "Dentifrices", price: 3800, unit: "tube", supplier: "Sensodyne", sales: 410, badge: "" },
+        { id: 11, name: "Sensodyne Soin Complet", category: "Dentifrices", price: 3600, unit: "tube", supplier: "Sensodyne", sales: 395, badge: "premium" },
+        { id: 12, name: "Colgate Black Fresh", category: "Dentifrices", price: 1700, unit: "tube", supplier: "Colgate", sales: 310, badge: "" },
+        { id: 13, name: "Signal Blancheur", category: "Dentifrices", price: 1650, unit: "tube", supplier: "Signal", sales: 520, badge: "" },
+        { id: 14, name: "Sardines Jolly", category: "Conserves", price: 650, unit: "boîte", supplier: "Jolly", sales: 890, badge: "hot" },
+        { id: 15, name: "Sardines Famrite", category: "Conserves", price: 600, unit: "boîte", supplier: "Famrite", sales: 720, badge: "" },
+        { id: 16, name: "Savon Maera Herbal", category: "Savons", price: 400, unit: "unité", supplier: "Maera", sales: 1250, badge: "best" },
+        { id: 17, name: "Savon Protex Pharmapur Aloe", category: "Savons", price: 550, unit: "150g", supplier: "Protex", sales: 980, badge: "" },
+        { id: 18, name: "Savon Protex Pharmapur Charbon", category: "Savons", price: 600, unit: "150g", supplier: "Protex", sales: 760, badge: "" },
+        { id: 19, name: "Savon Pharmapur Classique", category: "Savons", price: 450, unit: "100g", supplier: "Pharmapur", sales: 1100, badge: "" },
+        { id: 20, name: "Dettol Original Antibactérien", category: "Savons", price: 750, unit: "175g", supplier: "Dettol", sales: 880, badge: "" },
+        { id: 21, name: "Dettol Skincare", category: "Savons", price: 800, unit: "175g", supplier: "Dettol", sales: 640, badge: "" },
+        { id: 22, name: "Savon Nivea Crème Soft", category: "Savons", price: 680, unit: "100g", supplier: "Nivea", sales: 530, badge: "" },
+        { id: 23, name: "Savon Artisanal", category: "Savons", price: 900, unit: "pièce", supplier: "Artisan local", sales: 210, badge: "" },
+        { id: 24, name: "Sucre Blanc", category: "Épicerie", price: 4500, unit: "50kg", supplier: "Sucrerie", sales: 320, badge: "" },
+        { id: 25, name: "Spaghetti Pâte d'Or", category: "Pâtes", price: 1100, unit: "500g", supplier: "Pâte d'Or", sales: 450, badge: "" },
+        { id: 26, name: "Spaghetti Broli", category: "Pâtes", price: 1050, unit: "500g", supplier: "Broli", sales: 380, badge: "" },
+        { id: 27, name: "Spaghetti Panzani", category: "Pâtes", price: 1300, unit: "500g", supplier: "Panzani", sales: 590, badge: "" },
+        { id: 28, name: "Macaroni Helper Cheeseburger", category: "Pâtes", price: 1800, unit: "boîte", supplier: "Helper", sales: 260, badge: "" },
+        { id: 29, name: "Macaroni Kayna Coquillette", category: "Pâtes", price: 900, unit: "500g", supplier: "Kayna", sales: 410, badge: "" },
+        { id: 30, name: "Détergent Madar", category: "Ménage", price: 1500, unit: "kg", supplier: "Madar", sales: 730, badge: "" },
+        { id: 31, name: "Détergent Hoka High Foam", category: "Ménage", price: 1750, unit: "kg", supplier: "Hoka", sales: 680, badge: "" },
+        { id: 32, name: "Détergent Ozil Ultra Power", category: "Ménage", price: 2300, unit: "6 pièces", supplier: "Ozil", sales: 890, badge: "hot" },
+        { id: 33, name: "Serviettes Siempre Extra", category: "Hygiène", price: 1200, unit: "12x", supplier: "Siempre", sales: 950, badge: "" },
+        { id: 34, name: "Huile Mayer", category: "Huiles", price: 1350, unit: "1L", supplier: "Mayer", sales: 1430, badge: "best" },
+        { id: 35, name: "Huile Rouge 500g", category: "Huiles", price: 1100, unit: "500g", supplier: "Huilerie", sales: 540, badge: "" },
+        { id: 36, name: "Poulet fermier", category: "Viandes", price: 3200, unit: "kg", supplier: "Ferme Bini", sales: 680, badge: "fresh" },
+        { id: 37, name: "Tomates fraîches", category: "Fruits", price: 450, unit: "kg", supplier: "Maraîcher", sales: 1120, badge: "" },
+        { id: 38, name: "Mangues fraîches", category: "Fruits", price: 600, unit: "kg", supplier: "Ferme Moderne", sales: 890, badge: "" }
+    ];
+
+    let currentCategory = "all";
+    let currentSearch = "";
+    let currentSort = "default";
+    let currentView = "grid";
+    let compareList = JSON.parse(localStorage.getItem("salam_compare") || "[]");
+    let categories = ["all", ...new Set(FULL_PRODUCTS.map(p => p.category))];
+
+    function renderCategoryFilters() {
+        const container = document.getElementById("categoryFilters");
+        container.innerHTML = categories.map(cat => `<button class="filter-chip ${currentCategory === cat ? 'active' : ''}" onclick="filterByCategory('${cat}')">${cat === "all" ? "Tous" : cat}</button>`).join("");
+    }
+    function filterByCategory(cat) { currentCategory = cat; renderCategoryFilters(); renderProducts(); }
+    function setView(view) { currentView = view; document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active')); document.querySelector(`.view-btn[data-view="${view}"]`).classList.add('active'); renderProducts(); }
     
-    <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
-    
-    <header class="mobile-header">
-        <button class="menu-btn" onclick="openSidebar()"><i class="fa-solid fa-bars"></i></button>
-        <span class="mobile-logo">Salam <span>Market</span></span>
-        <button class="menu-btn" onclick="location.href='cart.html'">
-            <i class="fa-solid fa-cart-shopping"></i>
-            <span id="mobileCartBadge" style="position:absolute; top:8px; right:16px; background:var(--emerald-500); border-radius:50%; width:18px; height:18px; font-size:10px; display:none;"></span>
-        </button>
-    </header>
-    
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="sidebar-logo"><i class="fa-solid fa-store"></i></div>
-            <div class="sidebar-brand">
-                <h2>Salam Market</h2>
-                <p>PRO v5.0</p>
-            </div>
-        </div>
-        <nav class="sidebar-nav">
-            <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-chart-line"></i> Tableau de Bord</a>
-            <a href="products.html" class="nav-item active"><i class="fa-solid fa-basket-shopping"></i> Catalogue <span class="nav-badge" id="sidebarCartBadge" style="display:none;">0</span></a>
-            <a href="cart.html" class="nav-item"><i class="fa-solid fa-cart-shopping"></i> Panier</a>
-            <a href="orders.html" class="nav-item"><i class="fa-solid fa-box"></i> Commandes</a>
-            <a href="tracking.html" class="nav-item"><i class="fa-solid fa-map-location-dot"></i> Suivi Live</a>
-            <a href="chat.html" class="nav-item"><i class="fa-solid fa-comments"></i> Chat</a>
-            <a href="profile.html" class="nav-item"><i class="fa-solid fa-user"></i> Profil</a>
-        </nav>
-        <div class="sidebar-footer">
-            <button class="btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</button>
-        </div>
-    </aside>
-    
-    <main class="main-content">
-        <div class="catalog-container">
-            <div class="catalog-header">
-                <h1>🛒 Catalogue</h1>
-                <p id="productCount">Découvrez nos produits frais et authentiques</p>
-            </div>
-            
-            <div class="search-section">
-                <div class="search-row">
-                    <div class="search-input-wrapper">
-                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                        <input type="text" class="search-input" id="searchInput" placeholder="Rechercher un produit... (riz, huile, savon...)" autocomplete="off">
-                    </div>
-                    <button class="voice-btn" id="voiceBtn" onclick="startVoiceSearch()">
-                        <i class="fa-solid fa-microphone"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="filters-section">
-                <div class="category-filters" id="categoryFilters">
-                    <button class="filter-chip active" data-cat="all">Tous</button>
-                </div>
-                <select class="sort-select" id="sortSelect">
-                    <option value="default">Trier par</option>
-                    <option value="price-asc">Prix croissant</option>
-                    <option value="price-desc">Prix décroissant</option>
-                    <option value="name-asc">Nom A-Z</option>
-                    <option value="popular">Popularité</option>
-                </select>
-                <div class="view-toggle">
-                    <button class="view-btn active" data-view="grid" onclick="setView('grid')"><i class="fa-solid fa-grid-2"></i></button>
-                    <button class="view-btn" data-view="list" onclick="setView('list')"><i class="fa-solid fa-list"></i></button>
-                </div>
-            </div>
-            
-            <div id="productsContainer" class="products-grid"></div>
-        </div>
-    </main>
-    
-    <!-- Comparison Bar -->
-    <div class="compare-bar" id="compareBar">
-        <div style="font-size: 0.8rem; color: var(--text-muted);">
-            <i class="fa-solid fa-chart-simple"></i> Comparaison
-        </div>
-        <div class="compare-items" id="compareItems"></div>
-        <button class="btn-add" onclick="compareProducts()" style="width: auto; padding: var(--space-2) var(--space-5);">
-            Comparer <i class="fa-solid fa-arrow-right"></i>
-        </button>
-    </div>
-    
-    <div class="toast-container" id="toastContainer"></div>
-    
-    <script>
-        // ============================================================
-        // CATALOGUE PRODUITS — Recherche vocale + Comparaison
-        // ============================================================
-        
-        (() => {
-            'use strict';
-            
-            // Vérification session
-            const session = JSON.parse(localStorage.getItem('salam_session') || 'null');
-            if (!session) {
-                window.location.href = '../index.html';
-                return;
-            }
-            
-            // ========== DONNÉES PRODUITS ==========
-            const PRODUCTS = [
-                { id: 1, name: 'Riz Parfumé Mama Gold', category: 'Riz', price: 900, unit: 'kg', emoji: '🍚', supplier: 'BOUTIQUE LE TOUMAI', badge: 'best', sales: 1245, stock: 500 },
-                { id: 2, name: 'Riz Tanti', category: 'Riz', price: 800, unit: 'kg', emoji: '🍚', supplier: 'BOUTIQUE LE TOUMAI', badge: '', sales: 890, stock: 300 },
-                { id: 3, name: 'Huile Mayor 1L', category: 'Huiles', price: 1300, unit: 'L', emoji: '🫒', supplier: 'BOUTIQUE LE TOUMAI', badge: '', sales: 1567, stock: 200 },
-                { id: 4, name: 'Huile d\'Olive 500ml', category: 'Huiles', price: 2500, unit: 'ml', emoji: '🫒', supplier: 'Ferme Moderne', badge: 'premium', sales: 567, stock: 100 },
-                { id: 5, name: 'PHARMAPUR Herbal', category: 'Savons', price: 350, unit: 'unité', emoji: '🧼', supplier: 'BOUTIQUE LE TOUMAI', badge: 'best', sales: 2345, stock: 1000 },
-                { id: 6, name: 'Dettol Original', category: 'Savons', price: 650, unit: 'unité', emoji: '🧼', supplier: 'Pharmacie Centrale', badge: '', sales: 890, stock: 400 },
-                { id: 7, name: 'Colgate Blancheur', category: 'Dentifrices', price: 1800, unit: 'tube', emoji: '🦷', supplier: 'BOUTIQUE LE TOUMAI', badge: 'popular', sales: 678, stock: 250 },
-                { id: 8, name: 'Sensodyne', category: 'Dentifrices', price: 3500, unit: 'tube', emoji: '🦷', supplier: 'Pharmacie Centrale', badge: 'premium', sales: 345, stock: 150 },
-                { id: 9, name: 'Poulet fermier', category: 'Viandes', price: 3500, unit: 'kg', emoji: '🍗', supplier: 'Élevage Bini', badge: 'fresh', sales: 456, stock: 50 },
-                { id: 10, name: 'Mangues fraîches', category: 'Fruits', price: 500, unit: 'kg', emoji: '🥭', supplier: 'Ferme Moderne', badge: 'fresh', sales: 789, stock: 200 },
-                { id: 11, name: 'Tomates fraîches', category: 'Fruits', price: 450, unit: 'kg', emoji: '🍅', supplier: 'Ferme Moderne', badge: '', sales: 901, stock: 150 },
-                { id: 12, name: 'Gaz butane 6kg', category: 'Gaz', price: 4500, unit: 'bouteille', emoji: '🔥', supplier: 'GAZ EXPRESS BINI', badge: '', sales: 234, stock: 80 }
-            ];
-            
-            // Catégories uniques
-            const CATEGORIES = ['Tous', ...new Set(PRODUCTS.map(p => p.category))];
-            
-            // État
-            let currentCategory = 'all';
-            let currentSearch = '';
-            let currentSort = 'default';
-            let currentView = 'grid';
-            let compareList = JSON.parse(localStorage.getItem('salam_compare') || '[]');
-            
-            // ========== STORAGE HELPERS ==========
-            const Storage = {
-                get: (key, defaultVal = null) => {
-                    try { return JSON.parse(localStorage.getItem('salam_' + key) || 'null') || defaultVal; }
-                    catch { return defaultVal; }
-                },
-                set: (key, value) => localStorage.setItem('salam_' + key, JSON.stringify(value))
-            };
-            
-            // ========== INITIALISATION ==========
-            document.addEventListener('DOMContentLoaded', () => {
-                renderCategories();
-                renderProducts();
-                updateCartBadge();
-                updateCompareBar();
-                
-                // Écouteurs
-                document.getElementById('searchInput').addEventListener('input', (e) => {
-                    currentSearch = e.target.value.toLowerCase();
-                    renderProducts();
-                });
-                
-                document.getElementById('sortSelect').addEventListener('change', (e) => {
-                    currentSort = e.target.value;
-                    renderProducts();
-                });
-            });
-            
-            function renderCategories() {
-                const container = document.getElementById('categoryFilters');
-                container.innerHTML = CATEGORIES.map(cat => `
-                    <button class="filter-chip ${currentCategory === (cat === 'Tous' ? 'all' : cat) ? 'active' : ''}" 
-                            data-cat="${cat === 'Tous' ? 'all' : cat}" 
-                            onclick="filterByCategory('${cat === 'Tous' ? 'all' : cat}')">
-                        ${cat}
-                    </button>
-                `).join('');
-            }
-            
-            function filterByCategory(category) {
-                currentCategory = category;
-                renderCategories();
-                renderProducts();
-            }
-            
-            function renderProducts() {
-                let filtered = [...PRODUCTS];
-                
-                // Filtre par catégorie
-                if (currentCategory !== 'all') {
-                    filtered = filtered.filter(p => p.category === currentCategory);
-                }
-                
-                // Filtre par recherche
-                if (currentSearch) {
-                    filtered = filtered.filter(p => 
-                        p.name.toLowerCase().includes(currentSearch) || 
-                        p.category.toLowerCase().includes(currentSearch) ||
-                        p.supplier.toLowerCase().includes(currentSearch)
-                    );
-                }
-                
-                // Tri
-                if (currentSort === 'price-asc') filtered.sort((a, b) => a.price - b.price);
-                else if (currentSort === 'price-desc') filtered.sort((a, b) => b.price - a.price);
-                else if (currentSort === 'name-asc') filtered.sort((a, b) => a.name.localeCompare(b.name));
-                else if (currentSort === 'popular') filtered.sort((a, b) => b.sales - a.sales);
-                
-                // Mise à jour compteur
-                document.getElementById('productCount').innerHTML = `${filtered.length} produits trouvés`;
-                
-                // Rendu
-                const container = document.getElementById('productsContainer');
-                if (currentView === 'grid') {
-                    container.className = 'products-grid';
-                    container.innerHTML = filtered.map(p => renderProductCard(p)).join('');
-                } else {
-                    container.className = 'products-list';
-                    container.innerHTML = filtered.map(p => renderProductListItem(p)).join('');
-                }
-            }
-            
-            function renderProductCard(p) {
-                const isComparing = compareList.includes(p.id);
-                const badgeClass = p.badge === 'best' ? 'hot' : (p.badge === 'premium' ? 'new' : '');
-                const badgeText = p.badge === 'best' ? '🔥 Top vente' : (p.badge === 'premium' ? '⭐ Premium' : (p.badge === 'fresh' ? '🌿 Frais' : ''));
-                
-                return `
-                    <div class="product-card">
-                        <div class="product-image">
-                            ${badgeText ? `<span class="product-badge ${badgeClass}">${badgeText}</span>` : ''}
-                            <span>${p.emoji}</span>
-                        </div>
-                        <div class="product-info">
-                            <h3>${escapeHtml(p.name)}</h3>
-                            <div class="product-supplier">
-                                <i class="fa-solid fa-store"></i> ${escapeHtml(p.supplier)}
-                            </div>
-                            <div class="product-price">${p.price.toLocaleString()} FCFA <small style="font-size:0.7rem;">/${p.unit}</small></div>
-                            <div class="product-actions">
-                                <button class="btn-add" onclick="addToCart(${p.id}, '${escapeHtml(p.name)}', ${p.price}, '${p.emoji}')">
-                                    <i class="fa-solid fa-plus"></i> Ajouter
-                                </button>
-                                <button class="btn-compare ${isComparing ? 'active' : ''}" onclick="toggleCompare(${p.id})">
-                                    <i class="fa-solid fa-chart-simple"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            function renderProductListItem(p) {
-                const isComparing = compareList.includes(p.id);
-                
-                return `
-                    <div class="product-list-item">
-                        <div class="product-list-image"><span>${p.emoji}</span></div>
-                        <div class="product-list-info">
-                            <h3>${escapeHtml(p.name)}</h3>
-                            <div style="font-size:0.7rem; color: var(--text-muted);">${escapeHtml(p.supplier)}</div>
-                            <div class="price">${p.price.toLocaleString()} FCFA / ${p.unit}</div>
-                        </div>
-                        <div style="display: flex; gap: var(--space-2);">
-                            <button class="btn-add" onclick="addToCart(${p.id}, '${escapeHtml(p.name)}', ${p.price}, '${p.emoji}')">
-                                <i class="fa-solid fa-plus"></i> Ajouter
-                            </button>
-                            <button class="btn-compare ${isComparing ? 'active' : ''}" onclick="toggleCompare(${p.id})">
-                                <i class="fa-solid fa-chart-simple"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            // ========== PANIER ==========
-            function addToCart(id, name, price, emoji) {
-                let cart = Storage.get('cart', []);
-                const existing = cart.find(item => item.id === id);
-                
-                if (existing) {
-                    existing.quantity++;
-                } else {
-                    cart.push({
-                        id: id,
-                        key: `prod_${id}_${Date.now()}`,
-                        name: name,
-                        price: price,
-                        quantity: 1,
-                        image: emoji,
-                        supplier: PRODUCTS.find(p => p.id === id)?.supplier || 'Salam Market'
-                    });
-                }
-                
-                Storage.set('cart', cart);
-                updateCartBadge();
-                showToast('Ajouté au panier', `${name} a été ajouté`, 'success');
-            }
-            
-            function updateCartBadge() {
-                const cart = Storage.get('cart', []);
-                const total = cart.reduce((s, i) => s + i.quantity, 0);
-                
-                const sidebarBadge = document.getElementById('sidebarCartBadge');
-                const mobileBadge = document.getElementById('mobileCartBadge');
-                
-                if (sidebarBadge) {
-                    if (total > 0) {
-                        sidebarBadge.textContent = total;
-                        sidebarBadge.style.display = '';
-                    } else {
-                        sidebarBadge.style.display = 'none';
-                    }
-                }
-                
-                if (mobileBadge) {
-                    if (total > 0) {
-                        mobileBadge.textContent = total;
-                        mobileBadge.style.display = '';
-                    } else {
-                        mobileBadge.style.display = 'none';
-                    }
-                }
-            }
-            
-            // ========== COMPARAISON ==========
-            function toggleCompare(productId) {
-                const index = compareList.indexOf(productId);
-                if (index === -1) {
-                    if (compareList.length >= 4) {
-                        showToast('Limite atteinte', 'Vous ne pouvez comparer que 4 produits maximum', 'error');
-                        return;
-                    }
-                    compareList.push(productId);
-                    showToast('Ajouté à la comparaison', '', 'success');
-                } else {
-                    compareList.splice(index, 1);
-                    showToast('Retiré de la comparaison', '', 'info');
-                }
-                
-                localStorage.setItem('salam_compare', JSON.stringify(compareList));
-                renderProducts();
-                updateCompareBar();
-            }
-            
-            function updateCompareBar() {
-                const bar = document.getElementById('compareBar');
-                const container = document.getElementById('compareItems');
-                
-                if (compareList.length === 0) {
-                    bar.classList.remove('show');
-                    return;
-                }
-                
-                bar.classList.add('show');
-                
-                const compareProducts = PRODUCTS.filter(p => compareList.includes(p.id));
-                container.innerHTML = compareProducts.map(p => `
-                    <div class="compare-item">
-                        <span>${p.emoji} ${p.name}</span>
-                        <button onclick="toggleCompare(${p.id})"><i class="fa-solid fa-xmark"></i></button>
-                    </div>
-                `).join('');
-            }
-            
-            function compareProducts() {
-                if (compareList.length < 2) {
-                    showToast('Comparaison', 'Sélectionnez au moins 2 produits à comparer', 'warning');
-                    return;
-                }
-                
-                const productsToCompare = PRODUCTS.filter(p => compareList.includes(p.id));
-                let comparisonHTML = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">';
-                
-                productsToCompare.forEach(p => {
-                    comparisonHTML += `
-                        <div style="background: var(--surface-card); border-radius: var(--radius-lg); padding: 16px; text-align: center;">
-                            <div style="font-size: 3rem;">${p.emoji}</div>
-                            <h4 style="margin: 12px 0 8px;">${p.name}</h4>
-                            <p style="color: var(--emerald-400); font-weight: 700; font-size: 1.2rem;">${p.price.toLocaleString()} FCFA</p>
-                            <p style="font-size: 0.75rem; color: var(--text-muted);"><i class="fa-solid fa-store"></i> ${p.supplier}</p>
-                            <p style="font-size: 0.7rem;">📊 ${p.sales} ventes</p>
-                            <button class="btn-add" style="margin-top: 12px;" onclick="addToCart(${p.id}, '${p.name}', ${p.price}, '${p.emoji}')">Ajouter au panier</button>
-                        </div>
-                    `;
-                });
-                
-                comparisonHTML += '</div>';
-                
-                const modal = document.createElement('div');
-                modal.style.position = 'fixed';
-                modal.style.inset = '0';
-                modal.style.background = 'rgba(0,0,0,0.8)';
-                modal.style.backdropFilter = 'blur(20px)';
-                modal.style.zIndex = '1000';
-                modal.style.display = 'flex';
-                modal.style.alignItems = 'center';
-                modal.style.justifyContent = 'center';
-                modal.style.padding = '20px';
-                
-                const modalContent = document.createElement('div');
-                modalContent.style.background = 'var(--surface-card-solid)';
-                modalContent.style.borderRadius = 'var(--radius-xl)';
-                modalContent.style.maxWidth = '900px';
-                modalContent.style.width = '100%';
-                modalContent.style.maxHeight = '80vh';
-                modalContent.style.overflow = 'auto';
-                modalContent.style.padding = '24px';
-                modalContent.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 style="font-family: var(--font-display);">Comparaison de produits</h3>
-                        <button onclick="this.closest('div').parentElement.remove()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">&times;</button>
-                    </div>
-                    ${comparisonHTML}
-                `;
-                
-                modal.appendChild(modalContent);
-                document.body.appendChild(modal);
-                modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
-            }
-            
-            // ========== RECHERCHE VOCALE ==========
-            let recognition = null;
-            
-            function startVoiceSearch() {
-                const btn = document.getElementById('voiceBtn');
-                
-                if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                    showToast('Non supporté', 'La recherche vocale n\'est pas supportée sur ce navigateur', 'error');
-                    return;
-                }
-                
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                recognition = new SpeechRecognition();
-                recognition.lang = 'fr-FR';
-                recognition.continuous = false;
-                recognition.interimResults = false;
-                
-                recognition.onstart = () => {
-                    btn.classList.add('listening');
-                    btn.innerHTML = '<i class="fa-solid fa-microphone-slash"></i>';
-                    showToast('Écoute...', 'Parlez maintenant', 'info', 2000);
-                };
-                
-                recognition.onresult = (event) => {
-                    const transcript = event.results[0][0].transcript;
-                    document.getElementById('searchInput').value = transcript;
-                    currentSearch = transcript.toLowerCase();
-                    renderProducts();
-                    showToast('Recherche vocale', `"${transcript}"`, 'success');
-                };
-                
-                recognition.onerror = (event) => {
-                    console.error('Erreur reconnaissance:', event.error);
-                    showToast('Erreur', 'Réessayez s\'il vous plaît', 'error');
-                };
-                
-                recognition.onend = () => {
-                    btn.classList.remove('listening');
-                    btn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
-                };
-                
-                recognition.start();
-            }
-            
-            // ========== UTILITAIRES ==========
-            function setView(view) {
-                currentView = view;
-                document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
-                document.querySelector(`.view-btn[data-view="${view}"]`).classList.add('active');
-                renderProducts();
-            }
-            
-            function showToast(title, message, type = 'success') {
-                const container = document.getElementById('toastContainer');
-                if (!container) return;
-                
-                const icons = { success: 'fa-circle-check', error: 'fa-circle-exclamation', warning: 'fa-triangle-exclamation', info: 'fa-circle-info' };
-                
-                const toast = document.createElement('div');
-                toast.className = `toast ${type}`;
-                toast.innerHTML = `
-                    <i class="fa-solid ${icons[type] || icons.success} toast-icon"></i>
-                    <div class="toast-content">
-                        <div class="toast-title">${escapeHtml(title)}</div>
-                        <div class="toast-message">${escapeHtml(message)}</div>
-                    </div>
-                    <button class="toast-close" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></button>
-                `;
-                
-                container.appendChild(toast);
-                setTimeout(() => toast.classList.add('show'), 10);
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                    setTimeout(() => toast.remove(), 500);
-                }, 4000);
-            }
-            
-            function escapeHtml(str) {
-                const div = document.createElement('div');
-                div.textContent = str;
-                return div.innerHTML;
-            }
-            
-            function openSidebar() {
-                document.getElementById('sidebar').classList.add('open');
-                document.getElementById('overlay').classList.add('show');
-            }
-            
-            function closeSidebar() {
-                document.getElementById('sidebar').classList.remove('open');
-                document.getElementById('overlay').classList.remove('show');
-            }
-            
-            function logout() {
-                localStorage.removeItem('salam_session');
-                localStorage.removeItem('salam_cart');
-                window.location.href = '../index.html';
-            }
-            
-            // Expose globals
-            window.addToCart = addToCart;
-            window.filterByCategory = filterByCategory;
-            window.toggleCompare = toggleCompare;
-            window.compareProducts = compareProducts;
-            window.startVoiceSearch = startVoiceSearch;
-            window.setView = setView;
-            window.openSidebar = openSidebar;
-            window.closeSidebar = closeSidebar;
-            window.logout = logout;
-        })();
-    </script>
+    function getFilteredSorted() {
+        let filtered = FULL_PRODUCTS.filter(p => (currentCategory === "all" || p.category === currentCategory) && 
+            (currentSearch === "" || p.name.toLowerCase().includes(currentSearch) || p.category.toLowerCase().includes(currentSearch) || p.supplier.toLowerCase().includes(currentSearch)));
+        if (currentSort === "price-asc") filtered.sort((a,b)=>a.price-b.price);
+        else if (currentSort === "price-desc") filtered.sort((a,b)=>b.price-a.price);
+        else if (currentSort === "name-asc") filtered.sort((a,b)=>a.name.localeCompare(b.name));
+        return filtered;
+    }
+
+    function renderProducts() {
+        let products = getFilteredSorted();
+        document.getElementById("productCount").innerHTML = `${products.length} produits disponibles`;
+        const container = document.getElementById("productsContainer");
+        if (currentView === "grid") {
+            container.className = "products-grid";
+            container.innerHTML = products.map(p => {
+                const badgeClass = p.badge === "best" ? "hot" : (p.badge === "premium" ? "premium" : (p.badge === "hot" ? "hot" : ""));
+                const badgeText = p.badge === "best" ? "🔥 Top" : (p.badge === "premium" ? "⭐ Premium" : (p.badge === "hot" ? "📈 Populaire" : (p.badge === "fresh" ? "🌿 Frais" : "")));
+                return `<div class="product-card"><div class="product-img">${badgeText ? `<span class="product-badge ${badgeClass}">${badgeText}</span>` : ''}<img src="${getProductImage(p.name)}" alt="${p.name}" onerror="this.src='images/SpaghettiBarilla500g.jpg'"></div><div class="product-info"><h3>${escapeHtml(p.name)}</h3><div class="product-supplier"><i class="fa-solid fa-store"></i> ${escapeHtml(p.supplier)}</div><div class="product-price">${p.price.toLocaleString()} FCFA <small>/${p.unit}</small></div><div class="product-actions"><button class="btn-add" onclick="addToCart(${p.id}, '${escapeHtml(p.name)}', ${p.price})"><i class="fa-solid fa-plus"></i> Ajouter</button><button class="btn-compare ${compareList.includes(p.id) ? 'active' : ''}" onclick="toggleCompare(${p.id})"><i class="fa-solid fa-chart-simple"></i></button></div></div></div>`;
+            }).join("");
+        } else {
+            container.className = "products-list";
+            container.innerHTML = products.map(p => `<div class="product-list-item"><div class="product-list-img"><img src="${getProductImage(p.name)}" alt="${p.name}" onerror="this.src='images/SpaghettiBarilla500g.jpg'"></div><div class="product-list-info"><h3>${escapeHtml(p.name)}</h3><div style="font-size:0.7rem; color:#94A3B8;">${escapeHtml(p.supplier)}</div><div class="price">${p.price.toLocaleString()} FCFA / ${p.unit}</div></div><div style="display:flex; gap:8px;"><button class="btn-add" style="padding:8px 16px;" onclick="addToCart(${p.id}, '${escapeHtml(p.name)}', ${p.price})">Ajouter</button><button class="btn-compare ${compareList.includes(p.id) ? 'active' : ''}" onclick="toggleCompare(${p.id})"><i class="fa-solid fa-chart-simple"></i></button></div></div>`).join("");
+        }
+    }
+
+    function addToCart(id, name, price) {
+        let cart = JSON.parse(localStorage.getItem("salam_cart") || "[]");
+        let existing = cart.find(i => i.id === id);
+        if(existing) existing.quantity += 1;
+        else cart.push({ id, name, price, quantity: 1, image: getProductImage(name), supplier: FULL_PRODUCTS.find(p=>p.id===id)?.supplier });
+        localStorage.setItem("salam_cart", JSON.stringify(cart));
+        showToast("Ajouté au panier", `${name} ajouté ✅`, "success");
+    }
+
+    function toggleCompare(id) {
+        if(compareList.includes(id)) compareList = compareList.filter(i => i !== id);
+        else { if(compareList.length >= 4) { showToast("Limite atteinte", "Maximum 4 produits", "error"); return; } compareList.push(id); }
+        localStorage.setItem("salam_compare", JSON.stringify(compareList));
+        renderProducts();
+        updateCompareBar();
+    }
+    function updateCompareBar() {
+        const bar = document.getElementById("compareBar");
+        const container = document.getElementById("compareItems");
+        document.getElementById("compareCount").innerText = compareList.length;
+        if(compareList.length === 0) { bar.classList.remove("show"); return; }
+        bar.classList.add("show");
+        let compareProds = FULL_PRODUCTS.filter(p => compareList.includes(p.id));
+        container.innerHTML = compareProds.map(p => `<div class="compare-item"><img src="${getProductImage(p.name)}" onerror="this.src='images/SpaghettiBarilla500g.jpg'"> ${p.name.length > 20 ? p.name.slice(0,18)+'...' : p.name} <button onclick="toggleCompare(${p.id})"><i class="fa-solid fa-xmark"></i></button></div>`).join("");
+    }
+    function compareSelected() {
+        if(compareList.length < 2) { showToast("Comparaison", "Sélectionnez au moins 2 produits", "warning"); return; }
+        let prods = FULL_PRODUCTS.filter(p => compareList.includes(p.id));
+        let html = `<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px;">` + prods.map(p => `<div style="background:#111; border-radius:24px; padding:20px; text-align:center;"><img src="${getProductImage(p.name)}" style="width:100%; height:140px; object-fit:cover; border-radius:16px; margin-bottom:12px;" onerror="this.src='images/SpaghettiBarilla500g.jpg'"><h4>${p.name}</h4><div style="color:#34D399; font-weight:bold;">${p.price} FCFA</div><div style="font-size:0.7rem;">${p.supplier}</div><button class="btn-add" style="margin-top:12px;" onclick="addToCart(${p.id},'${p.name}',${p.price})">Ajouter</button></div>`).join("") + `</div>`;
+        let modal = document.createElement("div"); modal.style.position="fixed"; modal.style.inset=0; modal.style.background="rgba(0,0,0,0.85)"; modal.style.backdropFilter="blur(12px)"; modal.style.zIndex=1000; modal.style.display="flex"; modal.style.alignItems="center"; modal.style.justifyContent="center";
+        let content = document.createElement("div"); content.style.background="#0F0F1E"; content.style.borderRadius="28px"; content.style.maxWidth="1000px"; content.style.width="90%"; content.style.padding="24px"; content.style.maxHeight="80vh"; content.style.overflow="auto";
+        content.innerHTML = `<div style="display:flex; justify-content:space-between;"><h3>🔍 Comparaison produits</h3><button onclick="this.closest('div').parentElement.parentElement.remove()" style="background:none; border:none; color:white; font-size:1.8rem;">&times;</button></div>${html}`;
+        modal.appendChild(content); document.body.appendChild(modal); modal.onclick = (e) => { if(e.target === modal) modal.remove(); };
+    }
+
+    let recognition = null;
+    function startVoiceSearch() {
+        const btn = document.getElementById("voiceBtn");
+        if(!('webkitSpeechRecognition' in window)) { showToast("Non supporté", "Recherche vocale indisponible", "error"); return; }
+        const SpeechRecognition = window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition(); recognition.lang = "fr-FR"; recognition.interimResults = false;
+        recognition.onstart = () => { btn.classList.add("listening"); btn.innerHTML = '<i class="fa-solid fa-microphone-slash"></i>'; };
+        recognition.onresult = (event) => { let text = event.results[0][0].transcript; document.getElementById("searchInput").value = text; currentSearch = text.toLowerCase(); renderProducts(); showToast("Recherche vocale", `"${text}"`, "success"); };
+        recognition.onerror = () => showToast("Erreur", "Réessayez", "error");
+        recognition.onend = () => { btn.classList.remove("listening"); btn.innerHTML = '<i class="fa-solid fa-microphone"></i>'; };
+        recognition.start();
+    }
+
+    function showToast(title, msg, type="success") {
+        const container = document.getElementById("toastContainer");
+        const toast = document.createElement("div"); toast.className = `toast ${type}`; toast.innerHTML = `<i class="fa-solid fa-${type === 'success' ? 'circle-check' : 'circle-exclamation'}"></i> <div><strong>${title}</strong><br><small>${msg}</small></div>`;
+        container.appendChild(toast); setTimeout(() => toast.classList.add("show"), 10);
+        setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 300); }, 3000);
+    }
+    function escapeHtml(str) { return String(str).replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+    function openSidebar() { document.getElementById("sidebar").classList.add("open"); document.getElementById("overlay").classList.add("show"); }
+    function closeSidebar() { document.getElementById("sidebar").classList.remove("open"); document.getElementById("overlay").classList.remove("show"); }
+    function logout() { localStorage.clear(); window.location.href = "index.html"; }
+
+    document.getElementById("searchInput").addEventListener("input", (e) => { currentSearch = e.target.value.toLowerCase(); renderProducts(); });
+    document.getElementById("sortSelect").addEventListener("change", (e) => { currentSort = e.target.value; renderProducts(); });
+    renderCategoryFilters(); renderProducts(); updateCompareBar();
+    window.filterByCategory = filterByCategory; window.toggleCompare = toggleCompare; window.addToCart = addToCart; window.compareSelected = compareSelected; window.startVoiceSearch = startVoiceSearch; window.setView = setView; window.openSidebar = openSidebar; window.closeSidebar = closeSidebar; window.logout = logout;
+</script>
 </body>
 </html>
