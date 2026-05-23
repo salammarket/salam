@@ -238,6 +238,35 @@
         .chat-action-btn { width: 36px; height: 36px; border-radius: 50%; background: transparent; border: 1px solid var(--border-default); color: var(--text-muted); cursor: pointer; transition: all 0.2s ease; }
         .chat-action-btn:hover { background: var(--surface-hover); color: var(--emerald-400); transform: scale(1.05); }
         
+        /* Channel Selector */
+        .channel-selector {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 8px 0;
+        }
+        .channel-btn {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: transparent;
+            border: 1px solid var(--border-default);
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+        }
+        .channel-btn.active {
+            background: var(--emerald-500);
+            border-color: var(--emerald-500);
+            color: white;
+        }
+        .channel-btn:hover:not(.active) {
+            border-color: var(--emerald-400);
+            color: var(--emerald-400);
+        }
+        
         .messages-area { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
         .message { display: flex; max-width: 70%; animation: messageIn 0.3s ease; }
         @keyframes messageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -325,6 +354,7 @@
             .chat-sidebar.mobile-visible { display: flex; position: absolute; inset: 0; z-index: 10; background: var(--surface-card-solid); }
             .message { max-width: 85%; }
             .notifications-panel { width: 100%; right: -100%; }
+            .channel-selector { order: -1; width: 100%; margin-bottom: 8px; }
         }
         @media (max-width: 480px) {
             .chat-header { flex-direction: column; align-items: flex-start; }
@@ -366,7 +396,6 @@
             <a href="profile.html" class="nav-item"><i class="fa-solid fa-user"></i> Profil</a>
         </nav>
         <div class="sidebar-footer">
-            <!-- BOUTON MODE SOMBRE -->
             <div class="theme-toggle" id="themeToggleBtn">
                 <span><i class="fa-regular fa-moon"></i> Mode sombre</span>
                 <div class="toggle-switch" id="themeSwitch"></div>
@@ -415,7 +444,6 @@
         </div>
     </main>
     
-    <!-- Notifications Panel -->
     <div class="notifications-panel" id="notificationsPanel">
         <div class="notifications-header">
             <h3><i class="fa-regular fa-bell"></i> Notifications</h3>
@@ -443,10 +471,14 @@
                 }
                 
                 if (themeToggleBtn) {
-                    themeToggleBtn.addEventListener('click', function() {
+                    themeToggleBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
                         document.body.classList.toggle('dark');
                         const isDark = document.body.classList.contains('dark');
-                        if (themeSwitch) themeSwitch.classList.toggle('active');
+                        if (themeSwitch) {
+                            if (isDark) themeSwitch.classList.add('active');
+                            else themeSwitch.classList.remove('active');
+                        }
                         localStorage.setItem('salam_theme', isDark ? 'dark' : 'light');
                         showToast('Thème changé', isDark ? 'Mode sombre activé' : 'Mode clair activé', 'info', 1500);
                     });
@@ -462,7 +494,7 @@
             const currentUserName = currentUser.name;
             const currentUserRole = currentUser.role;
             
-            // ========== NUMÉROS RÉELS ==========
+            // ========== NUMÉROS ==========
             const REAL_PHONE_NUMBER = '+237688282662';
             const REAL_EMAIL = 'contact@salamarket.cm';
             
@@ -471,6 +503,47 @@
             let currentChatUser = null;
             let typingTimeout = null;
             let messageInterval = null;
+            
+            // ========== CANAUX DE COMMUNICATION (OPTIONNELS) ==========
+            let channels = {
+                internal: true,   // Chat interne (activé par défaut)
+                whatsapp: false,  // WhatsApp (désactivé par défaut)
+                sms: false,       // SMS (désactivé par défaut)
+                email: false      // Email (désactivé par défaut)
+            };
+            
+            // ========== RENDER CHANNEL SELECTOR ==========
+            function renderChannelSelector() {
+                const container = document.getElementById('chatChannelSelector');
+                if (!container) return;
+                container.innerHTML = `
+                    <div class="channel-selector">
+                        <span style="font-size:0.65rem; color:var(--text-muted);"><i class="fa-regular fa-comment-dots"></i> Canaux d'envoi :</span>
+                        <button class="channel-btn ${channels.internal ? 'active' : ''}" data-channel="internal">
+                            <i class="fa-regular fa-comment"></i> Chat
+                        </button>
+                        <button class="channel-btn ${channels.whatsapp ? 'active' : ''}" data-channel="whatsapp">
+                            <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                        </button>
+                        <button class="channel-btn ${channels.sms ? 'active' : ''}" data-channel="sms">
+                            <i class="fa-solid fa-message"></i> SMS
+                        </button>
+                        <button class="channel-btn ${channels.email ? 'active' : ''}" data-channel="email">
+                            <i class="fa-solid fa-envelope"></i> Email
+                        </button>
+                    </div>
+                `;
+                
+                document.querySelectorAll('.channel-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const channel = this.dataset.channel;
+                        channels[channel] = !channels[channel];
+                        renderChannelSelector();
+                        showToast('Canal ' + (channels[channel] ? 'activé' : 'désactivé'), channel, 'info', 1500);
+                    });
+                });
+            }
             
             // ========== RÉPONSES IA ==========
             const AI_RESPONSES = {
@@ -490,7 +563,7 @@
                 return AI_RESPONSES.default[Math.floor(Math.random() * AI_RESPONSES.default.length)];
             }
             
-            // ========== NOTIFICATIONS ==========
+            // ========== NOTIFICATIONS (UNIQUEMENT CANAUX ACTIFS) ==========
             function sendRealWhatsApp(phoneNumber, message) {
                 const formattedNumber = phoneNumber.replace(/[^0-9]/g, '');
                 window.open(`https://wa.me/${formattedNumber}?text=${encodeURIComponent(message)}`, '_blank');
@@ -507,71 +580,71 @@
                 return true;
             }
             
-            function saveNotification(type, title, body, data) {
-                const notifications = JSON.parse(localStorage.getItem('salam_notifications') || '[]');
-                notifications.unshift({ id: Date.now(), type, title, body, data, read: false, date: new Date().toISOString() });
-                localStorage.setItem('salam_notifications', JSON.stringify(notifications.slice(0, 50)));
-                updateNotificationBadge();
-                renderNotificationsList();
-                if ('Notification' in window && Notification.permission === 'granted') {
-                    new Notification(title, { body: body });
+            // NOTIFICATION CLIENT : UNIQUEMENT LES CANAUX ACTIFS
+            function notifyCustomer(customer, message, context) {
+                const fullMessage = `📱 SALAM MARKET\n\n${context || 'Message'}: "${message.substring(0, 200)}"\n\n---\nConnectez-vous à Salam Market pour répondre.`;
+                let channelsUsed = [];
+                
+                if (channels.whatsapp && customer.phone) {
+                    sendRealWhatsApp(customer.phone, fullMessage);
+                    channelsUsed.push('WhatsApp');
                 }
+                if (channels.sms && customer.phone) {
+                    sendRealSMS(customer.phone, fullMessage.substring(0, 160));
+                    channelsUsed.push('SMS');
+                }
+                if (channels.email && customer.email) {
+                    sendRealEmail(customer.email, `Message de Salam Market`, fullMessage);
+                    channelsUsed.push('Email');
+                }
+                
+                if (channelsUsed.length > 0) {
+                    showToast('Notification client', `Envoyée via: ${channelsUsed.join(', ')}`, 'success', 3000);
+                }
+                return channelsUsed.length > 0;
             }
             
-            function updateNotificationBadge() {
-                const notifications = JSON.parse(localStorage.getItem('salam_notifications') || '[]');
-                const unreadCount = notifications.filter(n => !n.read).length;
-                const badge = document.getElementById('notificationBadge');
-                if (badge) {
-                    if (unreadCount > 0) {
-                        badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
-                        badge.style.display = '';
-                    } else {
-                        badge.style.display = 'none';
+            // ENVOI AU CHAT INTERNE (TOUJOURS ACTIF)
+            function sendInternalMessage(customerId, customerName, message) {
+                const msgObj = {
+                    id: Date.now().toString() + '_' + Math.random().toString(36).substr(2, 8),
+                    from: currentUserId,
+                    fromName: currentUserName,
+                    to: customerId,
+                    text: message,
+                    timestamp: new Date().toISOString(),
+                    read: false
+                };
+                const messages = JSON.parse(localStorage.getItem('salam_messages') || '[]');
+                messages.push(msgObj);
+                localStorage.setItem('salam_messages', JSON.stringify(messages));
+                return true;
+            }
+            
+            // ENVOI GLOBAL (CHAT INTERNE + CANAUX ACTIFS)
+            function sendMessageToCustomer(customer, message) {
+                let sent = false;
+                let channelsUsed = [];
+                
+                // Chat interne (toujours actif)
+                sendInternalMessage(customer.id, customer.name, message);
+                channelsUsed.push('Chat interne');
+                sent = true;
+                
+                // Notifications externes (uniquement si canaux actifs)
+                if (channels.whatsapp || channels.sms || channels.email) {
+                    notifyCustomer(customer, message, `Nouveau message de ${currentUserName}`);
+                } else {
+                    showToast('Message envoyé', 'Uniquement dans le chat interne (aucun canal externe activé)', 'info', 3000);
+                }
+                
+                if (sent) {
+                    loadConversations();
+                    if (currentChatId === customer.id) {
+                        loadChatMessages();
                     }
                 }
-            }
-            
-            function renderNotificationsList() {
-                const container = document.getElementById('notificationsList');
-                if (!container) return;
-                const notifications = JSON.parse(localStorage.getItem('salam_notifications') || '[]');
-                if (notifications.length === 0) {
-                    container.innerHTML = '<div style="text-align:center;padding:32px;color:var(--text-muted);">Aucune notification</div>';
-                    return;
-                }
-                container.innerHTML = notifications.map(n => `
-                    <div class="notification-item ${!n.read ? 'unread' : ''}" onclick="markNotificationRead(${n.id})">
-                        <div class="notification-title">${escapeHtml(n.title)}</div>
-                        <div class="notification-body">${escapeHtml(n.body)}</div>
-                        <div class="notification-date">${formatTime(n.date)}</div>
-                    </div>
-                `).join('');
-            }
-            
-            function markNotificationRead(id) {
-                const notifications = JSON.parse(localStorage.getItem('salam_notifications') || '[]');
-                const index = notifications.findIndex(n => n.id === id);
-                if (index !== -1) {
-                    notifications[index].read = true;
-                    localStorage.setItem('salam_notifications', JSON.stringify(notifications));
-                    renderNotificationsList();
-                    updateNotificationBadge();
-                }
-            }
-            
-            function toggleNotificationsPanel() {
-                document.getElementById('notificationsPanel').classList.toggle('open');
-            }
-            
-            function notifySupplier(supplier, customerName, message) {
-                const notificationText = `🛒 NOUVEAU MESSAGE SALAM MARKET\n\nDe: ${customerName}\nMessage: "${message.substring(0, 200)}"\n\nPour répondre, connectez-vous à votre espace fournisseur.`;
-                sendRealWhatsApp(REAL_PHONE_NUMBER, notificationText);
-                sendRealSMS(REAL_PHONE_NUMBER, notificationText.substring(0, 160));
-                sendRealEmail(REAL_EMAIL, `Nouveau message de ${customerName}`, notificationText);
-                if (supplier.email) sendRealEmail(supplier.email, `Nouveau message de ${customerName}`, notificationText);
-                saveNotification('message', `Message de ${customerName}`, message.substring(0, 100), { customer: customerName, message: message });
-                showToast('Notification envoyée', `${customerName} a été notifié sur WhatsApp/SMS/Email`, 'success');
+                return sent;
             }
             
             // ========== CONTACTS ==========
@@ -617,7 +690,7 @@
                 return uniqueContacts;
             }
             
-            // ========== CHARGEMENT CONVERSATIONS ==========
+            // ========== CONVERSATIONS ==========
             function loadConversations() {
                 const saved = localStorage.getItem('salam_messages');
                 const allMessages = saved ? JSON.parse(saved) : [];
@@ -687,8 +760,18 @@
                 if (!currentChatUser) return;
                 const isOnline = currentChatUser.online === true;
                 const header = document.getElementById('chatHeader');
-                header.innerHTML = `<div class="chat-header-info"><div class="chat-header-avatar">${currentChatUser.avatar}</div><div><div class="chat-header-name">${escapeHtml(currentChatUser.name)}</div><div class="chat-header-status">${isOnline ? '🟢 En ligne' : '⚫ Hors ligne'} ${currentChatUser.role === 'supplier' && currentChatUser.category ? ` · ${currentChatUser.category}` : ''}</div></div></div>
-                    <div class="chat-actions"><button class="chat-action-btn" onclick="viewContactInfo()" title="Informations"><i class="fa-solid fa-circle-info"></i></button><button class="chat-action-btn" onclick="clearChat()" title="Effacer"><i class="fa-solid fa-trash"></i></button><button class="chat-action-btn" onclick="notifySupplierManually()" title="Notifier"><i class="fa-solid fa-bell"></i></button></div>`;
+                header.innerHTML = `
+                    <div class="chat-header-info">
+                        <div class="chat-header-avatar">${currentChatUser.avatar}</div>
+                        <div><div class="chat-header-name">${escapeHtml(currentChatUser.name)}</div><div class="chat-header-status">${isOnline ? '🟢 En ligne' : '⚫ Hors ligne'} ${currentChatUser.role === 'supplier' && currentChatUser.category ? ` · ${currentChatUser.category}` : ''}</div></div>
+                    </div>
+                    <div class="chat-actions">
+                        <button class="chat-action-btn" onclick="viewContactInfo()" title="Informations"><i class="fa-solid fa-circle-info"></i></button>
+                        <button class="chat-action-btn" onclick="clearChat()" title="Effacer"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                    <div id="chatChannelSelector"></div>
+                `;
+                renderChannelSelector();
             }
             
             function renderMessages(messages) {
@@ -726,7 +809,7 @@
                 localStorage.setItem('salam_messages', JSON.stringify(allMessages));
                 input.value = ''; input.style.height = 'auto';
                 loadConversations();
-                showToast('Message envoyé', text.substring(0, 50), 'success');
+                showToast('Message envoyé', text.substring(0, 50), 'success', 1500);
                 stopTyping();
                 
                 const receiver = getReceiverInfo(currentChatId);
@@ -745,36 +828,10 @@
                         msgs.push(aiMessage);
                         localStorage.setItem('salam_messages', JSON.stringify(msgs));
                         loadConversations();
-                        showToast('Réponse automatique', 'Un assistant IA vous a répondu', 'info');
-                        
-                        if (receiver.phone || receiver.email) {
-                            notifySupplier(receiver, currentUserName, text);
-                        }
+                        showToast('Réponse automatique', 'Un assistant IA vous a répondu', 'info', 2000);
                     }, 1000);
                 } else if (isSupplierOrAdmin && isOnline) {
-                    showToast('Message envoyé', 'Le fournisseur est en ligne, il vous répondra bientôt', 'info');
-                } else if (receiver && receiver.role === 'support') {
-                    setTimeout(() => {
-                        const aiResponse = "Merci pour votre message ! L'équipe Salam Market vous répond dans les minutes à venir. 🙏";
-                        const aiMessage = {
-                            id: Date.now().toString() + '_ai_support',
-                            from: 'support', fromName: 'Service Client Salam', to: currentUserId,
-                            text: aiResponse, timestamp: new Date().toISOString(), read: false, isAI: true
-                        };
-                        const msgs = JSON.parse(localStorage.getItem('salam_messages') || '[]');
-                        msgs.push(aiMessage);
-                        localStorage.setItem('salam_messages', JSON.stringify(msgs));
-                        loadConversations();
-                    }, 1500);
-                }
-            }
-            
-            function notifySupplierManually() {
-                if (currentChatUser && (currentChatUser.role === 'supplier' || currentChatUser.role === 'admin')) {
-                    notifySupplier(currentChatUser, currentUserName, "Je souhaite être recontacté rapidement. Merci !");
-                    showToast('Notification envoyée', 'Le fournisseur a été notifié', 'success');
-                } else {
-                    showToast('Impossible', 'Seul un fournisseur peut être notifié', 'error');
+                    showToast('Message envoyé', 'Le fournisseur est en ligne, il vous répondra bientôt', 'info', 2000);
                 }
             }
             
@@ -812,6 +869,64 @@
                 markMessagesAsRead(contactId);
                 if (window.innerWidth <= 768) document.getElementById('chatSidebar').classList.remove('mobile-visible');
                 document.getElementById('chatInput').focus();
+            }
+            
+            // ========== NOTIFICATIONS ==========
+            function saveNotification(type, title, body, data) {
+                const notifications = JSON.parse(localStorage.getItem('salam_notifications') || '[]');
+                notifications.unshift({ id: Date.now(), type, title, body, data, read: false, date: new Date().toISOString() });
+                localStorage.setItem('salam_notifications', JSON.stringify(notifications.slice(0, 50)));
+                updateNotificationBadge();
+                renderNotificationsList();
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification(title, { body: body });
+                }
+            }
+            
+            function updateNotificationBadge() {
+                const notifications = JSON.parse(localStorage.getItem('salam_notifications') || '[]');
+                const unreadCount = notifications.filter(n => !n.read).length;
+                const badge = document.getElementById('notificationBadge');
+                if (badge) {
+                    if (unreadCount > 0) {
+                        badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+                        badge.style.display = '';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                }
+            }
+            
+            function renderNotificationsList() {
+                const container = document.getElementById('notificationsList');
+                if (!container) return;
+                const notifications = JSON.parse(localStorage.getItem('salam_notifications') || '[]');
+                if (notifications.length === 0) {
+                    container.innerHTML = '<div style="text-align:center;padding:32px;color:var(--text-muted);">Aucune notification</div>';
+                    return;
+                }
+                container.innerHTML = notifications.map(n => `
+                    <div class="notification-item ${!n.read ? 'unread' : ''}" onclick="markNotificationRead(${n.id})">
+                        <div class="notification-title">${escapeHtml(n.title)}</div>
+                        <div class="notification-body">${escapeHtml(n.body)}</div>
+                        <div class="notification-date">${formatTime(n.date)}</div>
+                    </div>
+                `).join('');
+            }
+            
+            function markNotificationRead(id) {
+                const notifications = JSON.parse(localStorage.getItem('salam_notifications') || '[]');
+                const index = notifications.findIndex(n => n.id === id);
+                if (index !== -1) {
+                    notifications[index].read = true;
+                    localStorage.setItem('salam_notifications', JSON.stringify(notifications));
+                    renderNotificationsList();
+                    updateNotificationBadge();
+                }
+            }
+            
+            function toggleNotificationsPanel() {
+                document.getElementById('notificationsPanel').classList.toggle('open');
             }
             
             // ========== UTILITAIRES ==========
@@ -940,6 +1055,10 @@
                         this.style.height = Math.min(this.scrollHeight, 100) + 'px';
                     });
                 }
+                
+                if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+                    Notification.requestPermission();
+                }
             }
             
             function showToast(title, message, type = 'success', duration = 3000) {
@@ -989,7 +1108,6 @@
             window.toggleMobileChatSidebar = toggleMobileChatSidebar;
             window.toggleNotificationsPanel = toggleNotificationsPanel;
             window.markNotificationRead = markNotificationRead;
-            window.notifySupplierManually = notifySupplierManually;
             window.openSidebar = openSidebar;
             window.closeSidebar = closeSidebar;
             window.logout = logout;
