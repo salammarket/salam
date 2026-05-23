@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#0A0A14">
-    meta name="description" content="Administration — Salam Market PRO">
+    <meta name="description" content="Administration — Salam Market PRO">
     <meta name="apple-mobile-web-app-capable" content="yes">
     
     <title>Salam Market PRO · Administration</title>
@@ -772,6 +772,27 @@
             color: var(--text-primary);
         }
         
+        /* Access Denied */
+        .access-denied {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .access-denied i {
+            font-size: 4rem;
+            color: var(--rose-500);
+            margin-bottom: 20px;
+        }
+        
+        .access-denied h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .access-denied p {
+            color: var(--text-muted);
+        }
+        
         /* Responsive */
         @media (max-width: 1024px) {
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -808,37 +829,12 @@
         <div class="sidebar-header">
             <div class="sidebar-logo"><i class="fa-solid fa-crown"></i></div>
             <div class="sidebar-brand">
-                <h2>Salam Admin</h2>
-                <p>Super Admin</p>
+                <h2 id="sidebarBrandTitle">Salam Admin</h2>
+                <p id="sidebarBrandRole">Super Admin</p>
             </div>
         </div>
-        <nav class="sidebar-nav">
-            <button class="nav-item" data-section="dashboard">
-                <i class="fa-solid fa-gauge-high"></i> Tableau de Bord
-            </button>
-            <button class="nav-item" data-section="orders">
-                <i class="fa-solid fa-box"></i> Commandes
-                <span class="nav-badge" id="pendingOrdersBadge">0</span>
-            </button>
-            <button class="nav-item" data-section="users">
-                <i class="fa-solid fa-users"></i> Utilisateurs
-            </button>
-            <button class="nav-item" data-section="products">
-                <i class="fa-solid fa-basket-shopping"></i> Produits
-            </button>
-            <button class="nav-item" data-section="suppliers">
-                <i class="fa-solid fa-shop"></i> Fournisseurs
-            </button>
-            <button class="nav-item" data-section="promos">
-                <i class="fa-solid fa-tags"></i> Promotions
-            </button>
-            <button class="nav-item" data-section="messages">
-                <i class="fa-solid fa-envelope"></i> Messagerie
-                <span class="nav-badge" id="unreadMessagesBadge">0</span>
-            </button>
-            <button class="nav-item" data-section="settings">
-                <i class="fa-solid fa-gear"></i> Paramètres
-            </button>
+        <nav class="sidebar-nav" id="sidebarNav">
+            <!-- Les boutons seront générés dynamiquement selon le rôle -->
         </nav>
         <div class="sidebar-footer">
             <button class="btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</button>
@@ -1050,11 +1046,9 @@
                 </div>
                 <div class="chart-card" id="messagingContainer">
                     <div style="display: flex; min-height: 500px;">
-                        <!-- Liste des conversations -->
                         <div style="width: 300px; border-right: 1px solid var(--border-subtle); overflow-y: auto;" id="conversationsList">
                             <div class="messages-list" id="messagesList"></div>
                         </div>
-                        <!-- Vue de la conversation -->
                         <div style="flex: 1; display: flex; flex-direction: column;" id="conversationView">
                             <div class="conversation-view" id="activeConversation">
                                 <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
@@ -1261,15 +1255,25 @@
     
     <script>
         // ============================================================
-        // ADMIN DASHBOARD — Gestion complète avec Messagerie
+        // ADMIN DASHBOARD — Gestion complète avec Rôles
         // ============================================================
         
         (() => {
             'use strict';
             
-            // Vérification session admin
+            // Vérification session
             const session = JSON.parse(localStorage.getItem('salam_session') || 'null');
-            if (!session || session.user.role !== 'admin') {
+            if (!session) {
+                window.location.href = '../index.html';
+                return;
+            }
+            
+            const currentUser = session.user;
+            const isAdmin = currentUser.role === 'admin';
+            const isSupplier = currentUser.role === 'supplier';
+            
+            // Redirection si rôle invalide (ni admin ni supplier)
+            if (!isAdmin && !isSupplier) {
                 window.location.href = '../index.html';
                 return;
             }
@@ -1292,6 +1296,48 @@
             
             // Données par défaut
             function initDefaultData() {
+                // Utilisateurs par défaut
+                let users = Storage.get('users', []);
+                if (users.length === 0) {
+                    const defaultUsers = [
+                        { id: 'admin1', name: 'Administrateur', email: 'admin@salam.com', phone: '+237 600000001', role: 'admin', status: 'active', createdAt: new Date().toISOString(), totalOrders: 0, totalSpent: 0 },
+                        { id: 'supplier1', name: 'Mega Distribution', email: 'contact@megadist.com', phone: '+237 633445566', role: 'supplier', status: 'active', createdAt: new Date().toISOString(), totalOrders: 0, totalSpent: 0 },
+                        { id: 'client1', name: 'Jean Dupont', email: 'jean@email.com', phone: '+237 612345678', role: 'client', status: 'active', createdAt: new Date().toISOString(), totalOrders: 3, totalSpent: 25500 },
+                        { id: 'client2', name: 'Marie Ndiaye', email: 'marie@email.com', phone: '+237 687654321', role: 'client', status: 'active', createdAt: new Date().toISOString(), totalOrders: 1, totalSpent: 8900 }
+                    ];
+                    Storage.set('users', defaultUsers);
+                }
+                
+                // S'assurer que l'utilisateur connecté existe dans la base
+                let usersList = Storage.get('users', []);
+                const userExists = usersList.some(u => u.id === currentUser.id);
+                if (!userExists) {
+                    usersList.push(currentUser);
+                    Storage.set('users', usersList);
+                }
+                
+                // Produits par défaut
+                let products = Storage.get('products', []);
+                if (products.length === 0) {
+                    const defaultProducts = [
+                        { id: 1, name: 'Riz Parfumé 5kg', category: 'Alimentation', price: 3500, stock: 50, supplier: 'Mega Distribution', supplierId: 'supplier1', image: '🍚', available: true, createdAt: new Date().toISOString() },
+                        { id: 2, name: 'Huile d\'olive 1L', category: 'Alimentation', price: 2500, stock: 30, supplier: 'Mega Distribution', supplierId: 'supplier1', image: '🫒', available: true, createdAt: new Date().toISOString() },
+                        { id: 3, name: 'Smartphone Samsung', category: 'Électronique', price: 125000, stock: 10, supplier: 'Tech Import', supplierId: 'supplier2', image: '📱', available: true, createdAt: new Date().toISOString() },
+                        { id: 4, name: 'T-shirt Coton', category: 'Mode', price: 3500, stock: 100, supplier: 'Mode Express', supplierId: 'supplier2', image: '👕', available: true, createdAt: new Date().toISOString() }
+                    ];
+                    Storage.set('products', defaultProducts);
+                }
+                
+                // Commandes par défaut
+                let orders = Storage.get('orders', []);
+                if (orders.length === 0) {
+                    const defaultOrders = [
+                        { id: 'CMD001', customerName: 'Jean Dupont', customerId: 'client1', items: [{ name: 'Riz', price: 3500, quantity: 2 }], total: 7000, status: 'livrée', paymentStatus: 'paid', createdAt: new Date(Date.now() - 5 * 86400000).toISOString() },
+                        { id: 'CMD002', customerName: 'Marie Ndiaye', customerId: 'client2', items: [{ name: 'T-shirt', price: 3500, quantity: 1 }], total: 3500, status: 'livrée', paymentStatus: 'paid', createdAt: new Date(Date.now() - 3 * 86400000).toISOString() }
+                    ];
+                    Storage.set('orders', defaultOrders);
+                }
+                
                 // Messages par défaut
                 let messages = Storage.get('messages', []);
                 if (messages.length === 0) {
@@ -1302,7 +1348,7 @@
                             userId: 'client1',
                             userName: 'Jean Dupont',
                             userRole: 'client',
-                            message: 'Bonjour, ma commande #CMD123 n\'est pas encore livrée. Pouvez-vous me donner des nouvelles ?',
+                            message: 'Bonjour, ma commande #CMD001 n\'est pas encore livrée. Pouvez-vous me donner des nouvelles ?',
                             timestamp: new Date(Date.now() - 86400000).toISOString(),
                             read: false,
                             isFromAdmin: false
@@ -1328,94 +1374,134 @@
                             timestamp: new Date(Date.now() - 172800000).toISOString(),
                             read: false,
                             isFromAdmin: false
-                        },
-                        {
-                            id: 'msg_4',
-                            conversationId: 'conv_admin_client2',
-                            userId: 'client2',
-                            userName: 'Marie Ndiaye',
-                            userRole: 'client',
-                            message: 'Merci pour la livraison rapide ! Très satisfaite de votre service.',
-                            timestamp: new Date(Date.now() - 259200000).toISOString(),
-                            read: true,
-                            isFromAdmin: false
                         }
                     ];
                     Storage.set('messages', defaultMessages);
                 }
+            }
+            
+            initDefaultData();
+            
+            // ========== GESTION DU MENU SELON LE RÔLE ==========
+            function generateSidebarMenu() {
+                const sidebarNav = document.getElementById('sidebarNav');
+                const brandTitle = document.getElementById('sidebarBrandTitle');
+                const brandRole = document.getElementById('sidebarBrandRole');
                 
-                // Utilisateurs par défaut
-                let users = Storage.get('users', []);
-                if (users.length === 0) {
-                    const defaultUsers = [
-                        { id: 'admin1', name: 'Administrateur', email: 'admin@salam.com', phone: '+237 600000001', role: 'admin', status: 'active', createdAt: new Date().toISOString(), totalOrders: 0, totalSpent: 0 },
-                        { id: 'client1', name: 'Jean Dupont', email: 'jean@email.com', phone: '+237 612345678', role: 'client', status: 'active', createdAt: new Date().toISOString(), totalOrders: 3, totalSpent: 25500 },
-                        { id: 'client2', name: 'Marie Ndiaye', email: 'marie@email.com', phone: '+237 687654321', role: 'client', status: 'active', createdAt: new Date().toISOString(), totalOrders: 1, totalSpent: 8900 },
-                        { id: 'supplier1', name: 'Mega Distribution', email: 'contact@megadist.com', phone: '+237 633445566', role: 'supplier', status: 'active', createdAt: new Date().toISOString(), totalOrders: 0, totalSpent: 0 }
+                // Mettre à jour l'affichage du header
+                brandTitle.textContent = isAdmin ? 'Salam Admin' : 'Espace Fournisseur';
+                brandRole.textContent = isAdmin ? 'Super Admin' : currentUser.name || 'Fournisseur';
+                
+                // Définir les éléments de menu selon le rôle
+                let menuItems = [];
+                
+                if (isAdmin) {
+                    // Menu complet pour l'admin
+                    menuItems = [
+                        { section: 'dashboard', icon: 'fa-gauge-high', label: 'Tableau de Bord', badge: null },
+                        { section: 'orders', icon: 'fa-box', label: 'Commandes', badge: 'pendingOrdersBadge' },
+                        { section: 'users', icon: 'fa-users', label: 'Utilisateurs', badge: null },
+                        { section: 'products', icon: 'fa-basket-shopping', label: 'Produits', badge: null },
+                        { section: 'suppliers', icon: 'fa-shop', label: 'Fournisseurs', badge: null },
+                        { section: 'promos', icon: 'fa-tags', label: 'Promotions', badge: null },
+                        { section: 'messages', icon: 'fa-envelope', label: 'Messagerie', badge: 'unreadMessagesBadge' },
+                        { section: 'settings', icon: 'fa-gear', label: 'Paramètres', badge: null }
                     ];
-                    Storage.set('users', defaultUsers);
+                } else {
+                    // Menu restreint pour le fournisseur
+                    menuItems = [
+                        { section: 'dashboard', icon: 'fa-gauge-high', label: 'Tableau de Bord', badge: null },
+                        { section: 'products', icon: 'fa-basket-shopping', label: 'Mes Produits', badge: null },
+                        { section: 'messages', icon: 'fa-envelope', label: 'Messagerie', badge: 'unreadMessagesBadge' },
+                        { section: 'settings', icon: 'fa-gear', label: 'Paramètres', badge: null }
+                    ];
                 }
                 
-                // Produits par défaut
-                let products = Storage.get('products', []);
-                if (products.length === 0) {
-                    const defaultProducts = [
-                        { id: 1, name: 'Riz Parfumé 5kg', category: 'Alimentation', price: 3500, stock: 50, supplier: 'Mega Distribution', image: '🍚', available: true, createdAt: new Date().toISOString() },
-                        { id: 2, name: 'Huile d\'olive 1L', category: 'Alimentation', price: 2500, stock: 30, supplier: 'Mega Distribution', image: '🫒', available: true, createdAt: new Date().toISOString() },
-                        { id: 3, name: 'Smartphone Samsung', category: 'Électronique', price: 125000, stock: 10, supplier: 'Tech Import', image: '📱', available: true, createdAt: new Date().toISOString() },
-                        { id: 4, name: 'T-shirt Coton', category: 'Mode', price: 3500, stock: 100, supplier: 'Mode Express', image: '👕', available: true, createdAt: new Date().toISOString() }
-                    ];
-                    Storage.set('products', defaultProducts);
-                }
+                // Générer le HTML des boutons
+                sidebarNav.innerHTML = menuItems.map(item => `
+                    <button class="nav-item" data-section="${item.section}">
+                        <i class="fa-solid ${item.icon}"></i> ${item.label}
+                        ${item.badge ? `<span class="nav-badge" id="${item.badge}">0</span>` : ''}
+                    </button>
+                `).join('');
                 
-                // Commandes par défaut
-                let orders = Storage.get('orders', []);
-                if (orders.length === 0) {
-                    const defaultOrders = [
-                        { id: 'CMD001', customerName: 'Jean Dupont', customerId: 'client1', items: [{ name: 'Riz', price: 3500, quantity: 2 }], total: 7000, status: 'livrée', paymentStatus: 'paid', createdAt: new Date(Date.now() - 5 * 86400000).toISOString() },
-                        { id: 'CMD002', customerName: 'Marie Ndiaye', customerId: 'client2', items: [{ name: 'T-shirt', price: 3500, quantity: 1 }], total: 3500, status: 'livrée', paymentStatus: 'paid', createdAt: new Date(Date.now() - 3 * 86400000).toISOString() }
-                    ];
-                    Storage.set('orders', defaultOrders);
+                // Réattacher les événements de navigation
+                attachNavEvents();
+            }
+            
+            function attachNavEvents() {
+                const navButtons = document.querySelectorAll('.nav-item');
+                navButtons.forEach(button => {
+                    button.removeEventListener('click', navClickHandler);
+                    button.addEventListener('click', navClickHandler);
+                });
+            }
+            
+            function navClickHandler(e) {
+                e.preventDefault();
+                const sectionId = this.getAttribute('data-section');
+                if (sectionId) {
+                    showSection(sectionId);
                 }
             }
             
-            // Initialisation des données
-            initDefaultData();
-            
-            // ========== NAVIGATION ==========
-            function initNavigation() {
-                // Récupérer tous les boutons de navigation
-                const navButtons = document.querySelectorAll('.nav-item');
-                
-                // Ajouter l'événement click à chaque bouton
-                navButtons.forEach(button => {
-                    button.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const sectionId = this.getAttribute('data-section');
-                        if (sectionId) {
-                            showSection(sectionId);
-                        }
-                    });
-                });
-                
-                // Afficher la section dashboard par défaut
+            // ========== INITIALISATION ==========
+            function init() {
+                generateSidebarMenu();
+                updatePendingBadge();
+                updateUnreadBadge();
                 showSection('dashboard');
             }
             
+            function updatePendingBadge() {
+                const orders = Storage.get('orders', []);
+                let filteredOrders = orders;
+                
+                if (!isAdmin) {
+                    // Le fournisseur ne voit que les commandes concernant ses produits
+                    const myProducts = Storage.get('products', []).filter(p => p.supplierId === currentUser.id);
+                    const myProductNames = myProducts.map(p => p.name);
+                    filteredOrders = orders.filter(o => 
+                        o.items && o.items.some(item => myProductNames.includes(item.name))
+                    );
+                }
+                
+                const pending = filteredOrders.filter(o => !['livrée', 'annulée'].includes(o.status)).length;
+                const badge = document.getElementById('pendingOrdersBadge');
+                if (badge) badge.textContent = pending;
+            }
+            
+            function updateUnreadBadge() {
+                const messages = Storage.get('messages', []);
+                let unread = 0;
+                
+                if (isAdmin) {
+                    unread = messages.filter(m => !m.read && !m.isFromAdmin).length;
+                } else {
+                    // Le fournisseur voit les messages qui lui sont destinés
+                    unread = messages.filter(m => !m.read && m.targetUserId === currentUser.id && !m.isFromAdmin).length;
+                }
+                
+                const badge = document.getElementById('unreadMessagesBadge');
+                if (badge) badge.textContent = unread;
+            }
+            
+            // ========== NAVIGATION ==========
             function showSection(sectionId) {
-                // Cacher toutes les sections
                 const allSections = document.querySelectorAll('.section');
                 allSections.forEach(section => {
                     section.classList.remove('active');
                 });
                 
-                // Afficher la section sélectionnée
                 const targetSection = document.getElementById(`section-${sectionId}`);
                 if (targetSection) {
                     targetSection.classList.add('active');
+                } else {
+                    // Si la section n'existe pas, afficher dashboard
+                    const dashboardSection = document.getElementById('section-dashboard');
+                    if (dashboardSection) dashboardSection.classList.add('active');
                 }
                 
-                // Mettre à jour l'état actif des boutons
                 const navButtons = document.querySelectorAll('.nav-item');
                 navButtons.forEach(button => {
                     const btnSection = button.getAttribute('data-section');
@@ -1426,53 +1512,40 @@
                     }
                 });
                 
-                // Mettre à jour la section courante
                 currentSection = sectionId;
                 
-                // Charger les données de la section
+                // Charger les données
                 if (sectionId === 'dashboard') loadDashboard();
                 if (sectionId === 'orders') loadOrders();
-                if (sectionId === 'users') loadUsers();
+                if (sectionId === 'users' && isAdmin) loadUsers();
                 if (sectionId === 'products') loadProducts();
-                if (sectionId === 'suppliers') loadSuppliers();
-                if (sectionId === 'promos') loadPromos();
+                if (sectionId === 'suppliers' && isAdmin) loadSuppliers();
+                if (sectionId === 'promos' && isAdmin) loadPromos();
                 if (sectionId === 'messages') loadMessages();
                 
-                // Fermer le sidebar sur mobile
                 closeSidebar();
-            }
-            
-            // ========== INITIALISATION ==========
-            function init() {
-                initNavigation();
-                updatePendingBadge();
-                updateUnreadBadge();
-            }
-            
-            function updatePendingBadge() {
-                const orders = Storage.get('orders', []);
-                const pending = orders.filter(o => !['livrée', 'annulée'].includes(o.status)).length;
-                const badge = document.getElementById('pendingOrdersBadge');
-                if (badge) badge.textContent = pending;
-            }
-            
-            function updateUnreadBadge() {
-                const messages = Storage.get('messages', []);
-                const unread = messages.filter(m => !m.read && !m.isFromAdmin).length;
-                const badge = document.getElementById('unreadMessagesBadge');
-                if (badge) badge.textContent = unread;
             }
             
             // ========== DASHBOARD ==========
             function loadDashboard() {
-                const orders = Storage.get('orders', []);
-                const users = Storage.get('users', []);
-                const products = Storage.get('products', []);
+                let orders = Storage.get('orders', []);
+                let users = Storage.get('users', []);
+                let products = Storage.get('products', []);
+                
+                // Filtrer selon le rôle
+                if (!isAdmin) {
+                    const myProducts = products.filter(p => p.supplierId === currentUser.id);
+                    const myProductNames = myProducts.map(p => p.name);
+                    orders = orders.filter(o => 
+                        o.items && o.items.some(item => myProductNames.includes(item.name))
+                    );
+                    products = myProducts;
+                }
                 
                 const totalRevenue = orders.filter(o => o.paymentStatus === 'paid').reduce((sum, o) => sum + (o.total || 0), 0);
                 const totalOrders = orders.length;
                 const pendingOrders = orders.filter(o => !['livrée', 'annulée'].includes(o.status)).length;
-                const totalUsers = users.length;
+                const totalProducts = products.length;
                 
                 const statsContainer = document.getElementById('dashboardStats');
                 if (statsContainer) {
@@ -1492,46 +1565,18 @@
                             <div class="stat-value">${totalOrders}</div>
                             <div class="stat-label">Commandes totales</div>
                         </div>
-                        <div class="stat-card" onclick="showSection('users')">
-                            <div class="stat-icon" style="background: rgba(139, 92, 246, 0.08);"><i class="fa-solid fa-users" style="color: var(--violet-400);"></i></div>
-                            <div class="stat-value">${totalUsers}</div>
-                            <div class="stat-label">Utilisateurs</div>
+                        <div class="stat-card" onclick="showSection('products')">
+                            <div class="stat-icon" style="background: rgba(139, 92, 246, 0.08);"><i class="fa-solid fa-basket-shopping" style="color: var(--violet-400);"></i></div>
+                            <div class="stat-value">${totalProducts}</div>
+                            <div class="stat-label">Mes produits</div>
                         </div>
                     `;
-                }
-                
-                // Derniers utilisateurs
-                const recentUsers = [...users].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
-                const recentUsersTable = document.querySelector('#recentUsersTable tbody');
-                if (recentUsersTable) {
-                    recentUsersTable.innerHTML = recentUsers.map(u => `
-                        <tr>
-                            <td>${u.name}</td>
-                            <td><span class="badge ${u.role === 'admin' ? 'badge-danger' : (u.role === 'supplier' ? 'badge-warning' : 'badge-info')}">${u.role}</span></td>
-                            <td>${u.createdAt ? new Date(u.createdAt).toLocaleDateString('fr-FR') : '-'}</td>
-                        </tr>
-                    `).join('');
-                }
-                
-                // Dernières commandes
-                const recentOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
-                const recentOrdersTable = document.querySelector('#recentOrdersTable tbody');
-                if (recentOrdersTable) {
-                    recentOrdersTable.innerHTML = recentOrders.map(o => `
-                        <tr>
-                            <td><span class="badge badge-info">#${o.id}</span></td>
-                            <td>${o.customerName || 'N/A'}</td>
-                            <td>${(o.total || 0).toLocaleString()} FCFA</span></td>
-                            <td><span class="badge ${o.status === 'livrée' ? 'badge-success' : (o.status === 'annulée' ? 'badge-danger' : 'badge-warning')}">${o.status}</span></td>
-                        </tr>
-                    `).join('');
                 }
                 
                 initCharts(orders);
             }
             
             function initCharts(orders) {
-                // Ventes par mois
                 const monthlySales = Array(12).fill(0);
                 orders.forEach(o => {
                     const month = new Date(o.createdAt).getMonth();
@@ -1562,38 +1607,22 @@
                         }
                     });
                 }
-                
-                // Catégories
-                const products = Storage.get('products', []);
-                const categoryMap = new Map();
-                products.forEach(p => {
-                    categoryMap.set(p.category, (categoryMap.get(p.category) || 0) + 1);
-                });
-                
-                const ctx2 = document.getElementById('categoryChart')?.getContext('2d');
-                if (ctx2) {
-                    if (categoryChart) categoryChart.destroy();
-                    categoryChart = new Chart(ctx2, {
-                        type: 'doughnut',
-                        data: {
-                            labels: Array.from(categoryMap.keys()),
-                            datasets: [{
-                                data: Array.from(categoryMap.values()),
-                                backgroundColor: ['#10B981', '#8B5CF6', '#F59E0B', '#3B82F6', '#F43F5E', '#60A5FA']
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: { legend: { position: 'bottom', labels: { color: '#94A3B8' } } }
-                        }
-                    });
-                }
             }
             
             // ========== COMMANDES ==========
             function loadOrders() {
                 let orders = Storage.get('orders', []);
+                
+                // Filtrer pour le fournisseur
+                if (!isAdmin) {
+                    const products = Storage.get('products', []);
+                    const myProducts = products.filter(p => p.supplierId === currentUser.id);
+                    const myProductNames = myProducts.map(p => p.name);
+                    orders = orders.filter(o => 
+                        o.items && o.items.some(item => myProductNames.includes(item.name))
+                    );
+                }
+                
                 const search = document.getElementById('orderSearch')?.value.toLowerCase() || '';
                 const statusFilter = document.getElementById('orderStatusFilter')?.value || 'all';
                 
@@ -1616,7 +1645,7 @@
                             <td><strong>${(o.total || 0).toLocaleString()} FCFA</strong></td>
                             <td><span class="badge ${o.paymentStatus === 'paid' ? 'badge-success' : 'badge-warning'}">${o.paymentStatus === 'paid' ? 'Payé' : 'En attente'}</span></td>
                             <td>
-                                <select class="btn-outline btn-sm" onchange="updateOrderStatus('${o.id}', this.value)">
+                                <select class="btn-outline btn-sm" onchange="updateOrderStatus('${o.id}', this.value)" ${!isAdmin ? 'disabled' : ''}>
                                     <option value="confirmée" ${o.status === 'confirmée' ? 'selected' : ''}>Confirmée</option>
                                     <option value="préparation" ${o.status === 'préparation' ? 'selected' : ''}>Préparation</option>
                                     <option value="livraison" ${o.status === 'livraison' ? 'selected' : ''}>Livraison</option>
@@ -1626,7 +1655,7 @@
                             </span></td>
                             <td>${new Date(o.createdAt).toLocaleDateString('fr-FR')}</span></td>
                             <td>
-                                <button class="btn-outline btn-sm" onclick="deleteOrder('${o.id}')"><i class="fa-solid fa-trash"></i></button>
+                                ${isAdmin ? `<button class="btn-outline btn-sm" onclick="deleteOrder('${o.id}')"><i class="fa-solid fa-trash"></i></button>` : '-'}
                             </span></td>
                         </tr>
                     `).join('');
@@ -1638,8 +1667,6 @@
                 const index = orders.findIndex(o => o.id === id);
                 if (index !== -1) {
                     orders[index].status = status;
-                    if (!orders[index].statusHistory) orders[index].statusHistory = [];
-                    orders[index].statusHistory.push({ status, timestamp: new Date().toISOString(), note: 'Modifié par admin' });
                     Storage.set('orders', orders);
                     loadDashboard();
                     loadOrders();
@@ -1659,8 +1686,126 @@
                 showToast('Commande supprimée', `#${id} a été supprimée`, 'success');
             }
             
-            // ========== UTILISATEURS ==========
+            // ========== PRODUITS ==========
+            function loadProducts() {
+                let products = Storage.get('products', []);
+                
+                if (!isAdmin) {
+                    products = products.filter(p => p.supplierId === currentUser.id);
+                }
+                
+                const search = document.getElementById('productSearch')?.value.toLowerCase() || '';
+                if (search) {
+                    products = products.filter(p => p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search));
+                }
+                
+                const productsTable = document.querySelector('#productsTable tbody');
+                if (productsTable) {
+                    productsTable.innerHTML = products.map(p => `
+                        <tr>
+                            <td>${p.image || '📦'} ${p.name}</span></td>
+                            <td>${p.category}</span></td>
+                            <td>${(p.price || 0).toLocaleString()} FCFA</span></td>
+                            <td>${p.stock || 0}</span></td>
+                            <td>${p.supplier || '-'}</span></td>
+                            <td>
+                                <button class="btn-outline btn-sm" onclick="editProduct(${p.id})"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn-danger btn-sm" onclick="deleteProduct(${p.id})"><i class="fa-solid fa-trash"></i></button>
+                            </span></td>
+                        </tr>
+                    `).join('');
+                }
+            }
+            
+            function openProductModal(id = null) {
+                if (id) {
+                    const products = Storage.get('products', []);
+                    const product = products.find(p => p.id === id);
+                    if (product) {
+                        document.getElementById('productId').value = product.id;
+                        document.getElementById('productName').value = product.name;
+                        document.getElementById('productCategory').value = product.category;
+                        document.getElementById('productPrice').value = product.price;
+                        document.getElementById('productStock').value = product.stock;
+                        document.getElementById('productSupplier').value = product.supplier || '';
+                        document.getElementById('productImage').value = product.image || '📦';
+                        document.getElementById('productModalTitle').textContent = 'Modifier le produit';
+                    }
+                } else {
+                    document.getElementById('productId').value = '';
+                    document.getElementById('productName').value = '';
+                    document.getElementById('productCategory').value = '';
+                    document.getElementById('productPrice').value = '';
+                    document.getElementById('productStock').value = '';
+                    document.getElementById('productSupplier').value = currentUser.name || '';
+                    document.getElementById('productImage').value = '📦';
+                    document.getElementById('productModalTitle').textContent = 'Ajouter un produit';
+                }
+                document.getElementById('productModal').classList.add('show');
+            }
+            
+            function closeProductModal() {
+                document.getElementById('productModal').classList.remove('show');
+            }
+            
+            function saveProduct() {
+                const id = document.getElementById('productId').value;
+                const name = document.getElementById('productName').value.trim();
+                const category = document.getElementById('productCategory').value.trim();
+                const price = parseFloat(document.getElementById('productPrice').value);
+                const stock = parseInt(document.getElementById('productStock').value);
+                const supplier = document.getElementById('productSupplier').value.trim();
+                const image = document.getElementById('productImage').value;
+                
+                if (!name || !category || isNaN(price)) {
+                    showToast('Erreur', 'Champs requis manquants', 'error');
+                    return;
+                }
+                
+                let products = Storage.get('products', []);
+                
+                if (id) {
+                    const index = products.findIndex(p => p.id === parseInt(id));
+                    if (index !== -1) {
+                        products[index] = { ...products[index], name, category, price, stock, supplier, image };
+                        Storage.set('products', products);
+                        showToast('Produit modifié', name, 'success');
+                    }
+                } else {
+                    const newProduct = {
+                        id: Date.now(),
+                        name, category, price, stock, supplier, image,
+                        supplierId: currentUser.id,
+                        available: true,
+                        createdAt: new Date().toISOString()
+                    };
+                    products.push(newProduct);
+                    Storage.set('products', products);
+                    showToast('Produit ajouté', name, 'success');
+                }
+                
+                closeProductModal();
+                loadProducts();
+                loadDashboard();
+            }
+            
+            function editProduct(id) {
+                openProductModal(id);
+            }
+            
+            function deleteProduct(id) {
+                if (!confirm('Supprimer ce produit ?')) return;
+                let products = Storage.get('products', []);
+                products = products.filter(p => p.id !== id);
+                Storage.set('products', products);
+                loadProducts();
+                loadDashboard();
+                showToast('Produit supprimé', '', 'success');
+            }
+            
+            // ========== UTILISATEURS (admin only) ==========
             function loadUsers() {
+                if (!isAdmin) return;
                 let users = Storage.get('users', []);
                 const search = document.getElementById('userSearch')?.value.toLowerCase() || '';
                 if (search) {
@@ -1687,6 +1832,7 @@
             }
             
             function openUserModal(id = null) {
+                if (!isAdmin) return;
                 if (id) {
                     const users = Storage.get('users', []);
                     const user = users.find(u => u.id === id);
@@ -1716,6 +1862,7 @@
             }
             
             function saveUser() {
+                if (!isAdmin) return;
                 const id = document.getElementById('userId').value;
                 const name = document.getElementById('userName').value.trim();
                 const email = document.getElementById('userEmail').value.trim();
@@ -1769,6 +1916,7 @@
             }
             
             function deleteUser(id) {
+                if (!isAdmin) return;
                 if (!confirm('Supprimer cet utilisateur ?')) return;
                 let users = Storage.get('users', []);
                 users = users.filter(u => u.id !== id);
@@ -1778,119 +1926,9 @@
                 showToast('Utilisateur supprimé', '', 'success');
             }
             
-            // ========== PRODUITS ==========
-            function loadProducts() {
-                let products = Storage.get('products', []);
-                const search = document.getElementById('productSearch')?.value.toLowerCase() || '';
-                if (search) {
-                    products = products.filter(p => p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search));
-                }
-                
-                const productsTable = document.querySelector('#productsTable tbody');
-                if (productsTable) {
-                    productsTable.innerHTML = products.map(p => `
-                        <tr>
-                            <td>${p.image || '📦'} ${p.name}</td>
-                            <td>${p.category}</span></td>
-                            <td>${(p.price || 0).toLocaleString()} FCFA</span></td>
-                            <td>${p.stock || 0}</span></td>
-                            <td>${p.supplier || '-'}</span></td>
-                            <td>
-                                <button class="btn-outline btn-sm" onclick="editProduct(${p.id})"><i class="fa-solid fa-pen"></i></button>
-                                <button class="btn-danger btn-sm" onclick="deleteProduct(${p.id})"><i class="fa-solid fa-trash"></i></button>
-                            </span></td>
-                        </tr>
-                    `).join('');
-                }
-            }
-            
-            function openProductModal(id = null) {
-                if (id) {
-                    const products = Storage.get('products', []);
-                    const product = products.find(p => p.id === id);
-                    if (product) {
-                        document.getElementById('productId').value = product.id;
-                        document.getElementById('productName').value = product.name;
-                        document.getElementById('productCategory').value = product.category;
-                        document.getElementById('productPrice').value = product.price;
-                        document.getElementById('productStock').value = product.stock;
-                        document.getElementById('productSupplier').value = product.supplier || '';
-                        document.getElementById('productImage').value = product.image || '📦';
-                        document.getElementById('productModalTitle').textContent = 'Modifier le produit';
-                    }
-                } else {
-                    document.getElementById('productId').value = '';
-                    document.getElementById('productName').value = '';
-                    document.getElementById('productCategory').value = '';
-                    document.getElementById('productPrice').value = '';
-                    document.getElementById('productStock').value = '';
-                    document.getElementById('productSupplier').value = '';
-                    document.getElementById('productImage').value = '📦';
-                    document.getElementById('productModalTitle').textContent = 'Ajouter un produit';
-                }
-                document.getElementById('productModal').classList.add('show');
-            }
-            
-            function closeProductModal() {
-                document.getElementById('productModal').classList.remove('show');
-            }
-            
-            function saveProduct() {
-                const id = document.getElementById('productId').value;
-                const name = document.getElementById('productName').value.trim();
-                const category = document.getElementById('productCategory').value.trim();
-                const price = parseFloat(document.getElementById('productPrice').value);
-                const stock = parseInt(document.getElementById('productStock').value);
-                const supplier = document.getElementById('productSupplier').value.trim();
-                const image = document.getElementById('productImage').value;
-                
-                if (!name || !category || isNaN(price)) {
-                    showToast('Erreur', 'Champs requis manquants', 'error');
-                    return;
-                }
-                
-                let products = Storage.get('products', []);
-                
-                if (id) {
-                    const index = products.findIndex(p => p.id === parseInt(id));
-                    if (index !== -1) {
-                        products[index] = { ...products[index], name, category, price, stock, supplier, image };
-                        Storage.set('products', products);
-                        showToast('Produit modifié', name, 'success');
-                    }
-                } else {
-                    const newProduct = {
-                        id: Date.now(),
-                        name, category, price, stock, supplier, image,
-                        available: true,
-                        createdAt: new Date().toISOString()
-                    };
-                    products.push(newProduct);
-                    Storage.set('products', products);
-                    showToast('Produit ajouté', name, 'success');
-                }
-                
-                closeProductModal();
-                loadProducts();
-                loadDashboard();
-            }
-            
-            function editProduct(id) {
-                openProductModal(id);
-            }
-            
-            function deleteProduct(id) {
-                if (!confirm('Supprimer ce produit ?')) return;
-                let products = Storage.get('products', []);
-                products = products.filter(p => p.id !== id);
-                Storage.set('products', products);
-                loadProducts();
-                loadDashboard();
-                showToast('Produit supprimé', '', 'success');
-            }
-            
-            // ========== FOURNISSEURS ==========
+            // ========== FOURNISSEURS (admin only) ==========
             function loadSuppliers() {
+                if (!isAdmin) return;
                 let suppliers = Storage.get('suppliers', []);
                 const suppliersTable = document.querySelector('#suppliersTable tbody');
                 if (suppliersTable) {
@@ -1911,6 +1949,7 @@
             }
             
             function openSupplierModal(id = null) {
+                if (!isAdmin) return;
                 if (id) {
                     const suppliers = Storage.get('suppliers', []);
                     const supplier = suppliers.find(s => s.id === id);
@@ -1940,6 +1979,7 @@
             }
             
             function saveSupplier() {
+                if (!isAdmin) return;
                 const id = document.getElementById('supplierId').value;
                 const name = document.getElementById('supplierName').value.trim();
                 const category = document.getElementById('supplierCategory').value.trim();
@@ -1983,6 +2023,7 @@
             }
             
             function deleteSupplier(id) {
+                if (!isAdmin) return;
                 if (!confirm('Supprimer ce fournisseur ?')) return;
                 let suppliers = Storage.get('suppliers', []);
                 suppliers = suppliers.filter(s => s.id !== id);
@@ -1992,8 +2033,9 @@
                 showToast('Fournisseur supprimé', '', 'success');
             }
             
-            // ========== PROMOTIONS ==========
+            // ========== PROMOTIONS (admin only) ==========
             function loadPromos() {
+                if (!isAdmin) return;
                 let promos = Storage.get('promos', []);
                 const promosTable = document.querySelector('#promosTable tbody');
                 if (promosTable) {
@@ -2012,6 +2054,7 @@
             }
             
             function openPromoModal() {
+                if (!isAdmin) return;
                 document.getElementById('promoModal').classList.add('show');
             }
             
@@ -2020,6 +2063,7 @@
             }
             
             function savePromo() {
+                if (!isAdmin) return;
                 const code = document.getElementById('promoCode').value.trim().toUpperCase();
                 const discount = parseInt(document.getElementById('promoDiscount').value);
                 const minAmount = parseInt(document.getElementById('promoMinAmount').value) || 0;
@@ -2043,6 +2087,7 @@
             }
             
             function deletePromo(code) {
+                if (!isAdmin) return;
                 if (!confirm(`Supprimer le code ${code} ?`)) return;
                 let promos = Storage.get('promos', []);
                 promos = promos.filter(p => p.code !== code);
@@ -2056,18 +2101,24 @@
                 const messages = Storage.get('messages', []);
                 const users = Storage.get('users', []);
                 
-                // Créer les conversations uniques
+                let filteredMessages = messages;
+                if (!isAdmin) {
+                    filteredMessages = messages.filter(m => m.userId === currentUser.id || m.targetUserId === currentUser.id);
+                }
+                
                 const conversationsMap = new Map();
                 
-                messages.forEach(msg => {
+                filteredMessages.forEach(msg => {
+                    const isCurrentUserSender = msg.userId === currentUser.id;
+                    const otherUserId = isCurrentUserSender ? msg.targetUserId : msg.userId;
+                    const otherUser = otherUserId ? users.find(u => u.id === otherUserId) : null;
+                    const otherUserName = otherUser ? otherUser.name : (isCurrentUserSender ? (msg.targetUserName || 'Admin') : (msg.userName || 'Utilisateur'));
+                    
                     if (!conversationsMap.has(msg.conversationId)) {
-                        const otherUserId = msg.userId === 'admin' ? null : msg.userId;
-                        const otherUser = otherUserId ? users.find(u => u.id === otherUserId) : null;
-                        
                         conversationsMap.set(msg.conversationId, {
                             id: msg.conversationId,
                             userId: otherUserId,
-                            userName: otherUser ? otherUser.name : (msg.userName || 'Utilisateur'),
+                            userName: otherUserName,
                             userRole: otherUser ? otherUser.role : (msg.userRole || 'client'),
                             lastMessage: msg.message,
                             lastTimestamp: msg.timestamp,
@@ -2077,13 +2128,13 @@
                 });
                 
                 conversationsMap.forEach(conv => {
-                    const convMessages = messages.filter(m => m.conversationId === conv.id);
+                    const convMessages = filteredMessages.filter(m => m.conversationId === conv.id);
                     const lastMsg = convMessages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))[0];
                     if (lastMsg) {
                         conv.lastMessage = lastMsg.message;
                         conv.lastTimestamp = lastMsg.timestamp;
                     }
-                    conv.unreadCount = convMessages.filter(m => !m.read && !m.isFromAdmin).length;
+                    conv.unreadCount = convMessages.filter(m => !m.read && m.targetUserId === currentUser.id && !m.isFromAdmin).length;
                 });
                 
                 const conversations = Array.from(conversationsMap.values())
@@ -2095,7 +2146,7 @@
                         messagesList.innerHTML = `
                             <div style="text-align: center; padding: 40px; color: var(--text-muted);">
                                 <i class="fa-solid fa-inbox" style="font-size: 2rem; margin-bottom: 12px;"></i>
-                                <p>Aucun message</p>
+                                <p>Aucune conversation</p>
                             </div>
                         `;
                     } else {
@@ -2107,7 +2158,6 @@
                                 <div class="message-content">
                                     <div class="message-sender">
                                         ${escapeHtml(conv.userName || 'Utilisateur')}
-                                        ${conv.userRole ? `<span class="badge ${conv.userRole === 'supplier' ? 'badge-warning' : 'badge-info'}" style="margin-left: 8px; font-size: 0.6rem;">${conv.userRole}</span>` : ''}
                                     </div>
                                     <div class="message-preview">${escapeHtml(conv.lastMessage || '')}</div>
                                 </div>
@@ -2127,11 +2177,10 @@
                 currentConversationId = conversationId;
                 currentUserId = userId;
                 
-                // Marquer les messages comme lus
                 let messages = Storage.get('messages', []);
                 let updated = false;
                 messages = messages.map(msg => {
-                    if (msg.conversationId === conversationId && !msg.read && !msg.isFromAdmin) {
+                    if (msg.conversationId === conversationId && msg.targetUserId === currentUser.id && !msg.read && !msg.isFromAdmin) {
                         updated = true;
                         return { ...msg, read: true };
                     }
@@ -2143,11 +2192,10 @@
                     updateUnreadBadge();
                 }
                 
-                // Afficher la conversation
-                const conversationDiv = document.getElementById('activeConversation');
-                const convMessages = messages.filter(m => m.conversationId === conversationId)
+                const filteredMessages = messages.filter(m => m.conversationId === conversationId)
                     .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
                 
+                const conversationDiv = document.getElementById('activeConversation');
                 conversationDiv.innerHTML = `
                     <div class="conversation-header">
                         <div class="message-avatar" style="width: 36px; height: 36px; font-size: 0.9rem;">
@@ -2161,13 +2209,13 @@
                         </button>
                     </div>
                     <div class="conversation-messages" id="conversationMessages">
-                        ${convMessages.map(msg => `
-                            <div class="conv-message ${msg.isFromAdmin ? 'admin' : 'user'}">
+                        ${filteredMessages.map(msg => `
+                            <div class="conv-message ${msg.userId === currentUser.id ? 'admin' : 'user'}">
                                 <div>${escapeHtml(msg.message)}</div>
                                 <div class="conv-message-time">${new Date(msg.timestamp).toLocaleString('fr-FR')}</div>
                             </div>
                         `).join('')}
-                        ${convMessages.length === 0 ? '<div style="text-align: center; padding: 40px; color: var(--text-muted);">Aucun message dans cette conversation</div>' : ''}
+                        ${filteredMessages.length === 0 ? '<div style="text-align: center; padding: 40px; color: var(--text-muted);">Aucun message dans cette conversation</div>' : ''}
                     </div>
                     <div class="conversation-input">
                         <input type="text" id="messageInput" placeholder="Écrivez votre message..." onkeypress="if(event.key==='Enter') sendMessage()">
@@ -2210,20 +2258,20 @@
                 
                 const users = Storage.get('users', []);
                 const targetUser = users.find(u => u.id === currentUserId);
-                const userName = targetUser?.name || 'Utilisateur';
+                const targetName = targetUser?.name || 'Utilisateur';
                 
                 const newMessage = {
                     id: 'msg_' + Date.now(),
                     conversationId: currentConversationId,
-                    userId: 'admin',
-                    userName: 'Salam Market',
-                    userRole: 'admin',
+                    userId: currentUser.id,
+                    userName: currentUser.name,
+                    userRole: currentUser.role,
                     message: message,
                     timestamp: new Date().toISOString(),
                     read: false,
-                    isFromAdmin: true,
+                    isFromAdmin: currentUser.role === 'admin',
                     targetUserId: currentUserId,
-                    targetUserName: userName
+                    targetUserName: targetName
                 };
                 
                 let messages = Storage.get('messages', []);
@@ -2231,8 +2279,8 @@
                 Storage.set('messages', messages);
                 
                 input.value = '';
-                openConversation(currentConversationId, currentUserId, userName);
-                showToast('Message envoyé', `À ${userName}`, 'success');
+                openConversation(currentConversationId, currentUserId, targetName);
+                showToast('Message envoyé', `À ${targetName}`, 'success');
             }
             
             function refreshMessages() {
@@ -2247,15 +2295,15 @@
             
             // ========== PARAMÈTRES ==========
             function saveSettings() {
-                const deliveryFee = document.getElementById('deliveryFee').value;
-                const freeThreshold = document.getElementById('freeDeliveryThreshold').value;
-                const omNumber = document.getElementById('omNumber').value;
-                const mtnNumber = document.getElementById('mtnNumber').value;
+                const deliveryFee = document.getElementById('deliveryFee')?.value;
+                const freeThreshold = document.getElementById('freeDeliveryThreshold')?.value;
+                const omNumber = document.getElementById('omNumber')?.value;
+                const mtnNumber = document.getElementById('mtnNumber')?.value;
                 
-                localStorage.setItem('salam_delivery_fee', deliveryFee);
-                localStorage.setItem('salam_free_delivery_threshold', freeThreshold);
-                localStorage.setItem('salam_om_merchant', omNumber);
-                localStorage.setItem('salam_mtn_merchant', mtnNumber);
+                if (deliveryFee) localStorage.setItem('salam_delivery_fee', deliveryFee);
+                if (freeThreshold) localStorage.setItem('salam_free_delivery_threshold', freeThreshold);
+                if (omNumber) localStorage.setItem('salam_om_merchant', omNumber);
+                if (mtnNumber) localStorage.setItem('salam_mtn_merchant', mtnNumber);
                 
                 showToast('Paramètres sauvegardés', 'Configuration mise à jour', 'success');
             }
@@ -2311,10 +2359,10 @@
             function refreshAll() {
                 loadDashboard();
                 loadOrders();
-                loadUsers();
+                if (isAdmin) loadUsers();
                 loadProducts();
-                loadSuppliers();
-                loadPromos();
+                if (isAdmin) loadSuppliers();
+                if (isAdmin) loadPromos();
                 loadMessages();
                 showToast('Actualisé', 'Toutes les données ont été mises à jour', 'success');
             }
@@ -2322,11 +2370,9 @@
             function exportReport() {
                 const data = {
                     date: new Date().toISOString(),
+                    user: { id: currentUser.id, name: currentUser.name, role: currentUser.role },
                     orders: Storage.get('orders', []),
-                    users: Storage.get('users', []),
                     products: Storage.get('products', []),
-                    suppliers: Storage.get('suppliers', []),
-                    promos: Storage.get('promos', []),
                     messages: Storage.get('messages', [])
                 };
                 
@@ -2334,7 +2380,7 @@
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `salam_export_${new Date().toISOString().split('T')[0]}.json`;
+                a.download = `salam_export_${currentUser.role}_${new Date().toISOString().split('T')[0]}.json`;
                 a.click();
                 URL.revokeObjectURL(url);
                 showToast('Export réussi', 'Rapport téléchargé', 'success');
@@ -2394,19 +2440,6 @@
             // Initialisation
             init();
         })();
-        
-        // PWA Registration
-        if ('serviceWorker' in navigator) {
-          window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js')
-              .then((registration) => {
-                console.log('Service Worker enregistré avec succès:', registration.scope);
-              })
-              .catch((error) => {
-                console.error('Erreur d\'enregistrement du Service Worker:', error);
-              });
-          });
-        }
     </script>
 </body>
 </html>
