@@ -6,6 +6,7 @@
     <meta name="theme-color" content="#0A0A14">
     <meta name="description" content="Espace Fournisseur — Salam Market PRO">
     <title>Salam Market PRO · Espace Fournisseur</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
@@ -36,7 +37,7 @@
             --ease-out-expo: cubic-bezier(0.16,1,0.3,1);
             --duration-fast: 200ms; --duration-base: 400ms;
             --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
-            --space-5: 20px; --space-6: 24px; --space-8: 32px;
+            --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px;
         }
         
         body.dark {
@@ -51,7 +52,7 @@
             --shadow-lg: 0 20px 60px rgba(0,0,0,0.5);
         }
         
-        body { font-family: 'Inter', sans-serif; background: var(--surface-primary); color: var(--text-primary); min-height: 100vh; transition: background 0.3s, color 0.3s; }
+        body { font-family: 'Inter', sans-serif; background: var(--surface-primary); color: var(--text-primary); min-height: 100vh; transition: background 0.3s ease, color 0.3s ease; }
         .bg-decoration { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
         .bg-gradient-1 { position: absolute; width: 150%; height: 100%; background: radial-gradient(ellipse 80% 60% at 10% -20%, rgba(139,92,246,0.06) 0%, transparent 50%); animation: floatBg 20s ease-in-out infinite; }
         @keyframes floatBg { 0%,100% { transform: translate(0,0) rotate(0deg); } 33% { transform: translate(1%,-1%) rotate(0.5deg); } 66% { transform: translate(-1%,1%) rotate(-0.5deg); } }
@@ -61,7 +62,7 @@
         .sidebar-logo { width: 44px; height: 44px; background: linear-gradient(135deg, var(--violet-600), var(--emerald-500)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
         .sidebar-brand h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 700; }
         .sidebar-brand p { font-size: 0.65rem; color: var(--violet-400); }
-        .sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+        .sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: 4px; padding: 0 12px; }
         .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; color: var(--text-muted); font-size: 0.85rem; font-weight: 500; transition: all 0.2s ease; cursor: pointer; border: none; background: none; width: 100%; text-align: left; font-family: inherit; }
         .nav-item:hover { background: var(--surface-hover); color: var(--text-secondary); transform: translateX(4px); }
         .nav-item.active { background: rgba(139,92,246,0.08); color: var(--violet-400); border-left: 2px solid var(--violet-500); }
@@ -122,6 +123,8 @@
         .badge-danger { background: rgba(244,63,94,0.1); color: var(--rose-400); }
         .badge-violet { background: rgba(139,92,246,0.1); color: var(--violet-400); }
         
+        .stock-alert { background: rgba(244,63,94,0.12); color: var(--rose-400); padding: 4px 8px; border-radius: 8px; font-size: 0.65rem; font-weight: 600; }
+        
         .btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 12px; font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: all 0.2s ease; border: none; font-family: inherit; }
         .btn-primary { background: linear-gradient(135deg, var(--violet-600), var(--violet-500)); color: white; }
         .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(139,92,246,0.3); }
@@ -150,6 +153,7 @@
         .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--violet-400); box-shadow: 0 0 0 3px rgba(139,92,246,0.1); }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         
+        /* Chat Styles */
         .chat-container { background: var(--surface-card); border-radius: 20px; overflow: hidden; border: 1px solid var(--border-default); height: 600px; display: flex; flex-direction: column; }
         .chat-layout { display: flex; height: 100%; }
         .chat-conversations { width: 320px; border-right: 1px solid var(--border-default); display: flex; flex-direction: column; background: var(--surface-card); }
@@ -254,6 +258,7 @@
     
     <main class="main-content">
         <div class="supplier-container">
+            <!-- DASHBOARD -->
             <div class="section active" id="section-dashboard">
                 <div class="page-header"><div><h1><i class="fa-solid fa-chart-line"></i> Tableau de Bord</h1><p class="welcome-badge" id="supplierName">Chargement...</p></div><div class="header-actions"><button class="btn-outline btn" id="refreshBtn"><i class="fa-solid fa-rotate-right"></i> Actualiser</button></div></div>
                 <div class="stats-grid" id="dashboardStats"></div>
@@ -261,16 +266,19 @@
                 <div class="chart-card"><div class="chart-header">🆕 Dernières commandes</div><div class="table-wrapper"><table class="data-table" id="recentOrdersTable"><thead><tr><th>ID</th><th>Client</th><th>Total</th><th>Statut</th><th>Date</th></tr></thead><tbody></tbody></table></div></div>
             </div>
             
+            <!-- PRODUITS -->
             <div class="section" id="section-products">
                 <div class="page-header"><h1><i class="fa-solid fa-boxes-stacked"></i> Mes Produits</h1><div class="header-actions"><div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="productSearch" placeholder="Rechercher..."></div><button class="btn-primary btn" id="addProductBtn"><i class="fa-solid fa-plus"></i> Ajouter</button></div></div>
-                <div class="chart-card"><div class="table-wrapper"><table class="data-table" id="productsTable"><thead><tr><th>Produit</th><th>Catégorie</th><th>Prix</th><th>Stock</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
+                <div class="chart-card"><div class="table-wrapper"><table class="data-table" id="productsTable"><thead><tr><th>Produit</th><th>Catégorie</th><th>Prix</th><th>Stock</th><th>Actions</th></tr></thead><tbody></tbody></td></div></div>
             </div>
             
+            <!-- COMMANDES -->
             <div class="section" id="section-orders">
                 <div class="page-header"><h1><i class="fa-solid fa-clipboard-list"></i> Commandes</h1><div class="header-actions"><div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="orderSearch" placeholder="Rechercher..."></div><select class="btn-outline btn" id="orderStatusFilter"><option value="all">Tous</option><option value="confirmée">Confirmée</option><option value="préparation">Préparation</option><option value="livraison">Livraison</option><option value="livrée">Livrée</option></select></div></div>
-                <div class="chart-card"><div class="table-wrapper"><table class="data-table" id="ordersTable"><thead><tr><th>ID</th><th>Client</th><th>Total</th><th>Statut</th><th>Date</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
+                <div class="chart-card"><div class="table-wrapper"><table class="data-table" id="ordersTable"><thead><tr><th>ID</th><th>Client</th><th>Total</th><th>Statut</th><th>Date</th><th>Actions</th><tr></thead><tbody></tbody></table></div></div>
             </div>
             
+            <!-- STOCK -->
             <div class="section" id="section-stock">
                 <div class="page-header"><h1><i class="fa-solid fa-warehouse"></i> Gestion des stocks</h1><div class="header-actions"><button class="btn-outline btn" id="exportStockBtn"><i class="fa-solid fa-download"></i> Exporter</button></div></div>
                 <div class="chart-card"><div class="table-wrapper"><table class="data-table" id="stockTable"><thead><tr><th>Produit</th><th>Stock actuel</th><th>Stock min</th><th>Statut</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
@@ -292,11 +300,13 @@
                 </div>
             </div>
             
+            <!-- ANALYTIQUE -->
             <div class="section" id="section-analytics">
                 <div class="page-header"><h1><i class="fa-solid fa-chart-simple"></i> Analytique</h1></div>
                 <div class="charts-row"><div class="chart-card"><div class="chart-header">📈 Ventes mensuelles</div><div class="chart-container"><canvas id="monthlySalesChart"></canvas></div></div><div class="chart-card"><div class="chart-header">🏆 Top produits</div><div class="table-wrapper"><table class="data-table" id="topProductsTable"><thead><tr><th>Produit</th><th>Ventes</th><th>CA</th></tr></thead><tbody></tbody></table></div></div></div>
             </div>
             
+            <!-- PROFIL -->
             <div class="section" id="section-profile">
                 <div class="page-header"><h1><i class="fa-solid fa-user"></i> Mon Profil</h1></div>
                 <div class="chart-card"><div class="card-body" style="padding:24px;"><form id="profileForm"><div class="form-row"><div class="form-group"><label class="form-label">Nom</label><input type="text" class="form-input" id="profileName" readonly></div><div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="profileEmail" readonly></div></div><div class="form-row"><div class="form-group"><label class="form-label">Téléphone</label><input type="tel" class="form-input" id="profilePhone" readonly></div><div class="form-group"><label class="form-label">Adresse</label><input type="text" class="form-input" id="profileAddress" readonly></div></div><div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="profileDescription" rows="3" readonly></textarea></div><div class="form-group"><label class="form-label">Membre depuis</label><input type="text" class="form-input" id="profileSince" readonly></div><div class="form-group"><button type="button" class="btn-primary btn" id="editProfileBtn"><i class="fa-solid fa-pen"></i> Modifier</button><button type="button" class="btn-outline btn" id="saveProfileBtn" style="display:none;"><i class="fa-solid fa-check"></i> Enregistrer</button><button type="button" class="btn-outline btn" id="cancelProfileBtn" style="display:none;"><i class="fa-solid fa-xmark"></i> Annuler</button></div></form></div></div>
@@ -314,6 +324,59 @@
         (function() {
             'use strict';
             
+            // ========== INITIALISATION DES DONNÉES PAR DÉFAUT ==========
+            function initDefaultData() {
+                // Utilisateurs par défaut
+                let users = JSON.parse(localStorage.getItem('salam_users') || '[]');
+                if (users.length === 0) {
+                    users = [
+                        { id: 'ADM-001', name: 'Admin Principal', email: 'admin@salam.cm', phone: '+237600000000', password: 'Admin2025!', role: 'admin', avatar: '👑', status: 'active', createdAt: new Date().toISOString() },
+                        { id: 'SUP-001', name: 'BOUTIQUE LE TOUMAI', email: 'toumai@salam.cm', phone: '+237699887766', password: 'Toumai2025!', role: 'supplier', avatar: '🏪', status: 'active', createdAt: new Date().toISOString() },
+                        { id: 'CLI-001', name: 'Client Test', email: 'client@salam.cm', phone: '+237612345678', password: 'Client2025!', role: 'client', avatar: '🛒', status: 'active', createdAt: new Date().toISOString() },
+                        { id: 'CLI-002', name: 'Jean Dupont', email: 'jean@example.com', phone: '+237612345679', password: 'Client2025!', role: 'client', avatar: '🛒', status: 'active', createdAt: new Date().toISOString() }
+                    ];
+                    localStorage.setItem('salam_users', JSON.stringify(users));
+                    console.log('✅ Utilisateurs par défaut initialisés');
+                }
+                
+                // Produits par défaut
+                let products = JSON.parse(localStorage.getItem('salam_products') || '[]');
+                if (products.length === 0) {
+                    products = [
+                        { id: 1, name: 'Riz Parfumé Mama Gold', category: 'Riz', price: 900, stock: 50, unit: 'kg', minStock: 10, image: '🍚', supplier: 'BOUTIQUE LE TOUMAI', sales: 245, available: true, createdAt: new Date().toISOString() },
+                        { id: 2, name: 'Riz Tanti', category: 'Riz', price: 800, stock: 30, unit: 'kg', minStock: 10, image: '🍚', supplier: 'BOUTIQUE LE TOUMAI', sales: 189, available: true, createdAt: new Date().toISOString() },
+                        { id: 3, name: 'Huile Mayor 1L', category: 'Huiles', price: 1300, stock: 20, unit: 'L', minStock: 5, image: '🫒', supplier: 'BOUTIQUE LE TOUMAI', sales: 156, available: true, createdAt: new Date().toISOString() },
+                        { id: 4, name: 'PHARMAPUR Herbal', category: 'Savons', price: 350, stock: 100, unit: 'unité', minStock: 20, image: '🧼', supplier: 'BOUTIQUE LE TOUMAI', sales: 312, available: true, createdAt: new Date().toISOString() },
+                        { id: 5, name: 'Colgate Blancheur', category: 'Dentifrices', price: 1800, stock: 25, unit: 'tube', minStock: 10, image: '🦷', supplier: 'BOUTIQUE LE TOUMAI', sales: 98, available: true, createdAt: new Date().toISOString() }
+                    ];
+                    localStorage.setItem('salam_products', JSON.stringify(products));
+                    console.log('✅ Produits par défaut initialisés');
+                }
+                
+                // Commandes par défaut
+                let orders = JSON.parse(localStorage.getItem('salam_orders') || '[]');
+                if (orders.length === 0) {
+                    orders = [
+                        { id: 'CMD-' + Date.now().toString(36).toUpperCase(), userId: 'CLI-001', customerName: 'Client Test', items: [{ id: 1, name: 'Riz Parfumé Mama Gold', price: 900, quantity: 2, image: '🍚', supplier: 'BOUTIQUE LE TOUMAI' }], total: 1800, status: 'livrée', paymentStatus: 'paid', createdAt: new Date().toISOString() },
+                        { id: 'CMD-' + (Date.now()+1).toString(36).toUpperCase(), userId: 'CLI-002', customerName: 'Jean Dupont', items: [{ id: 3, name: 'Huile Mayor 1L', price: 1300, quantity: 1, image: '🫒', supplier: 'BOUTIQUE LE TOUMAI' }], total: 1300, status: 'confirmée', paymentStatus: 'pending', createdAt: new Date().toISOString() }
+                    ];
+                    localStorage.setItem('salam_orders', JSON.stringify(orders));
+                    console.log('✅ Commandes par défaut initialisées');
+                }
+                
+                // Messages par défaut
+                let messages = JSON.parse(localStorage.getItem('salam_messages') || '[]');
+                if (messages.length === 0) {
+                    messages = [
+                        { id: 'msg1', from: 'CLI-001', fromName: 'Client Test', to: 'SUP-001', text: 'Bonjour, est-ce que le riz est disponible ?', timestamp: new Date().toISOString(), read: false },
+                        { id: 'msg2', from: 'SUP-001', fromName: 'BOUTIQUE LE TOUMAI', to: 'CLI-001', text: 'Bonjour, oui il est disponible. Combien en voulez-vous ?', timestamp: new Date(Date.now() - 3600000).toISOString(), read: true }
+                    ];
+                    localStorage.setItem('salam_messages', JSON.stringify(messages));
+                    console.log('✅ Messages par défaut initialisés');
+                }
+            }
+            
+            // ========== THEME SOMBRE ==========
             function initTheme() {
                 const savedTheme = localStorage.getItem('salam_theme');
                 const themeSwitch = document.getElementById('themeSwitch');
@@ -331,46 +394,7 @@
                 }
             }
             
-            function initDefaultData() {
-                let users = JSON.parse(localStorage.getItem('salam_users') || '[]');
-                if (users.length === 0) {
-                    users = [
-                        { id: 'ADM-001', name: 'Admin Principal', email: 'admin@salam.cm', phone: '+237600000000', role: 'admin', avatar: '👑', status: 'active', createdAt: new Date().toISOString() },
-                        { id: 'SUP-001', name: 'BOUTIQUE LE TOUMAI', email: 'toumai@salam.cm', phone: '+237699887766', role: 'supplier', avatar: '🏪', status: 'active', createdAt: new Date().toISOString() },
-                        { id: 'CLI-001', name: 'Client Test', email: 'client@salam.cm', phone: '+237612345678', role: 'client', avatar: '🛒', status: 'active', createdAt: new Date().toISOString() },
-                        { id: 'CLI-002', name: 'Jean Dupont', email: 'jean@example.com', phone: '+237612345679', role: 'client', avatar: '🛒', status: 'active', createdAt: new Date().toISOString() }
-                    ];
-                    localStorage.setItem('salam_users', JSON.stringify(users));
-                }
-                let products = JSON.parse(localStorage.getItem('salam_products') || '[]');
-                if (products.length === 0) {
-                    products = [
-                        { id: 1, name: 'Riz Parfumé Mama Gold', category: 'Riz', price: 900, stock: 50, unit: 'kg', minStock: 10, image: '🍚', supplier: 'BOUTIQUE LE TOUMAI', sales: 245, available: true, createdAt: new Date().toISOString() },
-                        { id: 2, name: 'Riz Tanti', category: 'Riz', price: 800, stock: 30, unit: 'kg', minStock: 10, image: '🍚', supplier: 'BOUTIQUE LE TOUMAI', sales: 189, available: true, createdAt: new Date().toISOString() },
-                        { id: 3, name: 'Huile Mayor 1L', category: 'Huiles', price: 1300, stock: 20, unit: 'L', minStock: 5, image: '🫒', supplier: 'BOUTIQUE LE TOUMAI', sales: 156, available: true, createdAt: new Date().toISOString() },
-                        { id: 4, name: 'PHARMAPUR Herbal', category: 'Savons', price: 350, stock: 100, unit: 'unité', minStock: 20, image: '🧼', supplier: 'BOUTIQUE LE TOUMAI', sales: 312, available: true, createdAt: new Date().toISOString() },
-                        { id: 5, name: 'Colgate Blancheur', category: 'Dentifrices', price: 1800, stock: 25, unit: 'tube', minStock: 10, image: '🦷', supplier: 'BOUTIQUE LE TOUMAI', sales: 98, available: true, createdAt: new Date().toISOString() }
-                    ];
-                    localStorage.setItem('salam_products', JSON.stringify(products));
-                }
-                let orders = JSON.parse(localStorage.getItem('salam_orders') || '[]');
-                if (orders.length === 0) {
-                    orders = [
-                        { id: 'CMD-' + Date.now().toString(36).toUpperCase(), userId: 'CLI-001', customerName: 'Client Test', items: [{ id: 1, name: 'Riz Parfumé Mama Gold', price: 900, quantity: 2, image: '🍚', supplier: 'BOUTIQUE LE TOUMAI' }], total: 1800, status: 'livrée', paymentStatus: 'paid', createdAt: new Date().toISOString() },
-                        { id: 'CMD-' + (Date.now()+1).toString(36).toUpperCase(), userId: 'CLI-002', customerName: 'Jean Dupont', items: [{ id: 3, name: 'Huile Mayor 1L', price: 1300, quantity: 1, image: '🫒', supplier: 'BOUTIQUE LE TOUMAI' }], total: 1300, status: 'confirmée', paymentStatus: 'pending', createdAt: new Date().toISOString() }
-                    ];
-                    localStorage.setItem('salam_orders', JSON.stringify(orders));
-                }
-                let messages = JSON.parse(localStorage.getItem('salam_messages') || '[]');
-                if (messages.length === 0) {
-                    messages = [
-                        { id: 'msg1', from: 'CLI-001', fromName: 'Client Test', to: 'SUP-001', text: 'Bonjour, est-ce que le riz est disponible ?', timestamp: new Date().toISOString(), read: false },
-                        { id: 'msg2', from: 'SUP-001', fromName: 'BOUTIQUE LE TOUMAI', to: 'CLI-001', text: 'Bonjour, oui il est disponible. Combien en voulez-vous ?', timestamp: new Date(Date.now() - 3600000).toISOString(), read: true }
-                    ];
-                    localStorage.setItem('salam_messages', JSON.stringify(messages));
-                }
-            }
-            
+            // ========== SESSION ==========
             initDefaultData();
             
             const session = JSON.parse(localStorage.getItem('salam_session') || 'null');
@@ -392,6 +416,7 @@
                 set: function(k,v) { localStorage.setItem('salam_'+k, JSON.stringify(v)); }
             };
             
+            // ========== NOTIFICATIONS ==========
             function sendWhatsApp(phone, msg) { window.open('https://wa.me/' + (phone || DEFAULT_PHONE).replace(/[^0-9]/g, '') + '?text=' + encodeURIComponent(msg), '_blank'); return true; }
             function sendSMS(phone, msg) { window.open('sms:' + (phone || DEFAULT_PHONE) + '?body=' + encodeURIComponent(msg), '_blank'); return true; }
             function sendEmail(email, msg) { window.open('mailto:' + (email || 'client@salam.cm') + '?subject=Message de ' + supplierName + ' - Salam Market&body=' + encodeURIComponent(msg), '_blank'); return true; }
@@ -497,13 +522,30 @@
             
             window.toggleMobileChat = () => document.getElementById('chatConversations').classList.toggle('mobile-visible');
             
+            // ========== PRODUITS ==========
             function loadProducts() {
                 const allProducts = Storage.get('products', []);
                 products = allProducts.filter(p => p.supplier === supplierName);
                 const tbody = document.querySelector('#productsTable tbody');
-                if(tbody) tbody.innerHTML = products.map(p => `<tr><td>${p.image || '📦'} ${escapeHtml(p.name)}</span><td>${escapeHtml(p.category)}</span><td>${(p.price||0).toLocaleString()} FCFA</span><td class="${p.stock <= (p.minStock||10) ? 'stock-alert' : ''}">${p.stock || 0}${p.stock <= (p.minStock||10) ? ' ⚠️' : ''}</span><td><button class="btn-outline btn-sm" onclick="editProduct(${p.id})"><i class="fa-solid fa-pen"></i></button> <button class="btn-outline btn-sm" onclick="openStockModal(${p.id}, '${p.name}', ${p.stock||0})"><i class="fa-solid fa-warehouse"></i></button> <button class="btn-danger btn-sm" onclick="deleteProduct(${p.id})"><i class="fa-solid fa-trash"></i></button></span>`).join('');
+                if(tbody) tbody.innerHTML = products.map(p => `
+                    <tr>
+                        <td>${p.image || '📦'} ${escapeHtml(p.name)}</span>
+                        <td>${escapeHtml(p.category)}</span>
+                        <td>${(p.price||0).toLocaleString()} FCFA</span>
+                        <td class="${p.stock <= (p.minStock||10) ? 'stock-alert' : ''}">${p.stock || 0}${p.stock <= (p.minStock||10) ? ' ⚠️' : ''}</span>
+                        <td><button class="btn-outline btn-sm" onclick="editProduct(${p.id})"><i class="fa-solid fa-pen"></i></button> <button class="btn-outline btn-sm" onclick="openStockModal(${p.id}, '${p.name}', ${p.stock||0})"><i class="fa-solid fa-warehouse"></i></button> <button class="btn-danger btn-sm" onclick="deleteProduct(${p.id})"><i class="fa-solid fa-trash"></i></button></span>
+                    </tr>
+                `).join('');
                 document.getElementById('productsCount').textContent = products.length;
-                document.querySelector('#stockTable tbody').innerHTML = products.map(p => `<td>${escapeHtml(p.name)}</span><td>${p.stock || 0}</span><td>${p.minStock || 10}</span><td><span class="badge ${p.stock <= (p.minStock||10) ? 'badge-danger' : 'badge-success'}">${p.stock <= (p.minStock||10) ? 'Stock bas' : 'OK'}</span></span><td><button class="btn-outline btn-sm" onclick="openStockModal(${p.id}, '${p.name}', ${p.stock||0})"><i class="fa-solid fa-pen"></i></button></span>`).join('');
+                document.querySelector('#stockTable tbody').innerHTML = products.map(p => `
+                    <tr>
+                        <td>${escapeHtml(p.name)}</span>
+                        <td>${p.stock || 0}</span>
+                        <td>${p.minStock || 10}</span>
+                        <td><span class="badge ${p.stock <= (p.minStock||10) ? 'badge-danger' : 'badge-success'}">${p.stock <= (p.minStock||10) ? 'Stock bas' : 'OK'}</span>
+                        <td><button class="btn-outline btn-sm" onclick="openStockModal(${p.id}, '${p.name}', ${p.stock||0})"><i class="fa-solid fa-pen"></i></button></span>
+                    </tr>
+                `).join('');
             }
             
             function openProductModal(id) {
@@ -550,6 +592,7 @@
                 if(idx !== -1) { allProducts[idx].stock = final; Storage.set('products', allProducts); showToast('Stock mis à jour', 'Nouveau stock: ' + final, 'success'); closeStockModal(); loadProducts(); loadDashboard(); }
             }
             
+            // ========== COMMANDES ==========
             function loadOrders() {
                 let allOrders = Storage.get('orders', []);
                 orders = allOrders.filter(o => o.items?.some(i => i.supplier === supplierName));
@@ -557,7 +600,15 @@
                 const status = document.getElementById('orderStatusFilter')?.value || 'all';
                 let filtered = orders.filter(o => (status === 'all' || o.status === status) && (o.id.toLowerCase().includes(search) || (o.customerName || '').toLowerCase().includes(search)));
                 const tbody = document.querySelector('#ordersTable tbody');
-                if(tbody) tbody.innerHTML = filtered.map(o => { const total = o.items.filter(i => i.supplier === supplierName).reduce((s,i) => s + (i.price * i.quantity),0); return `<td><span class="badge badge-info">#${o.id.slice(-8)}</span><td>${escapeHtml(o.customerName || 'N/A')}<td>${total.toLocaleString()} FCFA</span><td><span class="badge ${o.status === 'livrée' ? 'badge-success' : o.status === 'annulée' ? 'badge-danger' : 'badge-warning'}">${o.status}</span><td>${new Date(o.createdAt).toLocaleDateString()}<td><button class="btn-outline btn-sm" onclick="updateOrderStatus('${o.id}', 'préparation')">Préparer</button>`; }).join('');
+                if(tbody) tbody.innerHTML = filtered.map(o => { const total = o.items.filter(i => i.supplier === supplierName).reduce((s,i) => s + (i.price * i.quantity),0); return `<tr>
+                        <td><span class="badge badge-info">#${o.id.slice(-8)}</span></td>
+                        <td>${escapeHtml(o.customerName || 'N/A')}</td>
+                        <td>${total.toLocaleString()} FCFA</span></td>
+                        <td><span class="badge ${o.status === 'livrée' ? 'badge-success' : o.status === 'annulée' ? 'badge-danger' : 'badge-warning'}">${o.status}</span></td>
+                        <td>${new Date(o.createdAt).toLocaleDateString()}</td>
+                        <td><button class="btn-outline btn-sm" onclick="updateOrderStatus('${o.id}', 'préparation')">Préparer</button></td>
+                    </tr>`;
+                }).join('');
                 const pending = orders.filter(o => !['livrée','annulée'].includes(o.status)).length;
                 document.getElementById('pendingOrdersBadge').textContent = pending;
             }
@@ -567,6 +618,7 @@
                 if(idx !== -1) { allOrders[idx].status = status; Storage.set('orders', allOrders); loadOrders(); loadDashboard(); showToast('Commande mise à jour', 'Statut: ' + status, 'success'); }
             }
             
+            // ========== DASHBOARD ==========
             function loadDashboard() {
                 const allProducts = Storage.get('products', []);
                 const supplierProducts = allProducts.filter(p => p.supplier === supplierName);
@@ -578,7 +630,7 @@
                 document.querySelectorAll('.stat-card[data-section]').forEach(card => { card.onclick = () => showSection(card.dataset.section); });
                 const recent = orders.slice().sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0,5);
                 const recentTbody = document.querySelector('#recentOrdersTable tbody');
-                if(recentTbody) recentTbody.innerHTML = recent.map(o => `<td><span class="badge badge-info">#${o.id.slice(-8)}</span><td>${escapeHtml(o.customerName || 'N/A')}<td>${(o.total||0).toLocaleString()} FCFA</span><td><span class="badge ${o.status === 'livrée' ? 'badge-success' : 'badge-warning'}">${o.status}</span><td>${new Date(o.createdAt).toLocaleDateString()}`).join('');
+                if(recentTbody) recentTbody.innerHTML = recent.map(o => `<td><span class="badge badge-info">#${o.id.slice(-8)}</span></td><td>${escapeHtml(o.customerName || 'N/A')}</td><td>${(o.total||0).toLocaleString()} FCFA</span><td><span class="badge ${o.status === 'livrée' ? 'badge-success' : 'badge-warning'}">${o.status}</span><td>${new Date(o.createdAt).toLocaleDateString()}</td></tr>`).join('');
                 initCharts();
             }
             
@@ -600,9 +652,10 @@
                 orders.forEach(o => { o.items.filter(i => i.supplier === supplierName).forEach(item => { const cur = productSales.get(item.id) || { name: item.name, qty: 0, rev: 0 }; cur.qty += item.quantity; cur.rev += item.price * item.quantity; productSales.set(item.id, cur); }); });
                 const top = Array.from(productSales.entries()).sort((a,b) => b[1].rev - a[1].rev).slice(0,5);
                 const topTbody = document.querySelector('#topProductsTable tbody');
-                if(topTbody) topTbody.innerHTML = top.map(([id,d]) => `<td>${escapeHtml(d.name)}<td>${d.qty}<td>${d.rev.toLocaleString()} FCFA`).join('');
+                if(topTbody) topTbody.innerHTML = top.map(([id,d]) => `<td>${escapeHtml(d.name)}</td><td>${d.qty}</td><td>${d.rev.toLocaleString()} FCFA</td>`).join('');
             }
             
+            // ========== PROFIL ==========
             function loadProfile() {
                 const users = Storage.get('users', []);
                 const user = users.find(u => u.id === supplierId) || supplier;
