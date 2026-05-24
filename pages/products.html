@@ -3,576 +3,376 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Design Élégant | Ultra Responsive</title>
+    <meta name="theme-color" content="#0A0A14">
+    <title>Salam Market · Catalogue complet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* RESET & BASE - couleurs d'origine préservées */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --emerald-400: #34D399;
+            --emerald-500: #10B981;
+            --emerald-600: #059669;
+            --violet-500: #8B5CF6;
+            --rose-500: #F43F5E;
+            --surface-primary: #0A0A14;
+            --surface-card: rgba(15, 15, 30, 0.85);
+            --surface-card-solid: #0F0F1E;
+            --surface-input: rgba(10, 10, 20, 0.7);
+            --border-default: rgba(255, 255, 255, 0.08);
+            --border-accent: rgba(16, 185, 129, 0.25);
+            --text-primary: #F1F5F9;
+            --text-secondary: #CBD5E1;
+            --text-muted: #94A3B8;
+            --font-display: 'Space Grotesk', system-ui, sans-serif;
+            --font-body: 'Inter', system-ui, sans-serif;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
         body {
-            /* Les couleurs initiales : fond clair, texte foncé élégant */
-            background-color: #f8f9fc;   /* Très légère teinte neutre, garde la clarté */
-            color: #1a2c3e;              /* Bleu-gris profond (reste dans la palette naturelle) */
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, 'Noto Sans', sans-serif;
-            line-height: 1.5;
-            scroll-behavior: smooth;
+            font-family: var(--font-body);
+            background: var(--surface-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
         }
 
-        /* Typographie raffinée et aérée */
-        h1, h2, h3, h4 {
-            font-weight: 600;
-            letter-spacing: -0.02em;
-            line-height: 1.2;
-            color: #0f2b3b;   /* nuance profonde existante */
-        }
+        .bg-decoration { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+        .bg-gradient-1 { position: absolute; width: 150%; height: 100%; background: radial-gradient(ellipse 80% 60% at 10% -20%, rgba(16, 185, 129, 0.06) 0%, transparent 50%); }
 
-        p, li, span, .text-body {
-            font-weight: 400;
-            color: #2c3e4e;
-        }
-
-        /* Conteneur principal ultra réactif avec marges fluides */
-        .container {
-            width: 100%;
-            max-width: 1280px;
-            margin-left: auto;
-            margin-right: auto;
-            padding-left: clamp(1rem, 5vw, 2.5rem);
-            padding-right: clamp(1rem, 5vw, 2.5rem);
-        }
-
-        /* sections espacées avec respiration moderne */
-        section {
-            padding: 5rem 0;
-        }
-
-        /* ===== COMPOSANTS MODERNES (gardant les couleurs d'origine) ===== */
-        /* cartes élégantes avec micro-ombres et arrondis */
-        .card {
-            background-color: #ffffff;
-            border-radius: 1.75rem;
-            transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.02), 0 2px 6px rgba(0, 0, 0, 0.03);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            overflow: hidden;
-        }
-
-        .card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.02);
-            border-color: rgba(0, 0, 0, 0.08);
-        }
-
-        /* boutons primaires & secondaires - couleurs inchangées mais plus d'élégance */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.75rem;
-            font-size: 0.95rem;
-            font-weight: 500;
-            border-radius: 2.5rem;
-            transition: all 0.25s ease;
-            cursor: pointer;
-            text-decoration: none;
-            border: none;
-            background: none;
-            font-family: inherit;
-            letter-spacing: -0.01em;
-        }
-
-        .btn-primary {
-            background-color: #2c6e9e;   /* couleur d'origine, ton bleu profond */
-            color: white;
-            box-shadow: 0 2px 5px rgba(44, 110, 158, 0.2);
-        }
-
-        .btn-primary:hover {
-            background-color: #1f5a85;
-            transform: scale(0.97);
-            box-shadow: 0 8px 18px rgba(44, 110, 158, 0.25);
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 1.5px solid #2c6e9e;
-            color: #2c6e9e;
-        }
-
-        .btn-outline:hover {
-            background-color: rgba(44, 110, 158, 0.06);
-            border-color: #1f5a85;
-            color: #1f5a85;
-            transform: translateY(-2px);
-        }
-
-        /* navigation / header élégant */
-        .navbar {
-            padding: 1.2rem 0;
-            background-color: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-            position: sticky;
+        .sidebar {
+            width: 280px;
+            background: rgba(10, 10, 20, 0.96);
+            backdrop-filter: blur(40px);
+            border-right: 1px solid var(--border-default);
+            position: fixed;
             top: 0;
+            left: 0;
+            bottom: 0;
             z-index: 100;
-        }
-
-        .nav-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            background: linear-gradient(135deg, #1f4e6e, #2c6e9e);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            font-weight: 500;
-            color: #1f3b4c;
-            transition: color 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: #2c6e9e;
-        }
-
-        /* hero section élégante */
-        .hero {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 1.5rem;
-            padding: 2rem 0 3rem;
+            padding: 24px 16px;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
+        .sidebar-header { display: flex; align-items: center; gap: 12px; padding-bottom: 24px; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .sidebar-logo { width: 44px; height: 44px; background: linear-gradient(135deg, var(--emerald-600), var(--emerald-500)); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+        .sidebar-brand h2 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; }
+        .sidebar-brand p { font-size: 0.65rem; color: var(--emerald-400); }
+        .sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 14px; color: var(--text-muted); font-size: 0.85rem; font-weight: 500; text-decoration: none; transition: all 0.2s; cursor: pointer; }
+        .nav-item:hover { background: rgba(255,255,255,0.03); color: var(--text-secondary); transform: translateX(4px); }
+        .nav-item.active { background: rgba(16,185,129,0.08); color: var(--emerald-400); border-left: 2px solid var(--emerald-500); }
+        .btn-logout { width: 100%; padding: 12px 16px; background: transparent; border: 1px solid var(--border-default); border-radius: 14px; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 12px; transition: 0.2s; }
+        .btn-logout:hover { background: rgba(239,68,68,0.1); border-color: var(--rose-500); color: var(--rose-500); }
+        .mobile-header { display: none; position: fixed; top: 0; left: 0; right: 0; height: 60px; background: rgba(10,10,20,0.95); backdrop-filter: blur(40px); border-bottom: 1px solid var(--border-default); z-index: 99; align-items: center; padding: 0 16px; }
+        .menu-btn { width: 40px; height: 40px; background: transparent; border: none; color: white; font-size: 1.2rem; cursor: pointer; }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 98; }
+        .main-content { flex: 1; margin-left: 280px; padding: 28px; position: relative; z-index: 1; }
+        .catalog-container { max-width: 1400px; margin: 0 auto; }
+        .catalog-header h1 { font-family: var(--font-display); font-size: 2rem; margin-bottom: 6px; }
+        .catalog-header p { color: var(--text-muted); }
 
-        .hero h1 {
-            font-size: clamp(2.2rem, 7vw, 4rem);
-            max-width: 850px;
-            background: linear-gradient(to right, #1f3b4c, #2c6e9e);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-        }
+        .search-section { background: var(--surface-card); backdrop-filter: blur(20px); border: 1px solid var(--border-default); border-radius: var(--radius-xl); padding: 20px 24px; margin: 24px 0; }
+        .search-row { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+        .search-input-wrapper { flex: 1; position: relative; }
+        .search-input { width: 100%; padding: 16px 16px 16px 48px; background: var(--surface-input); border: 1.5px solid var(--border-default); border-radius: 20px; color: white; font-size: 0.95rem; outline: none; transition: 0.2s; }
+        .search-input:focus { border-color: var(--border-accent); }
+        .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+        .voice-btn { width: 54px; height: 54px; border-radius: 20px; background: rgba(16,185,129,0.1); border: 1px solid var(--border-accent); color: var(--emerald-400); cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+        .voice-btn:hover { background: var(--emerald-500); color: white; }
+        .voice-btn.listening { background: var(--rose-500); border-color: var(--rose-500); color: white; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(244,63,94,0.4); } 50% { box-shadow: 0 0 0 8px rgba(244,63,94,0); } }
+        
+        .filters-section { display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; margin-bottom: 28px; }
+        .category-filters { display: flex; gap: 10px; flex-wrap: wrap; }
+        .filter-chip { padding: 8px 18px; border-radius: 40px; font-size: 0.75rem; font-weight: 600; background: transparent; border: 1px solid var(--border-default); color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+        .filter-chip.active, .filter-chip:hover { background: rgba(16,185,129,0.12); border-color: var(--emerald-400); color: var(--emerald-400); }
+        .sort-select { padding: 8px 16px; background: var(--surface-input); border: 1px solid var(--border-default); border-radius: 30px; color: white; cursor: pointer; }
+        .view-toggle { display: flex; gap: 6px; background: var(--surface-input); padding: 5px; border-radius: 40px; }
+        .view-btn { padding: 8px 14px; border-radius: 30px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+        .view-btn.active { background: var(--emerald-500); color: white; }
 
-        .hero p {
-            font-size: clamp(1rem, 4vw, 1.25rem);
-            max-width: 650px;
-            opacity: 0.8;
-        }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+        .product-card { background: var(--surface-card); backdrop-filter: blur(20px); border: 1px solid var(--border-default); border-radius: var(--radius-xl); overflow: hidden; transition: all 0.3s ease; }
+        .product-card:hover { transform: translateY(-6px); border-color: var(--border-accent); box-shadow: var(--shadow-md); }
+        .product-img { height: 200px; background: linear-gradient(145deg, #1a1a2a, #0a0a14); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        .product-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+        .product-card:hover .product-img img { transform: scale(1.05); }
+        .product-badge { position: absolute; top: 12px; left: 12px; padding: 4px 12px; border-radius: 30px; font-size: 0.65rem; font-weight: 700; background: var(--emerald-500); color: black; z-index: 2; }
+        .product-badge.hot { background: var(--rose-500); color: white; }
+        .product-badge.premium { background: var(--violet-500); color: white; }
+        .product-info { padding: 20px; }
+        .product-info h3 { font-size: 1rem; font-weight: 600; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .product-supplier { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+        .product-price { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--emerald-400); margin-bottom: 16px; }
+        .product-actions { display: flex; gap: 12px; }
+        .btn-add { flex: 1; padding: 12px; background: rgba(16,185,129,0.1); border: 1px solid var(--border-accent); border-radius: 14px; color: var(--emerald-400); font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-add:hover { background: var(--emerald-500); color: white; }
+        .btn-compare { width: 44px; background: transparent; border: 1px solid var(--border-default); border-radius: 14px; cursor: pointer; transition: 0.2s; }
+        .btn-compare:hover { border-color: var(--violet-500); }
+        .btn-compare.active { background: var(--violet-500); border-color: var(--violet-500); color: white; }
+        
+        .products-list { display: flex; flex-direction: column; gap: 14px; }
+        .product-list-item { display: flex; align-items: center; gap: 20px; background: var(--surface-card); border: 1px solid var(--border-default); border-radius: 20px; padding: 16px; transition: 0.2s; }
+        .product-list-item:hover { border-color: var(--border-accent); transform: translateX(4px); }
+        .product-list-img { width: 70px; height: 70px; background: #12121f; border-radius: 16px; overflow: hidden; flex-shrink: 0; }
+        .product-list-img img { width: 100%; height: 100%; object-fit: cover; }
+        .product-list-info { flex: 1; }
+        .product-list-info h3 { font-size: 0.95rem; margin-bottom: 4px; }
+        .product-list-info .price { color: var(--emerald-400); font-weight: 700; }
 
-        /* Grille responsive magnifique */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .feature-card {
-            background: white;
-            padding: 2rem 1.8rem;
-            border-radius: 1.75rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 25px -12px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(0, 0, 0, 0.03);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 25px 35px -16px rgba(0, 0, 0, 0.1);
-            border-color: rgba(44, 110, 158, 0.2);
-        }
-
-        .feature-icon {
-            font-size: 2.4rem;
-            margin-bottom: 1.2rem;
-            display: inline-block;
-        }
-
-        /* sections plus élégantes avec accents */
-        .section-title {
-            font-size: clamp(1.8rem, 5vw, 2.5rem);
-            margin-bottom: 1rem;
-            position: relative;
-            display: inline-block;
-        }
-
-        .section-subtitle {
-            color: #4a6275;
-            max-width: 700px;
-            margin-bottom: 3rem;
-            font-size: 1.1rem;
-        }
-
-        /* formulaire propre - couleurs préservées */
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 1rem 1.2rem;
-            background-color: #ffffff;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 1.5rem;
-            font-family: inherit;
-            font-size: 1rem;
-            transition: all 0.2s;
-            outline: none;
-        }
-
-        input:focus, textarea:focus, select:focus {
-            border-color: #2c6e9e;
-            box-shadow: 0 0 0 4px rgba(44, 110, 158, 0.15);
-        }
-
-        label {
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            display: block;
-            color: #1f3b4c;
-        }
-
-        /* témoignages / citations */
-        .testimonial-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 2rem;
-        }
-
-        .testimonial {
-            background: white;
-            padding: 2rem;
-            border-radius: 1.75rem;
-            border: 1px solid rgba(0, 0, 0, 0.03);
-            box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.05);
-        }
-
-        .testimonial p {
-            font-style: normal;
-            font-size: 1rem;
-            line-height: 1.5;
-        }
-
-        .quote-mark {
-            font-size: 3rem;
-            line-height: 1;
-            color: #2c6e9e;
-            opacity: 0.3;
-            margin-bottom: -1rem;
-            display: block;
-        }
-
-        /* footer épuré mais élégant */
-        footer {
-            background-color: #ffffff;
-            border-top: 1px solid rgba(0, 0, 0, 0.04);
-            padding: 3rem 0 2rem;
-            margin-top: 3rem;
-        }
-
-        .footer-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 2rem;
-        }
-
-        .footer-copyright {
-            text-align: center;
-            margin-top: 3rem;
-            font-size: 0.85rem;
-            color: #5b6f82;
-        }
-
-        /* images responsives (si utilisées) */
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        /* micro-interactions pour tout lien/élément */
-        a, button, .card, .feature-card, .testimonial, .btn {
-            transition: all 0.2s ease;
-        }
-
-        /* spacing helpers */
-        .text-center {
-            text-align: center;
-        }
-
-        .mt-2 {
-            margin-top: 1rem;
-        }
-        .mb-4 {
-            margin-bottom: 2rem;
-        }
-
-        /* barre fine de séparation élégante */
-        .divider {
-            height: 2px;
-            width: 70px;
-            background: linear-gradient(90deg, #2c6e9e, #b0c7db);
-            margin: 1rem auto 2rem;
-            border-radius: 5px;
-        }
-
-        /* responsive fine tuning */
+        .compare-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #0F0F1E; border-top: 1px solid var(--border-default); padding: 16px 28px; transform: translateY(100%); transition: transform 0.4s; z-index: 50; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; align-items: center; }
+        .compare-bar.show { transform: translateY(0); }
+        .compare-items { display: flex; gap: 12px; flex-wrap: wrap; }
+        .compare-item { background: rgba(16,185,129,0.1); padding: 6px 14px; border-radius: 40px; display: flex; gap: 8px; align-items: center; font-size: 0.8rem; }
+        .compare-item img { width: 28px; height: 28px; object-fit: cover; border-radius: 8px; }
+        .compare-item button { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; }
+        .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 200; display: flex; flex-direction: column; gap: 12px; }
+        .toast { background: #1e1e2e; border-left: 3px solid var(--emerald-500); padding: 12px 20px; border-radius: 16px; transform: translateX(120%); transition: 0.3s; display: flex; align-items: center; gap: 12px; }
+        .toast.show { transform: translateX(0); }
+        
         @media (max-width: 768px) {
-            section {
-                padding: 3rem 0;
-            }
-            .nav-container {
-                flex-direction: column;
-                align-items: center;
-            }
-            .nav-links {
-                justify-content: center;
-                gap: 1.2rem;
-            }
-            .hero {
-                padding: 1rem 0 2rem;
-            }
-            .btn {
-                padding: 0.65rem 1.4rem;
-            }
-            .feature-card, .testimonial {
-                padding: 1.5rem;
-            }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .mobile-header { display: flex; }
+            .main-content { margin-left: 0; padding-top: 80px; }
+            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+            .product-info h3 { white-space: normal; font-size: 0.85rem; }
         }
-
-        @media (max-width: 480px) {
-            .grid, .testimonial-grid {
-                gap: 1.2rem;
-            }
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
+        @media (max-width: 500px) { .products-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-
-    <!-- Barre de navigation moderne et aérée -->
-    <nav class="navbar">
-        <div class="container nav-container">
-            <div class="logo">Élégance</div>
-            <div class="nav-links">
-                <a href="#">Accueil</a>
-                <a href="#">Services</a>
-                <a href="#">Réalisations</a>
-                <a href="#">Contact</a>
-                <a href="#" class="btn btn-outline" style="padding: 0.5rem 1.2rem;">Connexion</a>
-            </div>
-        </div>
+<div class="bg-decoration"><div class="bg-gradient-1"></div></div>
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+<header class="mobile-header">
+    <button class="menu-btn" onclick="openSidebar()"><i class="fa-solid fa-bars"></i></button>
+    <span class="mobile-logo" style="font-weight:700;">Salam <span style="color:#10B981;">Market</span></span>
+    <button class="menu-btn" onclick="location.href='cart.html'"><i class="fa-solid fa-cart-shopping"></i></button>
+</header>
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header"><div class="sidebar-logo"><i class="fa-solid fa-store"></i></div><div class="sidebar-brand"><h2>Salam Market</h2><p>PRO v6</p></div></div>
+    <nav class="sidebar-nav">
+        <div class="nav-item active"><i class="fa-solid fa-basket-shopping"></i> Catalogue</div>
+        <div class="nav-item"><i class="fa-solid fa-cart-shopping"></i> Panier</div>
+        <div class="nav-item"><i class="fa-solid fa-box"></i> Commandes</div>
+        <div class="nav-item"><i class="fa-solid fa-user"></i> Profil</div>
     </nav>
+    <div class="sidebar-footer"><button class="btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</button></div>
+</aside>
+<main class="main-content">
+    <div class="catalog-container">
+        <div class="catalog-header"><h1>🛍️ Catalogue complet</h1><p id="productCount">Tous nos produits authentiques</p></div>
+        <div class="search-section"><div class="search-row"><div class="search-input-wrapper"><i class="fa-solid fa-magnifying-glass search-icon"></i><input type="text" id="searchInput" class="search-input" placeholder="Rechercher un produit... (riz, spaghetti, savon, dentifrice)"></div><button class="voice-btn" id="voiceBtn" onclick="startVoiceSearch()"><i class="fa-solid fa-microphone"></i></button></div></div>
+        <div class="filters-section"><div class="category-filters" id="categoryFilters"></div><select id="sortSelect" class="sort-select"><option value="default">Trier par</option><option value="price-asc">Prix croissant</option><option value="price-desc">Prix décroissant</option><option value="name-asc">Nom A-Z</option></select><div class="view-toggle"><button class="view-btn active" data-view="grid" onclick="setView('grid')"><i class="fa-solid fa-grid-2"></i></button><button class="view-btn" data-view="list" onclick="setView('list')"><i class="fa-solid fa-list"></i></button></div></div>
+        <div id="productsContainer" class="products-grid"></div>
+    </div>
+</main>
+<div class="compare-bar" id="compareBar"><div><i class="fa-solid fa-chart-simple"></i> Comparaison (<span id="compareCount">0</span>/4)</div><div class="compare-items" id="compareItems"></div><button class="btn-add" onclick="compareSelected()" style="width:auto; padding:8px 20px;">Comparer</button></div>
+<div class="toast-container" id="toastContainer"></div>
 
-    <main>
-        <!-- Hero ultra propre avec dégradé subtil (couleurs préservées) -->
-        <section style="padding-top: 2rem;">
-            <div class="container hero">
-                <h1>Design élégant,<br>expérience fluide</h1>
-                <div class="divider"></div>
-                <p>Une interface pensée pour l'excellence, réactive sur tous les supports, avec une esthétique raffinée et intemporelle. Les couleurs restent pures et authentiques, seules les formes s'élèvent.</p>
-                <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
-                    <a href="#" class="btn btn-primary">Commencer →</a>
-                    <a href="#" class="btn btn-outline">Découvrir</a>
-                </div>
-            </div>
-        </section>
+<script>
+    // ========== CHEMINS DES IMAGES (depuis pages/ vers dossier images/ à la racine) ==========
+    // Le fichier est dans pages/products.html, donc les images sont dans ../images/
+    const IMG_BASE = "../images/";
+    
+    const imageMapping = {
+        "Spaghetti Barilla n°5": "SpaghettiBarilla500g.jpg",
+        "Spaghetti Pâte d'Or": "SpaghettiPATEDOR.jpg",
+        "Spaghetti Broli": "SpaghettiBROLI.jpg",
+        "Spaghetti Panzani": "SpaghettiPANZANI.jpg",
+        "Macaroni Kayna Petit plomb": "MacaroniKayna500g.jpg",
+        "Macaroni Helper Cheeseburger": "MacaroniHELPER.jpg",
+        "Macaroni Kayna Coquillette": "MacaroniKAYNA.jpg",
+        "Riz Tanti": "RizTanti.jpg",
+        "Riz Parfumé Mama Gold": "RizParfuméMamaGold.jpg",
+        "Riz Long Grain 5kg": "RizParfuméMamaGold.jpg",
+        "Colgate MaxWhite": "Dentifrice.ColgateMaxWhite.jpg",
+        "Colgate MaxFresh": "Dentifrice.ColgateMaxFresh.jpg",
+        "Colgate Herbal": "Dentifrice.Colgate.Herbal.jpg",
+        "Parodontax": "Dentifrice.Parodontax.jpg",
+        "Sensodyne Répare & Protège": "Dentifrice.SensodyneRepare&Protege.jpg",
+        "Sensodyne Soin Complet": "Dentifrice.Sensodyne.jpg",
+        "Colgate Black Fresh": "Dentifrice.Colgat.jpg",
+        "Signal Blancheur": "Dentifrice.Signal.jpg",
+        "Sardines Jolly": "SardineJoly.jpg",
+        "Sardines Famrite": "Sardine.Famrite.jpg",
+        "Savon Maera Herbal": "SAVON.Maera.jpg",
+        "Savon Protex Pharmapur Aloe": "Protex.jpg",
+        "Savon Protex Pharmapur Charbon": "protex_-_pharmapur_-_charbon_2_.jpg",
+        "Savon Pharmapur Classique": "Savon-PHARMAPUR-150g-1.webp",
+        "Dettol Original Antibactérien": "Dettol.Original.jpg",
+        "Dettol Skincare": "Dettol.Skincare.jpg",
+        "Savon Nivea Crème Soft": "SAVON.NIVEA.jpg",
+        "Savon Artisanal": "SAVON.jpg",
+        "Sucre Blanc": "SucreBlanc.jpg",
+        "Détergent Madar": "detergentMadar.jpg",
+        "Détergent Hoka High Foam": "detergeantHoka.jpg",
+        "Détergent Ozil Ultra Power": "detergentOzil.jpg",
+        "Serviettes Siempre Extra": "cotonhygeniquesiempre.jpg",
+        "Huile Mayer": "HuileMajo1r.jpg",
+        "Huile Rouge 500g": "huileRouge.jpg"
+    };
 
-        <!-- Section cartes fonctions / grille ultra responsive -->
-        <section>
-            <div class="container">
-                <div class="text-center">
-                    <h2 class="section-title">Fonctionnalités clés</h2>
-                    <p class="section-subtitle">Des composants modernes, une attention au détail, une adaptabilité parfaite.</p>
-                </div>
-                <div class="grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">✨</div>
-                        <h3>Responsive absolu</h3>
-                        <p>Adaptation parfaite à toutes les tailles d'écran, du mobile au grand écran, sans effort de lecture.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🎨</div>
-                        <h3>Palette préservée</h3>
-                        <p>Nous gardons vos couleurs d'origine avec honneur, en sublimant uniquement les contrastes et l'espacement.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">⚡</div>
-                        <h3>Ultra fluide</h3>
-                        <p>Transitions douces, micro-interactions et animations subtiles pour une expérience premium.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🧼</div>
-                        <h3>Propre & élégant</h3>
-                        <p>Hiérarchie visuelle irréprochable, typographie aérée, coins arrondis et ombres sophistiquées.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+    function getProductImage(productName) {
+        let filename = imageMapping[productName];
+        if (filename) {
+            return IMG_BASE + filename;
+        }
+        // Fallback
+        return IMG_BASE + "SpaghettiBarilla500g.jpg";
+    }
 
-        <!-- Section Témoignages / élégance sociale -->
-        <section style="background-color: rgba(44, 110, 158, 0.02);">
-            <div class="container">
-                <div class="text-center">
-                    <h2 class="section-title">Ce qu'ils disent</h2>
-                    <p class="section-subtitle">Des retours authentiques, un design qui inspire confiance.</p>
-                </div>
-                <div class="testimonial-grid">
-                    <div class="testimonial">
-                        <span class="quote-mark">“</span>
-                        <p>Un travail incroyablement propre. Le site respire, chaque détail est à sa place. Les couleurs d’origine n’ont jamais été aussi mises en valeur.</p>
-                        <h4 style="margin-top: 1rem;">— Sophie L.</h4>
-                    </div>
-                    <div class="testimonial">
-                        <span class="quote-mark">“</span>
-                        <p>La navigation est un bonheur, ultra réactive sur mon iPad et mon smartphone. Le design reste chic et moderne sans en faire trop.</p>
-                        <h4 style="margin-top: 1rem;">— Marc D.</h4>
-                    </div>
-                    <div class="testimonial">
-                        <span class="quote-mark">“</span>
-                        <p>Enfin un site qui respecte la charte graphique tout en étant résolument actuel. La qualité des animations est bluffante.</p>
-                        <h4 style="margin-top: 1rem;">— Julie M.</h4>
-                    </div>
-                </div>
-            </div>
-        </section>
+    // TOUS LES PRODUITS
+    const FULL_PRODUCTS = [
+        { id: 1, name: "Spaghetti Barilla n°5", category: "Pâtes", price: 1200, unit: "500g", supplier: "Barilla", sales: 320, badge: "best" },
+        { id: 2, name: "Macaroni Kayna Petit plomb", category: "Pâtes", price: 850, unit: "500g", supplier: "Kayna", sales: 210, badge: "" },
+        { id: 3, name: "Riz Tanti", category: "Riz", price: 800, unit: "kg", supplier: "Tantie Mouna", sales: 1450, badge: "hot" },
+        { id: 4, name: "Riz Parfumé Mama Gold", category: "Riz", price: 950, unit: "kg", supplier: "Mama Gold", sales: 2100, badge: "best" },
+        { id: 5, name: "Riz Long Grain 5kg", category: "Riz", price: 4200, unit: "5kg", supplier: "Mama Gold", sales: 870, badge: "" },
+        { id: 6, name: "Colgate MaxWhite", category: "Dentifrices", price: 1850, unit: "tube", supplier: "Colgate", sales: 540, badge: "" },
+        { id: 7, name: "Colgate MaxFresh", category: "Dentifrices", price: 1800, unit: "tube", supplier: "Colgate", sales: 490, badge: "" },
+        { id: 8, name: "Colgate Herbal", category: "Dentifrices", price: 1950, unit: "tube", supplier: "Colgate", sales: 380, badge: "" },
+        { id: 9, name: "Parodontax", category: "Dentifrices", price: 3200, unit: "tube", supplier: "Parodontax", sales: 275, badge: "premium" },
+        { id: 10, name: "Sensodyne Répare & Protège", category: "Dentifrices", price: 3800, unit: "tube", supplier: "Sensodyne", sales: 410, badge: "" },
+        { id: 11, name: "Sensodyne Soin Complet", category: "Dentifrices", price: 3600, unit: "tube", supplier: "Sensodyne", sales: 395, badge: "premium" },
+        { id: 12, name: "Colgate Black Fresh", category: "Dentifrices", price: 1700, unit: "tube", supplier: "Colgate", sales: 310, badge: "" },
+        { id: 13, name: "Signal Blancheur", category: "Dentifrices", price: 1650, unit: "tube", supplier: "Signal", sales: 520, badge: "" },
+        { id: 14, name: "Sardines Jolly", category: "Conserves", price: 650, unit: "boîte", supplier: "Jolly", sales: 890, badge: "hot" },
+        { id: 15, name: "Sardines Famrite", category: "Conserves", price: 600, unit: "boîte", supplier: "Famrite", sales: 720, badge: "" },
+        { id: 16, name: "Savon Maera Herbal", category: "Savons", price: 400, unit: "unité", supplier: "Maera", sales: 1250, badge: "best" },
+        { id: 17, name: "Savon Protex Pharmapur Aloe", category: "Savons", price: 550, unit: "150g", supplier: "Protex", sales: 980, badge: "" },
+        { id: 18, name: "Savon Protex Pharmapur Charbon", category: "Savons", price: 600, unit: "150g", supplier: "Protex", sales: 760, badge: "" },
+        { id: 19, name: "Savon Pharmapur Classique", category: "Savons", price: 450, unit: "100g", supplier: "Pharmapur", sales: 1100, badge: "" },
+        { id: 20, name: "Dettol Original Antibactérien", category: "Savons", price: 750, unit: "175g", supplier: "Dettol", sales: 880, badge: "" },
+        { id: 21, name: "Dettol Skincare", category: "Savons", price: 800, unit: "175g", supplier: "Dettol", sales: 640, badge: "" },
+        { id: 22, name: "Savon Nivea Crème Soft", category: "Savons", price: 680, unit: "100g", supplier: "Nivea", sales: 530, badge: "" },
+        { id: 23, name: "Savon Artisanal", category: "Savons", price: 900, unit: "pièce", supplier: "Artisan local", sales: 210, badge: "" },
+        { id: 24, name: "Sucre Blanc", category: "Épicerie", price: 4500, unit: "50kg", supplier: "Sucrerie", sales: 320, badge: "" },
+        { id: 25, name: "Spaghetti Pâte d'Or", category: "Pâtes", price: 1100, unit: "500g", supplier: "Pâte d'Or", sales: 450, badge: "" },
+        { id: 26, name: "Spaghetti Broli", category: "Pâtes", price: 1050, unit: "500g", supplier: "Broli", sales: 380, badge: "" },
+        { id: 27, name: "Spaghetti Panzani", category: "Pâtes", price: 1300, unit: "500g", supplier: "Panzani", sales: 590, badge: "" },
+        { id: 28, name: "Macaroni Helper Cheeseburger", category: "Pâtes", price: 1800, unit: "boîte", supplier: "Helper", sales: 260, badge: "" },
+        { id: 29, name: "Macaroni Kayna Coquillette", category: "Pâtes", price: 900, unit: "500g", supplier: "Kayna", sales: 410, badge: "" },
+        { id: 30, name: "Détergent Madar", category: "Ménage", price: 1500, unit: "kg", supplier: "Madar", sales: 730, badge: "" },
+        { id: 31, name: "Détergent Hoka High Foam", category: "Ménage", price: 1750, unit: "kg", supplier: "Hoka", sales: 680, badge: "" },
+        { id: 32, name: "Détergent Ozil Ultra Power", category: "Ménage", price: 2300, unit: "6 pièces", supplier: "Ozil", sales: 890, badge: "hot" },
+        { id: 33, name: "Serviettes Siempre Extra", category: "Hygiène", price: 1200, unit: "12x", supplier: "Siempre", sales: 950, badge: "" },
+        { id: 34, name: "Huile Mayer", category: "Huiles", price: 1350, unit: "1L", supplier: "Mayer", sales: 1430, badge: "best" },
+        { id: 35, name: "Huile Rouge 500g", category: "Huiles", price: 1100, unit: "500g", supplier: "Huilerie", sales: 540, badge: "" },
+        { id: 36, name: "Poulet fermier", category: "Viandes", price: 3200, unit: "kg", supplier: "Ferme Bini", sales: 680, badge: "fresh" },
+        { id: 37, name: "Tomates fraîches", category: "Fruits", price: 450, unit: "kg", supplier: "Maraîcher", sales: 1120, badge: "" },
+        { id: 38, name: "Mangues fraîches", category: "Fruits", price: 600, unit: "kg", supplier: "Ferme Moderne", sales: 890, badge: "" }
+    ];
 
-        <!-- Formulaire de contact élégant mais simple -->
-        <section>
-            <div class="container">
-                <div class="text-center">
-                    <h2 class="section-title">Parlons de votre projet</h2>
-                    <p class="section-subtitle">Un espace de contact intuitif, pensé pour la clarté.</p>
-                </div>
-                <div style="max-width: 680px; margin: 0 auto;">
-                    <div class="card" style="padding: 2rem;">
-                        <form>
-                            <div class="form-group">
-                                <label for="name">Nom complet</label>
-                                <input type="text" id="name" placeholder="Sophie Martin" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Adresse email</label>
-                                <input type="email" id="email" placeholder="sophie@exemple.com" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="message">Message</label>
-                                <textarea id="message" rows="4" placeholder="Décrivez votre besoin..."></textarea>
-                            </div>
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary" style="width: 100%;">Envoyer le message →</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
+    let currentCategory = "all";
+    let currentSearch = "";
+    let currentSort = "default";
+    let currentView = "grid";
+    let compareList = JSON.parse(localStorage.getItem("salam_compare") || "[]");
+    let categories = ["all", ...new Set(FULL_PRODUCTS.map(p => p.category))];
 
-        <!-- Section mise en avant d'une galerie ou concept design (élément purement décoratif élégant) -->
-        <section style="padding-top: 0;">
-            <div class="container">
-                <div class="card" style="display: flex; flex-wrap: wrap; gap: 2rem; align-items: center; justify-content: space-between; padding: 2rem;">
-                    <div style="flex: 1; min-width: 200px;">
-                        <h3>Design & Performance</h3>
-                        <p>Nos composants respectent les standards les plus exigeants tout en restant légers. L’expérience utilisateur est au cœur de chaque décision.</p>
-                        <a href="#" class="btn btn-outline" style="margin-top: 1rem;">Explorer →</a>
-                    </div>
-                    <div style="flex: 0.8; min-width: 140px; text-align: center;">
-                        <div style="font-size: 3.5rem;">📱💻</div>
-                        <small style="color: #2c6e9e;">100% responsive</small>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
+    function renderCategoryFilters() {
+        const container = document.getElementById("categoryFilters");
+        container.innerHTML = categories.map(cat => `<button class="filter-chip ${currentCategory === cat ? 'active' : ''}" onclick="filterByCategory('${cat}')">${cat === "all" ? "Tous" : cat}</button>`).join("");
+    }
+    function filterByCategory(cat) { currentCategory = cat; renderCategoryFilters(); renderProducts(); }
+    function setView(view) { currentView = view; document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active')); document.querySelector(`.view-btn[data-view="${view}"]`).classList.add('active'); renderProducts(); }
+    
+    function getFilteredSorted() {
+        let filtered = FULL_PRODUCTS.filter(p => (currentCategory === "all" || p.category === currentCategory) && 
+            (currentSearch === "" || p.name.toLowerCase().includes(currentSearch) || p.category.toLowerCase().includes(currentSearch) || p.supplier.toLowerCase().includes(currentSearch)));
+        if (currentSort === "price-asc") filtered.sort((a,b)=>a.price-b.price);
+        else if (currentSort === "price-desc") filtered.sort((a,b)=>b.price-a.price);
+        else if (currentSort === "name-asc") filtered.sort((a,b)=>a.name.localeCompare(b.name));
+        return filtered;
+    }
 
-    <!-- Footer épuré, informations et mentions légales (très élégant) -->
-    <footer>
-        <div class="container">
-            <div class="footer-grid">
-                <div>
-                    <div class="logo" style="font-size: 1.6rem;">Élégance</div>
-                    <p style="margin-top: 0.75rem; max-width: 260px;">L'art de sublimer vos interfaces sans jamais trahir votre identité chromatique.</p>
-                </div>
-                <div>
-                    <h4>Explorer</h4>
-                    <ul style="list-style: none; margin-top: 0.8rem;">
-                        <li><a href="#" style="text-decoration: none; color: #2c3e4e;">Accueil</a></li>
-                        <li><a href="#" style="text-decoration: none; color: #2c3e4e;">Services</a></li>
-                        <li><a href="#" style="text-decoration: none; color: #2c3e4e;">À propos</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4>Légal</h4>
-                    <ul style="list-style: none; margin-top: 0.8rem;">
-                        <li><a href="#" style="text-decoration: none; color: #2c3e4e;">Mentions légales</a></li>
-                        <li><a href="#" style="text-decoration: none; color: #2c3e4e;">Confidentialité</a></li>
-                        <li><a href="#" style="text-decoration: none; color: #2c3e4e;">CGU</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4>Suivez-nous</h4>
-                    <div style="display: flex; gap: 1rem; margin-top: 0.8rem;">
-                        <a href="#" style="text-decoration: none; font-size: 1.4rem;">📘</a>
-                        <a href="#" style="text-decoration: none; font-size: 1.4rem;">📸</a>
-                        <a href="#" style="text-decoration: none; font-size: 1.4rem;">🐦</a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-copyright">
-                <p>© 2025 — Design raffiné, couleurs préservées, expérience ultra responsive.</p>
-            </div>
-        </div>
-    </footer>
+    function renderProducts() {
+        let products = getFilteredSorted();
+        document.getElementById("productCount").innerHTML = `${products.length} produits disponibles`;
+        const container = document.getElementById("productsContainer");
+        if (currentView === "grid") {
+            container.className = "products-grid";
+            container.innerHTML = products.map(p => {
+                const badgeClass = p.badge === "best" ? "hot" : (p.badge === "premium" ? "premium" : (p.badge === "hot" ? "hot" : ""));
+                const badgeText = p.badge === "best" ? "🔥 Top" : (p.badge === "premium" ? "⭐ Premium" : (p.badge === "hot" ? "📈 Populaire" : (p.badge === "fresh" ? "🌿 Frais" : "")));
+                return `<div class="product-card"><div class="product-img">${badgeText ? `<span class="product-badge ${badgeClass}">${badgeText}</span>` : ''}<img src="${getProductImage(p.name)}" alt="${p.name}" onerror="this.src='../images/SpaghettiBarilla500g.jpg'"></div><div class="product-info"><h3>${escapeHtml(p.name)}</h3><div class="product-supplier"><i class="fa-solid fa-store"></i> ${escapeHtml(p.supplier)}</div><div class="product-price">${p.price.toLocaleString()} FCFA <small>/${p.unit}</small></div><div class="product-actions"><button class="btn-add" onclick="addToCart(${p.id}, '${escapeHtml(p.name)}', ${p.price})"><i class="fa-solid fa-plus"></i> Ajouter</button><button class="btn-compare ${compareList.includes(p.id) ? 'active' : ''}" onclick="toggleCompare(${p.id})"><i class="fa-solid fa-chart-simple"></i></button></div></div></div>`;
+            }).join("");
+        } else {
+            container.className = "products-list";
+            container.innerHTML = products.map(p => `<div class="product-list-item"><div class="product-list-img"><img src="${getProductImage(p.name)}" alt="${p.name}" onerror="this.src='../images/SpaghettiBarilla500g.jpg'"></div><div class="product-list-info"><h3>${escapeHtml(p.name)}</h3><div style="font-size:0.7rem; color:#94A3B8;">${escapeHtml(p.supplier)}</div><div class="price">${p.price.toLocaleString()} FCFA / ${p.unit}</div></div><div style="display:flex; gap:8px;"><button class="btn-add" style="padding:8px 16px;" onclick="addToCart(${p.id}, '${escapeHtml(p.name)}', ${p.price})">Ajouter</button><button class="btn-compare ${compareList.includes(p.id) ? 'active' : ''}" onclick="toggleCompare(${p.id})"><i class="fa-solid fa-chart-simple"></i></button></div></div>`).join("");
+        }
+    }
 
-    <!-- Petite surcouche JS simple pour la validation de formulaire (uniquement élégance fonctionnelle, pas intrusive) -->
-    <script>
-        (function() {
-            // ajouter une petite interaction de confirmation pour le formulaire sans changer les couleurs
-            const form = document.querySelector('form');
-            if (form) {
-                form.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const name = document.getElementById('name')?.value.trim();
-                    const email = document.getElementById('email')?.value.trim();
-                    if (!name || !email) {
-                        alert('Veuillez remplir les champs obligatoires.');
-                        return;
-                    }
-                    alert(`Merci ${name}, votre message a bien été envoyé. (Démo élégante)`);
-                    form.reset();
-                });
-            }
-            // ajout d'un effet subtil de révélation au scroll ? non nécessaire, mais garde la propreté
-            console.log('Design ultra responsive, propre et élégant - couleurs inchangées');
-        })();
-    </script>
+    function addToCart(id, name, price) {
+        let cart = JSON.parse(localStorage.getItem("salam_cart") || "[]");
+        let existing = cart.find(i => i.id === id);
+        if(existing) existing.quantity += 1;
+        else cart.push({ id, name, price, quantity: 1, image: getProductImage(name), supplier: FULL_PRODUCTS.find(p=>p.id===id)?.supplier });
+        localStorage.setItem("salam_cart", JSON.stringify(cart));
+        showToast("Ajouté au panier", `${name} ajouté ✅`, "success");
+    }
+
+    function toggleCompare(id) {
+        if(compareList.includes(id)) compareList = compareList.filter(i => i !== id);
+        else { if(compareList.length >= 4) { showToast("Limite atteinte", "Maximum 4 produits", "error"); return; } compareList.push(id); }
+        localStorage.setItem("salam_compare", JSON.stringify(compareList));
+        renderProducts();
+        updateCompareBar();
+    }
+    function updateCompareBar() {
+        const bar = document.getElementById("compareBar");
+        const container = document.getElementById("compareItems");
+        document.getElementById("compareCount").innerText = compareList.length;
+        if(compareList.length === 0) { bar.classList.remove("show"); return; }
+        bar.classList.add("show");
+        let compareProds = FULL_PRODUCTS.filter(p => compareList.includes(p.id));
+        container.innerHTML = compareProds.map(p => `<div class="compare-item"><img src="${getProductImage(p.name)}" onerror="this.src='../images/SpaghettiBarilla500g.jpg'"> ${p.name.length > 20 ? p.name.slice(0,18)+'...' : p.name} <button onclick="toggleCompare(${p.id})"><i class="fa-solid fa-xmark"></i></button></div>`).join("");
+    }
+    function compareSelected() {
+        if(compareList.length < 2) { showToast("Comparaison", "Sélectionnez au moins 2 produits", "warning"); return; }
+        let prods = FULL_PRODUCTS.filter(p => compareList.includes(p.id));
+        let html = `<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px;">` + prods.map(p => `<div style="background:#111; border-radius:24px; padding:20px; text-align:center;"><img src="${getProductImage(p.name)}" style="width:100%; height:140px; object-fit:cover; border-radius:16px; margin-bottom:12px;" onerror="this.src='../images/SpaghettiBarilla500g.jpg'"><h4>${p.name}</h4><div style="color:#34D399; font-weight:bold;">${p.price} FCFA</div><div style="font-size:0.7rem;">${p.supplier}</div><button class="btn-add" style="margin-top:12px;" onclick="addToCart(${p.id},'${p.name}',${p.price})">Ajouter</button></div>`).join("") + `</div>`;
+        let modal = document.createElement("div"); modal.style.position="fixed"; modal.style.inset=0; modal.style.background="rgba(0,0,0,0.85)"; modal.style.backdropFilter="blur(12px)"; modal.style.zIndex=1000; modal.style.display="flex"; modal.style.alignItems="center"; modal.style.justifyContent="center";
+        let content = document.createElement("div"); content.style.background="#0F0F1E"; content.style.borderRadius="28px"; content.style.maxWidth="1000px"; content.style.width="90%"; content.style.padding="24px"; content.style.maxHeight="80vh"; content.style.overflow="auto";
+        content.innerHTML = `<div style="display:flex; justify-content:space-between;"><h3>🔍 Comparaison produits</h3><button onclick="this.closest('div').parentElement.parentElement.remove()" style="background:none; border:none; color:white; font-size:1.8rem;">&times;</button></div>${html}`;
+        modal.appendChild(content); document.body.appendChild(modal); modal.onclick = (e) => { if(e.target === modal) modal.remove(); };
+    }
+
+    let recognition = null;
+    function startVoiceSearch() {
+        const btn = document.getElementById("voiceBtn");
+        if(!('webkitSpeechRecognition' in window)) { showToast("Non supporté", "Recherche vocale indisponible", "error"); return; }
+        const SpeechRecognition = window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition(); recognition.lang = "fr-FR"; recognition.interimResults = false;
+        recognition.onstart = () => { btn.classList.add("listening"); btn.innerHTML = '<i class="fa-solid fa-microphone-slash"></i>'; };
+        recognition.onresult = (event) => { let text = event.results[0][0].transcript; document.getElementById("searchInput").value = text; currentSearch = text.toLowerCase(); renderProducts(); showToast("Recherche vocale", `"${text}"`, "success"); };
+        recognition.onerror = () => showToast("Erreur", "Réessayez", "error");
+        recognition.onend = () => { btn.classList.remove("listening"); btn.innerHTML = '<i class="fa-solid fa-microphone"></i>'; };
+        recognition.start();
+    }
+
+    function showToast(title, msg, type="success") {
+        const container = document.getElementById("toastContainer");
+        const toast = document.createElement("div"); toast.className = `toast ${type}`; toast.innerHTML = `<i class="fa-solid fa-${type === 'success' ? 'circle-check' : 'circle-exclamation'}"></i> <div><strong>${title}</strong><br><small>${msg}</small></div>`;
+        container.appendChild(toast); setTimeout(() => toast.classList.add("show"), 10);
+        setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 300); }, 3000);
+    }
+    function escapeHtml(str) { return String(str).replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+    function openSidebar() { document.getElementById("sidebar").classList.add("open"); document.getElementById("overlay").classList.add("show"); }
+    function closeSidebar() { document.getElementById("sidebar").classList.remove("open"); document.getElementById("overlay").classList.remove("show"); }
+    function logout() { localStorage.clear(); window.location.href = "../index.html"; }
+
+    document.getElementById("searchInput").addEventListener("input", (e) => { currentSearch = e.target.value.toLowerCase(); renderProducts(); });
+    document.getElementById("sortSelect").addEventListener("change", (e) => { currentSort = e.target.value; renderProducts(); });
+    renderCategoryFilters(); renderProducts(); updateCompareBar();
+    window.filterByCategory = filterByCategory; window.toggleCompare = toggleCompare; window.addToCart = addToCart; window.compareSelected = compareSelected; window.startVoiceSearch = startVoiceSearch; window.setView = setView; window.openSidebar = openSidebar; window.closeSidebar = closeSidebar; window.logout = logout;
+</script>
 </body>
 </html>
